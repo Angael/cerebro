@@ -1,6 +1,6 @@
 import { prisma } from '../../db/db.js';
 import { userTypeCache } from '../../cache/userCache.js';
-import { UserType } from '@prisma/client';
+import { UserType } from '@cerebro/db';
 
 // TODO: IMPORTANT use in a future webhook
 export async function registerUser(uid: string, email: string) {

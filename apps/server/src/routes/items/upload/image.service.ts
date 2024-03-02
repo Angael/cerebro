@@ -4,7 +4,7 @@ import logger from '../../../utils/log.js';
 import { S3Delete, S3SimpleUpload } from '../../../aws/s3-helpers.js';
 import { makeS3Path, replaceFileWithHash } from '../../../utils/makeS3Path.js';
 import { prisma } from '../../../db/db.js';
-import { ItemType, Processed, Tag } from '@prisma/client';
+import { ItemType, Processed, Tag } from '@cerebro/db';
 import { HttpError } from '../../../utils/errors/HttpError.js';
 import { MyFile, uploadPayload } from './upload.type.js';
 

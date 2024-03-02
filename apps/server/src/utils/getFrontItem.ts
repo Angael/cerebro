@@ -1,23 +1,19 @@
-import { Image, Item, Thumbnail, User, Video } from "@prisma/client";
-import { BaseItem, FrontItem, ImageItem, VideoItem } from "@vanih/cerebro-contracts";
+import { Image, Item, Thumbnail, User, Video } from '@cerebro/db';
+import { BaseItem, FrontItem, ImageItem, VideoItem } from '@vanih/cerebro-contracts';
 import { s3PathToUrl } from './s3PathToUrl.js';
-import { HttpError } from "./errors/HttpError.js";
-import logger from "./log.js";
+import { HttpError } from './errors/HttpError.js';
+import logger from './log.js';
 
 type ParamItem = Item & { Image: Image[]; Video: Video[]; thumbnails: Thumbnail[] };
 
 export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem {
-  const sourceImage  =
-    item.Image.find((e) => e.mediaType === 'SOURCE')
-  const sourceVideo =
-    item.Video.find((e) => e.mediaType === 'SOURCE')
+  const sourceImage = item.Image.find((e) => e.mediaType === 'SOURCE');
+  const sourceVideo = item.Video.find((e) => e.mediaType === 'SOURCE');
 
-  const compressedImage =
-    item.Image.find((e) => e.mediaType === 'COMPRESSED')
-  const compressedVideo =
-    item.Video.find((e) => e.mediaType === 'COMPRESSED')
+  const compressedImage = item.Image.find((e) => e.mediaType === 'COMPRESSED');
+  const compressedVideo = item.Video.find((e) => e.mediaType === 'COMPRESSED');
 
-  if(!sourceImage?.size && !sourceVideo?.size){
+  if (!sourceImage?.size && !sourceVideo?.size) {
     throw new HttpError(404);
   }
 
@@ -36,7 +32,7 @@ export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem 
   };
 
   // Last worst case scenario check
-  if(!baseItem.isMine && baseItem.private){
+  if (!baseItem.isMine && baseItem.private) {
     throw new HttpError(404);
   }
 
@@ -49,10 +45,10 @@ export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem 
         src: s3PathToUrl(img.path),
         height: img.height,
         width: img.width,
-        animated: img.animated
+        animated: img.animated,
       },
     } satisfies ImageItem;
-  } else if(item.type === 'VIDEO' && sourceVideo){
+  } else if (item.type === 'VIDEO' && sourceVideo) {
     const vid = compressedVideo ?? sourceVideo;
 
     return {
@@ -63,7 +59,7 @@ export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem 
         height: vid.height,
         width: vid.width,
         durationMs: vid.durationMs,
-        bitrateKb: vid.bitrateKb
+        bitrateKb: vid.bitrateKb,
       },
     } satisfies VideoItem;
   } else {

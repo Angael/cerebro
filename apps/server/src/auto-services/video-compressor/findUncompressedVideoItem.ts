@@ -1,6 +1,6 @@
 import { prisma } from '../../db/db.js';
 import logger from '../../utils/log.js';
-import { Item, Video } from '@prisma/client';
+import { Item, Video } from '@cerebro/db';
 
 export const findUncompressedVideoItem = async (): Promise<[Item, Video] | []> => {
   const uncompressedItems: Item[] =

@@ -1,4 +1,4 @@
-import { Thumbnail, ThumbnailType } from '@prisma/client';
+import { Thumbnail, ThumbnailType } from '@cerebro/db';
 
 export interface IThumbnailBeforeUpload {
   thumbnail: Omit<Thumbnail, 'id' | 'createdAt' | 'updatedAt'>;

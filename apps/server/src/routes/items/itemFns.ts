@@ -1,4 +1,4 @@
-import { Item, Tag } from '@prisma/client';
+import { Item, Tag } from '@cerebro/db';
 import { FrontItem, QueryItems } from '@vanih/cerebro-contracts';
 import { prisma } from '../../db/db.js';
 import { S3DeleteMany } from '../../aws/s3-helpers.js';

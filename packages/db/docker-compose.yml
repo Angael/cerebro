@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    container_name: cerebro_db
+    volumes:
+      - C:/cerebro/db:/var/lib/mysql
+    ports:
+      - "27017:27017"
+    environment:
+      MYSQL_ROOT_PASSWORD: root

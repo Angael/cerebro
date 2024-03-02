@@ -10,7 +10,7 @@ import { changeExtension } from '../../../utils/changeExtension.js';
 import { betterUnlink } from '../../../utils/betterUnlink.js';
 import { prisma } from '../../../db/db.js';
 import { uploadThumbnails } from '../uploadThumbnails.js';
-import { Item, Video } from '@prisma/client';
+import { Item, Video } from '@cerebro/db';
 import { calculateThumbnailDimensions } from '../../../utils/calculateThumbnailDimensions.js';
 import { createThumbnail } from '@vanih/dunes-node';
 import { join } from 'path';

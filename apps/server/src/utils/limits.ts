@@ -1,5 +1,5 @@
 import { GB } from './consts.js';
-import { UserType } from '@prisma/client';
+import { UserType } from '@cerebro/db';
 
 export const limitsConfig = {
   [UserType.FREE]: 0,

@@ -1,4 +1,4 @@
-import { Tag } from '@prisma/client';
+import { Tag } from '@cerebro/db';
 
 export type MyFile =
   | Express.Multer.File

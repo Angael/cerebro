@@ -1,6 +1,6 @@
 import { extname } from 'path';
 import { nanoid } from 'nanoid';
-import { ThumbnailType } from '@prisma/client';
+import { ThumbnailType } from '@cerebro/db';
 
 export const replaceFileWithHash = (filename: string, hash?: string) => {
   if (hash) {

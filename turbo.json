@@ -7,12 +7,16 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["prisma:generate", "^lint"]
     },
     "dev": {
-      "dependsOn": ["^prisma:generate"],
+      "dependsOn": ["serverCompose", "^prisma:generate"],
       "cache": false,
       "persistent": true
+    },
+    "serverCompose": {
+      "cache": false,
+      "persistent": false
     },
     "prisma:validate": {
       "dependsOn": ["^prisma:validate"]

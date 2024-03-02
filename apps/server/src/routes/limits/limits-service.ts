@@ -1,7 +1,7 @@
 import { limitsConfig } from '../../utils/limits.js';
 import { prisma } from '../../db/db.js';
 import { usedSpaceCache, userTypeCache } from '../../cache/userCache.js';
-import { Prisma, UserType } from '@prisma/client';
+import { Prisma, UserType } from '@cerebro/db';
 import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '../../utils/errors/HttpError.js';
 

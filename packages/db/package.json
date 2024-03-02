@@ -1,12 +1,10 @@
 {
-  "name": "db",
+  "name": "@cerebro/db",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "exports": {
-    "client": "./client.js"
-  },
+  "main": "./index.ts",
+  "types": "./index.ts",
   "scripts": {
+    "serverCompose": "docker-compose up -d",
     "prisma:seed": "prisma db seed",
     "prisma:generate": "prisma generate",
     "prisma:validate": "prisma validate",
@@ -14,9 +12,6 @@
     "prisma:deploy": "dotenv -e .env.production -- prisma migrate deploy",
     "prisma:studio": "prisma studio"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.10.2"
   },

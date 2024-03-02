@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { UserType } from '@prisma/client';
+import { UserType } from '@cerebro/db';
 import logger from '../utils/log.js';
 
 export const forRole =

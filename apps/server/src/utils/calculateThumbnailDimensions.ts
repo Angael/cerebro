@@ -1,6 +1,6 @@
 import { IThumbnailMeasure } from '../models/IThumbnail.js';
 import { MD_CELL_SIZE, XS_CELL_SIZE } from './consts.js';
-import { ThumbnailType } from '@prisma/client';
+import { ThumbnailType } from '@cerebro/db';
 
 const resizeWithSameAspectRatio = (_w: number, _h: number, desiredPxAmount: number) => {
   const x = desiredPxAmount / (_w * _h);

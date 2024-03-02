@@ -1,4 +1,4 @@
-import { Tag } from '@prisma/client';
+import { Tag } from '@cerebro/db';
 import { prisma } from '../../db/db.js';
 import { itemTagsCache } from '../../cache/caches.js';
 

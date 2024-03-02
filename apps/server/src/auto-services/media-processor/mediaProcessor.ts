@@ -1,6 +1,6 @@
 import logger from '../../utils/log.js';
 import { BaseProcessor } from '../base-processor/BaseProcessor.js';
-import { Item, ItemType, Processed } from '@prisma/client';
+import { Item, ItemType, Processed } from '@cerebro/db';
 import { prisma } from '../../db/db.js';
 import { processImage } from './image/processImage.js';
 import { processVideo } from './video/processVideo.js';

@@ -7,7 +7,7 @@ import path from 'path';
 import { OPTIMIZATION_DIR } from '../../utils/consts.js';
 import { analyzeVideo, compressVideo, VideoStats } from '@vanih/dunes-node';
 import { makeS3Path } from '../../utils/makeS3Path.js';
-import { Item } from '@prisma/client';
+import { Item } from '@cerebro/db';
 import { betterUnlink } from '../../utils/betterUnlink.js';
 import { changeExtension } from '../../utils/changeExtension.js';
 

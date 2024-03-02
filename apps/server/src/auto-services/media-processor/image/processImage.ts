@@ -7,7 +7,7 @@ import { generateOptimizedSrc, generateThumbnails } from './sharpHelpers.js';
 import { betterUnlink } from '../../../utils/betterUnlink.js';
 import { prisma } from '../../../db/db.js';
 import { uploadThumbnails } from '../uploadThumbnails.js';
-import { Item } from '@prisma/client';
+import { Item } from '@cerebro/db';
 import logger from '../../../utils/log.js';
 
 function fetchDetails(item: Item) {

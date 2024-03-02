@@ -1,5 +1,5 @@
 import { SessionClaims } from '../declare-extensions.js';
-import { UserType } from '@prisma/client';
+import { UserType } from '@cerebro/db';
 import { prisma } from '../db/db.js';
 import { clerkClient } from '@clerk/clerk-sdk-node';
 

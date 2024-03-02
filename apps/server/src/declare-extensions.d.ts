@@ -1,6 +1,6 @@
 import { LooseAuthProp, RequireAuthProp } from '@clerk/clerk-sdk-node';
 import { Request } from 'express';
-import { UserType } from '@prisma/client';
+import { UserType } from '@cerebro/db';
 
 export type SessionClaims = {
   roles: Array<keyof typeof UserType>;

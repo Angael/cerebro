@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@cerebro/db';
 import logger from '../utils/log.js';
 
 export const prisma = new PrismaClient();

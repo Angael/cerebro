@@ -1,6 +1,6 @@
 import express from 'express';
 import { MyRoute } from '../express-helpers/routeType.js';
-import { Tag } from '@prisma/client';
+import { Tag } from '@cerebro/db';
 import { useCache } from '../../middleware/expressCache.js';
 import { getAllTags } from './tags.service.js';
 import logger from '../../utils/log.js';
