@@ -7,13 +7,11 @@
     "node": ">= 18.12.1"
   },
   "scripts": {
-    "start": "node build/src/main.js",
+    "start": "node build/index.js",
     "start:prod": "cross-env NODE_ENV=production npm run start",
     "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"npm run start\"",
-    "db:run": "docker run -it --name cerebro -v \"C:/cerebro/db:/var/lib/mysql\" -p 27017:27017 -e MYSQL_ROOT_PASSWORD=root -d mysql:latest",
-    "db:start": "docker start cerebro",
     "prebuild": "rimraf build",
-    "build": "cross-env NODE_ENV=production tsc -p tsconfig.json",
+    "build": "cross-env NODE_ENV=production esbuild ./src/main.ts --platform=node --bundle --outfile=build/index.js --format=esm --external:sharp",
     "lint": "tsc",
     "ngrok": "ngrok http 3000"
   },
@@ -54,6 +52,7 @@
     "@typescript-eslint/eslint-plugin": "~5.39",
     "@typescript-eslint/parser": "~5.39",
     "dotenv-cli": "^7.2.1",
+    "esbuild": "^0.20.1",
     "eslint": "~8.24",
     "eslint-config-prettier": "~8.5",
     "eslint-plugin-jest": "~27.1",
