@@ -3,6 +3,10 @@ import { Card } from "@repo/ui/card";
 import { Code } from "@repo/ui/code";
 import styles from "./page.module.css";
 import { Button } from "@repo/ui/button";
+import React, { Suspense } from "react";
+import { nanoid } from "nanoid";
+
+const ClientCmp = React.lazy(() => import("./clientCmp"));
 
 function Gradient({
   conic,
@@ -12,7 +16,7 @@ function Gradient({
   small?: boolean;
   conic?: boolean;
   className?: string;
-}): JSX.Element {
+}) {
   return (
     <span
       className={[
@@ -79,8 +83,12 @@ export default function Page(): JSX.Element {
       </div>
 
       <Button appName="web" className={styles.button}>
-        Click me!
+        Click me! {nanoid()}
       </Button>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <ClientCmp />
+      </Suspense>
 
       <div className={styles.hero}>
         <div className={styles.heroContent}>
