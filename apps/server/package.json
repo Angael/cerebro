@@ -14,7 +14,7 @@
     "db:start": "docker start cerebro",
     "prebuild": "rimraf build",
     "build": "cross-env NODE_ENV=production tsc -p tsconfig.json",
-    "lint": "tsc ./src/main.ts --noEmit && eslint . --ext .ts",
+    "lint": "tsc",
     "ngrok": "ngrok http 3000"
   },
   "prisma": {

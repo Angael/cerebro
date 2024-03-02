@@ -4,9 +4,8 @@ import { S3Delete, S3SimpleUpload } from '../../aws/s3-helpers.js';
 import { prisma } from '../../db/db.js';
 import logger from '../../utils/log.js';
 import { IThumbnailBeforeUpload } from '../../models/IThumbnail.js';
-import { Thumbnail } from '@cerebro/db';
 
-async function dbInsert(thumbnail: Thumbnail) {
+async function dbInsert(thumbnail: IThumbnailBeforeUpload['thumbnail']) {
   await prisma.thumbnail.create({
     data: {
       type: thumbnail.type,
