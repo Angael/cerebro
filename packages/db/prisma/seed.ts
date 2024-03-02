@@ -1,5 +1,7 @@
-import { PrismaClient } from '@cerebro/db';
+import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
+
 async function main() {
   await prisma.user.upsert({
     where: { uid: 'Se561raFjoSjJY5Q7kZtwoIHk4H2' },
