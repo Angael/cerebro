@@ -10,8 +10,15 @@
       "dependsOn": ["^lint"]
     },
     "dev": {
+      "dependsOn": ["^prisma:generate"],
       "cache": false,
       "persistent": true
+    },
+    "prisma:validate": {
+      "dependsOn": ["^prisma:validate"]
+    },
+    "prisma:generate": {
+      "dependsOn": ["^prisma:validate"]
     }
   }
 }
