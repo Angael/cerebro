@@ -2,6 +2,8 @@
   "name": "cerebro",
   "private": true,
   "scripts": {
+    "db:up": "docker-compose up -d",
+    "db:start": "docker-compose start",
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",

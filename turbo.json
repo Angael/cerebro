@@ -10,13 +10,9 @@
       "dependsOn": ["prisma:generate", "^lint"]
     },
     "dev": {
-      "dependsOn": ["serverCompose", "^prisma:generate", "^build"],
+      "dependsOn": ["^prisma:generate", "^build"],
       "cache": false,
       "persistent": true
-    },
-    "serverCompose": {
-      "cache": false,
-      "persistent": false
     },
     "prisma:validate": {
       "dependsOn": ["^prisma:validate"]

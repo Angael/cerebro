@@ -6,7 +6,6 @@
   "types": "src/main.ts",
   "scripts": {
     "build": "tsup-node src/main.ts",
-    "serverCompose": "docker-compose up -d",
     "prisma:seed": "prisma db seed",
     "prisma:generate": "prisma generate",
     "prisma:validate": "prisma validate",
