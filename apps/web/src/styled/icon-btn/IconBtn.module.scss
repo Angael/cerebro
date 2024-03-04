@@ -1,0 +1,54 @@
+.iconBtn {
+  all: unset;
+  --iconSize: 32px;
+
+  width: var(--iconSize);
+  height: var(--iconSize);
+
+  display: flex;
+  place-items: center;
+  justify-content: center;
+
+  color: var(--c-primary);
+  cursor: pointer;
+
+  transition: opacity 0.1s;
+  &:hover,
+  &:focus-visible {
+    color: var(--c-primary-hover);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--iconColor);
+    border-radius: 8px;
+  }
+
+  &:active {
+    color: var(--c-primary-active);
+  }
+
+  &[disabled] {
+    color: var(--c-disabled-bg);
+    cursor: auto;
+    pointer-events: none;
+  }
+
+  &.filled {
+    color: var(--c-primary-contrast);
+    background-color: var(--c-primary);
+    border-radius: 50%;
+    &:hover,
+    &:focus-visible {
+      background-color: var(--c-primary-hover);
+    }
+    &:active {
+      background-color: var(--c-primary-active);
+    }
+    &[disabled] {
+      color: var(--c-disabled-text);
+      background-color: var(--c-disabled-bg);
+      cursor: auto;
+      pointer-events: none;
+    }
+  }
+}

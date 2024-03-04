@@ -1,0 +1,17 @@
+@mixin up($width) {
+  @media screen and (min-width: $width) {
+    @content;
+  }
+}
+
+@mixin desktop($width: 640px) {
+  @media screen and (min-width: $width) {
+    @content;
+  }
+}
+
+@mixin onlyMobile($width: 640px) {
+  @media screen and (max-width: $width) {
+    @content;
+  }
+}

@@ -1,0 +1,50 @@
+$padding: 16px;
+$border: 2px;
+
+.MyGrid {
+  display: grid;
+  position: relative;
+  width: 100%;
+  gap: 16px;
+  justify-content: center;
+  grid-auto-rows: 200px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+  // padding and bg
+  background-color: var(--c-bg-paper);
+  min-height: 500px;
+  border-radius: 8px;
+
+  transition: 0.2s;
+  padding: $padding - $border * 2;
+  border: $border solid transparent;
+
+  &.onDrag {
+    border: $border solid var(--c-primary);
+  }
+}
+
+.dragWatermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--c-textSecondary);
+
+  pointer-events: none;
+}
+
+.canClick {
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

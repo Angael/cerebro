@@ -1,0 +1,19 @@
+@use "src/style/breakpoints";
+
+.ItemGrid {
+  display: grid;
+  gap: 16px;
+  grid-auto-flow: dense;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 150px;
+
+  @include breakpoints.up(600px) {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 200px;
+  }
+}

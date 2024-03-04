@@ -1,0 +1,31 @@
+@use "src/style/util";
+@use "src/style/breakpoints";
+
+.uploadFileStats {
+  color: var(--c-text);
+  background-color: var(--c-bg-paper);
+  backdrop-filter: blur(20px);
+
+  position: sticky;
+  bottom: 8px;
+  z-index: util.$layer-2;
+  margin: 8px 0;
+
+  display: flex;
+  gap: 16px;
+
+  .fileStat {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  @include breakpoints.onlyMobile {
+    border-radius: 0;
+    justify-content: space-around;
+    margin-left: -16px;
+    margin-right: -16px;
+    bottom: -1px;
+  }
+}

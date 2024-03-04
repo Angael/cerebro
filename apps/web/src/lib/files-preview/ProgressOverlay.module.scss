@@ -1,0 +1,43 @@
+@use "src/style/util";
+@use "src/style/animation";
+
+@keyframes breathe {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+.ProgressOverlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  right: var(--progress);
+  background: grey;
+  opacity: 0.65;
+  z-index: util.$layer-1;
+
+  color: white;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  transition: 0.1s;
+
+  &.notStarted {
+    background: grey;
+  }
+  &.started {
+    background: dodgerblue;
+    animation: animation.$ease-in-out-quad breathe 0.8s infinite alternate;
+  }
+  &.success {
+    background: var(--c-success);
+  }
+  &.failed {
+    background-color: red;
+  }
+}

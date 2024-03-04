@@ -1,0 +1,17 @@
+@use "src/style/util";
+
+.body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--c-bg);
+}
+
+.Layout {
+  @include util.container();
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

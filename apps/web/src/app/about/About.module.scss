@@ -1,0 +1,10 @@
+.HomeText {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 16px 0;
+
+  h2 {
+    margin-bottom: -20px;
+  }
+}

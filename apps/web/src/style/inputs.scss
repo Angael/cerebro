@@ -1,0 +1,21 @@
+// in process of migration
+input.textfield {
+  display: block;
+  width: 100%;
+  background-color: var(--c-bg-paper);
+  color: var(--c-text);
+  border: solid 2px var(--c-textSecondary); // Questionable color chosen for border
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 16px;
+
+  &:focus {
+    outline: none;
+    border-color: var(--c-primary);
+  }
+
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px var(--c-disabled-text) inset;
+    -webkit-text-fill-color: var(--c-primary) !important;
+  }
+}

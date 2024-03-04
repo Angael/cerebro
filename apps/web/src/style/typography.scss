@@ -1,0 +1,50 @@
+.body1 {
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem; /* 24px */
+  color: var(--c-text);
+}
+
+.body2 {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  color: var(--c-textSecondary);
+}
+
+.h1 {
+  font-size: 3.75rem; /* 60px */
+  line-height: 1;
+  font-weight: 500;
+}
+
+.h2 {
+  font-size: 2.25rem; /* 36px */
+  line-height: 2.5rem; /* 40px */
+}
+
+.h3 {
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem; /* 36px */
+}
+
+.h4 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+}
+
+.h5 {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.75rem; /* 28px */
+}
+
+.h6 {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem; /* 28px */
+}
+
+.success {
+  color: var(--c-success);
+}
+
+.error {
+  color: var(--c-error);
+}

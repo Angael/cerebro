@@ -1,0 +1,24 @@
+@use 'src/style/util';
+@use 'src/style/shadow';
+
+.navbar {
+  position: sticky;
+  top: 0;
+
+  z-index: util.$layer-navbar;
+
+  .navbarBg {
+    backdrop-filter: blur(12px);
+    background-color: var(--c-bg-paper);
+
+    .navbarFlex {
+      @include util.container;
+
+      display: flex;
+      align-items: center;
+      height: 100%;
+      gap: 12px;
+      padding: 16px;
+    }
+  }
+}

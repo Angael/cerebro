@@ -1,28 +1,42 @@
 {
   "name": "web",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 4000",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint . --max-warnings 0"
+    "start": "next start -p 4000",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
-    "next": "^14.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@clerk/nextjs": "^4.26.2",
+    "@mdi/js": "^7.3.67",
+    "@mdi/react": "^1.6.1",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-progress": "^1.0.3",
+    "@tanstack/react-query": "^5.7.2",
+    "@tanstack/react-query-next-experimental": "^5.17.0",
+    "clamp": "^1.0.1",
+    "clsx": "^2.0.0",
+    "nanoid": "^5.0.3",
+    "next": "14.0.1",
+    "numeral": "^2.0.6",
+    "p-queue": "^7.4.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-dropzone": "^14.2.3",
+    "redaxios": "^0.5.1",
+    "sass": "^1.69.5",
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^14.0.4",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "@types/eslint": "^8.56.1",
-    "@types/node": "^20.10.6",
-    "@types/react": "^18.2.46",
-    "@types/react-dom": "^18.2.18",
-    "eslint": "^8.56.0",
-    "typescript": "^5.3.3"
+    "@types/clamp": "^1.0.2",
+    "@types/node": "^20",
+    "@types/numeral": "^2.0.4",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@vanih/cerebro-contracts": "^0.0.9",
+    "prettier": "^3.0.3",
+    "typescript": "^5"
   }
 }

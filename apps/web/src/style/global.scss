@@ -1,0 +1,95 @@
+@use "src/style/colors2";
+@use "src/style/css-variables";
+@use "src/style/typography";
+@use "src/style/inputs";
+
+body {
+  font-family: "Open Sans", sans-serif;
+
+  color: var(--c-text);
+  background-color: var(--c-bg);
+
+  // Idk what those do
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  margin: 0;
+  min-height: 100vh;
+  overflow-y: scroll;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  font-style: italic;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  all: unset;
+  display: block;
+
+  color: var(--c-text);
+}
+
+a {
+  all: unset;
+  cursor: pointer;
+  color: #fff;
+  transition-timing-function: ease-out;
+  transition: opacity 0.1s;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+details {
+  summary {
+    cursor: pointer;
+  }
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex {
+  display: flex;
+
+  &.col {
+    flex-direction: column;
+  }
+
+  &.gap-1 {
+    gap: 8px;
+  }
+
+  &.gap-2 {
+    gap: 16px;
+  }
+
+  &.center {
+    justify-content: center;
+    align-items: center;
+  }
+}

@@ -1,0 +1,24 @@
+@use 'src/style/util';
+
+.btnStyle {
+  all: unset;
+
+  display: inline-block;
+  width: auto;
+  place-items: center;
+  justify-content: center;
+
+  font-weight: 500;
+  color: var(--c-primary-contrast);
+  border: var(--c-primary) 2px solid;
+  background-color: var(--c-primary);
+  border-radius: 999px;
+  padding: 4px 8px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+
+  transition: background-color 0.1s, color 0.1s, border 0.1s;
+
+  @include util.button-states;
+}

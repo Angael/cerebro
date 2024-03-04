@@ -1,0 +1,31 @@
+@use 'src/style/breakpoints';
+
+.paginationStack {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0;
+  gap: 16px;
+
+  overflow: auto;
+
+  .mobileHidden {
+    // Keep same width even when longer numbers are shown
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    text-align: center;
+
+    display: none;
+    @include breakpoints.desktop() {
+      display: block;
+    }
+  }
+}
+
+.pages {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
