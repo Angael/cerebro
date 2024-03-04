@@ -16,6 +16,7 @@
   "dependencies": {
     "@cerebro/db": "workspace:*",
     "@clerk/clerk-sdk-node": "^4.12.20",
+    "@types/cors": "^2.8.17",
     "@types/fs-extra": "^9.0.13",
     "@vanih/cerebro-contracts": "0.0.7",
     "@vanih/dunes-node": "3.2.0",
