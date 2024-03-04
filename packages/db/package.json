@@ -1,10 +1,11 @@
 {
   "name": "@cerebro/db",
   "version": "1.0.0",
+  "type": "module",
   "main": "./db.js",
   "types": "./db.ts",
   "scripts": {
-    "build": "tsc ./db.ts",
+    "build": "tsup-node ./db.ts",
     "serverCompose": "docker-compose up -d",
     "prisma:seed": "prisma db seed",
     "prisma:generate": "prisma generate",
