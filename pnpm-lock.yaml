@@ -246,6 +246,9 @@ importers:
       tslib:
         specifier: '2.5'
         version: 2.5.3
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
     devDependencies:
       prisma:
         specifier: ^5.10.2
@@ -6546,7 +6549,6 @@ packages:
   /typescript@5.3.3:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
-    dev: true
 
   /uglify-js@3.17.4:
     resolution: {integrity: sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==}

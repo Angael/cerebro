@@ -7,7 +7,7 @@
     "node": ">= 18.12.1"
   },
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node build/src/main.js",
     "start:prod": "cross-env NODE_ENV=production npm run start",
     "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"npm run start\"",
     "prebuild": "rimraf build",
