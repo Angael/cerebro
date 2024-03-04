@@ -1,11 +1,8 @@
 {
   "name": "server",
-  "author": "Angael",
-  "version": "0.2.0",
+  "version": "0.8.0",
   "type": "module",
-  "engines": {
-    "node": ">= 18.12.1"
-  },
+  "main": "src/main.ts",
   "scripts": {
     "start": "node build/src/main.js",
     "start:prod": "cross-env NODE_ENV=production npm run start",
@@ -41,6 +38,7 @@
     "node-cache": "^5.1.2",
     "promise-retry": "^2.0.1",
     "sharp": "^0.31.3",
+    "source-map-support": "^0.5.21",
     "winston": "^3.8.2",
     "zod": "^3.20.2"
   },

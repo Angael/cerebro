@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      nanoid:
-        specifier: ^5.0.6
-        version: 5.0.6
       tsup:
         specifier: ^8.0.2
         version: 8.0.2
@@ -139,6 +136,9 @@ importers:
       sharp:
         specifier: ^0.31.3
         version: 0.31.3
+      source-map-support:
+        specifier: ^0.5.21
+        version: 0.5.21
       winston:
         specifier: ^3.8.2
         version: 3.11.0
@@ -5317,12 +5317,6 @@ packages:
     hasBin: true
     dev: false
 
-  /nanoid@5.0.6:
-    resolution: {integrity: sha512-rRq0eMHoGZxlvaFOUdK1Ev83Bd1IgzzR+WJ3IbDJ7QOSdAxYjlurSPqFs9s4lJg29RT6nPwizFtJhQS6V5xgiA==}
-    engines: {node: ^18 || >=20}
-    hasBin: true
-    dev: false
-
   /napi-build-utils@1.0.2:
     resolution: {integrity: sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==}
     dev: false
@@ -6499,10 +6493,16 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
+  /source-map-support@0.5.21:
+    resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
+    dependencies:
+      buffer-from: 1.1.2
+      source-map: 0.6.1
+    dev: false
+
   /source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
-    dev: true
 
   /source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
