@@ -4,13 +4,13 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "build"]
+      "outputs": [".next/**", "!.next/cache/**", "dist", "out", "build"]
     },
     "lint": {
       "dependsOn": ["prisma:generate", "^lint"]
     },
     "dev": {
-      "dependsOn": ["serverCompose", "^prisma:generate"],
+      "dependsOn": ["serverCompose", "^prisma:generate", "^build"],
       "cache": false,
       "persistent": true
     },
@@ -23,6 +23,11 @@
     },
     "prisma:generate": {
       "dependsOn": ["^prisma:validate"]
+    },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
     }
   }
 }
