@@ -1,6 +1,6 @@
 import { UserJSON } from '@clerk/clerk-sdk-node';
-import logger from '../../utils/log.js';
-import { User } from '../../models/User.js';
+import logger from '@/utils/log.js';
+import { User } from '@/models/User.js';
 
 export async function userCreated(data: UserJSON) {
   const { id, email_addresses } = data;
@@ -14,6 +14,6 @@ export async function userCreated(data: UserJSON) {
   } catch (e) {
     logger.error('Failed to add account %s', id);
     console.log(e);
-    throw new Error(e);
+    throw new Error(e as any);
   }
 }
