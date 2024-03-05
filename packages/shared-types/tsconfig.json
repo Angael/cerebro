@@ -1,0 +1,3 @@
+{
+  "extends": "@cerebro/tsconfig/tsconfig.node.json"
+}
