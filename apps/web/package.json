@@ -9,6 +9,8 @@
     "lint": "tsc && next lint"
   },
   "dependencies": {
+    "@cerebro/tsconfig": "workspace:*",
+    "@cerebro/shared-types": "workspace:*",
     "@clerk/nextjs": "^4.26.2",
     "@mdi/js": "^7.3.67",
     "@mdi/react": "^1.6.1",
@@ -33,16 +35,13 @@
     "sass": "^1.69.5"
   },
   "devDependencies": {
-    "@cerebro/tsconfig": "workspace:*",
     "@types/clamp": "^1.0.2",
     "@types/node": "^20",
     "@types/numeral": "^2.0.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@vanih/cerebro-contracts": "^0.0.9",
     "eslint": "8.57.0",
     "eslint-config-next": "14.1.2",
-    "prettier": "^3.0.3",
-    "typescript": "^5"
+    "prettier": "^3.0.3"
   }
 }

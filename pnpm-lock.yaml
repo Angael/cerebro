@@ -8,13 +8,16 @@ importers:
 
   .:
     dependencies:
-      tsup:
-        specifier: ^8.0.2
-        version: 8.0.2
-    devDependencies:
       '@cerebro/tsconfig':
         specifier: workspace:*
         version: link:packages/typescript-config
+      tsup:
+        specifier: ^8.0.2
+        version: 8.0.2(typescript@5.3.3)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+    devDependencies:
       prettier:
         specifier: ^3.1.1
         version: 3.1.1
@@ -27,6 +30,9 @@ importers:
       '@cerebro/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@cerebro/shared-types':
+        specifier: workspace:*
+        version: link:../../packages/shared-types
       '@cerebro/tsconfig':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -39,9 +45,6 @@ importers:
       '@types/fs-extra':
         specifier: ^9.0.13
         version: 9.0.13
-      '@vanih/cerebro-contracts':
-        specifier: 0.0.7
-        version: 0.0.7
       '@vanih/dunes-node':
         specifier: 3.2.0
         version: 3.2.0
@@ -123,13 +126,16 @@ importers:
         version: 2.5.3
       tsutils:
         specifier: ~3.21
-        version: 3.21.0(typescript@4.9.5)
-      typescript:
-        specifier: ^4.9.4
-        version: 4.9.5
+        version: 3.21.0(typescript@5.3.3)
 
   apps/web:
     dependencies:
+      '@cerebro/shared-types':
+        specifier: workspace:*
+        version: link:../../packages/shared-types
+      '@cerebro/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@clerk/nextjs':
         specifier: ^4.26.2
         version: 4.29.9(next@14.0.1)(react-dom@18.2.0)(react@18.2.0)
@@ -197,9 +203,6 @@ importers:
         specifier: ^1.69.5
         version: 1.71.1
     devDependencies:
-      '@cerebro/tsconfig':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       '@types/clamp':
         specifier: ^1.0.2
         version: 1.0.3
@@ -215,9 +218,6 @@ importers:
       '@types/react-dom':
         specifier: ^18
         version: 18.2.18
-      '@vanih/cerebro-contracts':
-        specifier: ^0.0.9
-        version: 0.0.9
       eslint:
         specifier: 8.57.0
         version: 8.57.0
@@ -227,9 +227,6 @@ importers:
       prettier:
         specifier: ^3.0.3
         version: 3.1.1
-      typescript:
-        specifier: ^5
-        version: 5.3.3
 
   packages/db:
     dependencies:
@@ -242,16 +239,13 @@ importers:
       tslib:
         specifier: '2.5'
         version: 2.5.3
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
     devDependencies:
       prisma:
         specifier: ^5.10.2
         version: 5.10.2
 
   packages/shared-types:
-    devDependencies:
+    dependencies:
       '@cerebro/tsconfig':
         specifier: workspace:*
         version: link:../typescript-config
@@ -1889,14 +1883,6 @@ packages:
 
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
-
-  /@vanih/cerebro-contracts@0.0.7:
-    resolution: {integrity: sha512-5I66QKFWQBr4OCDAzALIzEpiwSLTcEovvwVnH9xf8S5fV0sTFGldyMqsul40m87mIZPiSXTWmt88bL4ZF2zcTw==}
-    dev: false
-
-  /@vanih/cerebro-contracts@0.0.9:
-    resolution: {integrity: sha512-OrVCStDfgBiPWLayvuvqB3CzunNLPFzBaSgl5XAOkJzwy9E5l5kVuUdYixiH/b4l2tPzfAYDgB1qr5Iq8fg7Aw==}
-    dev: true
 
   /@vanih/dunes-node@3.2.0:
     resolution: {integrity: sha512-MfOc7ifv21m1GdDUFYpic6Ls2jsB1RAiVly5g5tCH2dGOalWEnlO0HH43raKMgM0lXB/Ca22U7hxJ+AUJWEJOA==}
@@ -5418,7 +5404,7 @@ packages:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
     dev: false
 
-  /tsup@8.0.2:
+  /tsup@8.0.2(typescript@5.3.3):
     resolution: {integrity: sha512-NY8xtQXdH7hDUAZwcQdY/Vzlw9johQsaqf7iwZ6g1DOUlFYQ5/AtVAjTvihhEyeRlGo4dLRVHtrRaL35M1daqQ==}
     engines: {node: '>=18'}
     hasBin: true
@@ -5451,19 +5437,20 @@ packages:
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tree-kill: 1.2.2
+      typescript: 5.3.3
     transitivePeerDependencies:
       - supports-color
       - ts-node
     dev: false
 
-  /tsutils@3.21.0(typescript@4.9.5):
+  /tsutils@3.21.0(typescript@5.3.3):
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
     engines: {node: '>= 6'}
     peerDependencies:
       typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
     dependencies:
       tslib: 1.14.1
-      typescript: 4.9.5
+      typescript: 5.3.3
     dev: true
 
   /tunnel-agent@0.6.0:
@@ -5603,15 +5590,10 @@ packages:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
     dev: false
 
-  /typescript@4.9.5:
-    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
-    engines: {node: '>=4.2.0'}
-    hasBin: true
-    dev: true
-
   /typescript@5.3.3:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
     engines: {node: '>=14.17'}
+    hasBin: true
 
   /unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

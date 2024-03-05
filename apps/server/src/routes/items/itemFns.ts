@@ -1,10 +1,10 @@
 import { Item, Tag } from '@cerebro/db';
-import { FrontItem, QueryItems } from '@vanih/cerebro-contracts';
-import { prisma } from '../../db/db.js';
-import { S3DeleteMany } from '../../aws/s3-helpers.js';
-import { HttpError } from '../../utils/errors/HttpError.js';
-import logger from '../../utils/log.js';
-import { getFrontItem } from '../../utils/getFrontItem.js';
+import { FrontItem, QueryItems } from '@cerebro/shared-types';
+import { prisma } from '@/db/db.js';
+import { S3DeleteMany } from '@/aws/s3-helpers.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
+import logger from '@/utils/log.js';
+import { getFrontItem } from '@/utils/getFrontItem.js';
 
 export async function getAllItems(
   limit: number,

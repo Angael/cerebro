@@ -1,5 +1,5 @@
 import React from 'react';
-import type { VideoItem as VideoItemType } from '@vanih/cerebro-contracts';
+import type { VideoItem as VideoItemType } from '@cerebro/shared-types';
 import css from './Item.module.scss';
 
 type Props = {

@@ -5,10 +5,11 @@
   "main": "dist/main.js",
   "types": "src/main.ts",
   "scripts": {
-    "build": "tsup-node src/main.ts"
+    "build": "tsup-node src/main.ts",
+    "lint": "tsc"
   },
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
     "@cerebro/tsconfig": "workspace:*"
-  },
-  "dependencies": {}
+  }
 }

@@ -1,28 +1,28 @@
 import express, { Request } from 'express';
 import multer from 'multer';
 import z from 'zod';
-import { QueryItems } from '@vanih/cerebro-contracts';
+import { QueryItems } from '@cerebro/shared-types';
 
 import { deleteItem, getAllItems, getItem } from './itemFns.js';
 import { multerOptions } from './multerConfig.js';
-import { MAX_UPLOAD_SIZE } from '../../utils/consts.js';
+import { MAX_UPLOAD_SIZE } from '@/utils/consts.js';
 import { uploadFileForUser } from './upload/upload.service.js';
-import { errorResponse } from '../../utils/errors/errorResponse.js';
+import { errorResponse } from '@/utils/errors/errorResponse.js';
 import { MyRoute } from '../express-helpers/routeType.js';
-import { useCache } from '../../middleware/expressCache.js';
-import { usedSpaceCache } from '../../cache/userCache.js';
+import { useCache } from '@/middleware/expressCache.js';
+import { usedSpaceCache } from '@/cache/userCache.js';
 import { doesUserHaveSpaceLeftForFile } from '../limits/limits-service.js';
-import { HttpError } from '../../utils/errors/HttpError.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
 import { getItemTags } from '../tags/tags.service.js';
-import { arrayFromString } from '../../utils/arrayFromString.js';
-import { betterUnlink } from '../../utils/betterUnlink.js';
-import logger from '../../utils/log.js';
+import { arrayFromString } from '@/utils/arrayFromString.js';
+import { betterUnlink } from '@/utils/betterUnlink.js';
+import logger from '@/utils/log.js';
 import {
   downloadFromLinkService,
   getStatsFromLink,
 } from './download-from-link/downloadFromLink.service.js';
 import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
-import { isPremium } from '../../middleware/isPremium.js';
+import { isPremium } from '@/middleware/isPremium.js';
 
 const router = express.Router({ mergeParams: true });
 

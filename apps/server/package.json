@@ -16,10 +16,10 @@
   "dependencies": {
     "@cerebro/db": "workspace:*",
     "@cerebro/tsconfig": "workspace:*",
+    "@cerebro/shared-types": "workspace:*",
     "@clerk/clerk-sdk-node": "^4.12.20",
     "@types/cors": "^2.8.17",
     "@types/fs-extra": "^9.0.13",
-    "@vanih/cerebro-contracts": "0.0.7",
     "@vanih/dunes-node": "3.2.0",
     "async": "^3.2.4",
     "aws-sdk": "^2.1282.0",
@@ -48,7 +48,6 @@
     "@types/sharp": "^0.31.1",
     "dotenv-cli": "^7.2.1",
     "tslib": "2.5",
-    "tsutils": "~3.21",
-    "typescript": "^4.9.4"
+    "tsutils": "~3.21"
   }
 }

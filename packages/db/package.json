@@ -16,8 +16,7 @@
   "dependencies": {
     "@cerebro/tsconfig": "workspace:*",
     "@prisma/client": "^5.10.2",
-    "tslib": "2.5",
-    "typescript": "^5.3.3"
+    "tslib": "2.5"
   },
   "devDependencies": {
     "prisma": "^5.10.2"

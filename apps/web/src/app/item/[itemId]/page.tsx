@@ -1,10 +1,10 @@
-import React from "react";
-import { BackendApi, getApiHeaders } from "@/utils/backend-api";
-import { auth } from "@clerk/nextjs";
-import { FrontItem } from "@vanih/cerebro-contracts";
-import ImageItem from "@/app/item/[itemId]/ImageItem";
-import VideoItem from "@/app/item/[itemId]/VideoItem";
-import GoBackLink from "@/app/item/[itemId]/GoBackLink";
+import React from 'react';
+import { BackendApi, getApiHeaders } from '@/utils/backend-api';
+import { auth } from '@clerk/nextjs';
+import { FrontItem } from '@cerebro/shared-types';
+import ImageItem from '@/app/item/[itemId]/ImageItem';
+import VideoItem from '@/app/item/[itemId]/VideoItem';
+import GoBackLink from '@/app/item/[itemId]/GoBackLink';
 
 type Props = {
   params: {
@@ -24,8 +24,8 @@ const ItemPage = async ({ params }: Props) => {
   return (
     <>
       <GoBackLink />
-      {type === "IMAGE" && <ImageItem item={data} />}
-      {type === "VIDEO" && <VideoItem item={data} />}
+      {type === 'IMAGE' && <ImageItem item={data} />}
+      {type === 'VIDEO' && <VideoItem item={data} />}
     </>
   );
 };
