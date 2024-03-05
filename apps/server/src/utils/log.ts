@@ -3,10 +3,8 @@ import { isProd } from '@/utils/env.js';
 
 const timeAndPrintf = format.combine(
   format.splat(),
-  format.timestamp({
-    format: 'YY-MM-DD HH:mm:ss.SSS',
-  }),
-  format.printf((info) => `[${info.timestamp}]  [${info.level}] : ${info.message}`),
+  format.timestamp({ format: () => new Date().toISOString() }),
+  format.printf((info) => `[${info.timestamp}] [${info.level}]: ${info.message}`),
 );
 
 export const logger = createLogger({
