@@ -30,8 +30,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "redaxios": "^0.5.1",
-    "sass": "^1.69.5",
-    "zustand": "^4.4.6"
+    "sass": "^1.69.5"
   },
   "devDependencies": {
     "@cerebro/tsconfig": "workspace:*",
