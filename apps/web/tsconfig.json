@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/nextjs.json",
+  "extends": "@cerebro/tsconfig/nextjs.json",
   "compilerOptions": {
     // css modules QoL
     "noUncheckedIndexedAccess": false,

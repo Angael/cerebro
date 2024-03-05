@@ -1,29 +1,3 @@
 {
-  "compilerOptions": {
-    // Base options
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-
-    // Aliases
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["*"]
-    },
-
-    // strictness
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-
-    // Transpilation
-    "moduleResolution": "nodenext",
-    "module": "NodeNext",
-
-    // Output
-    "noEmit": true
-  }
+  "extends": "@cerebro/tsconfig/tsconfig.node.json"
 }

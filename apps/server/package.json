@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@cerebro/db": "workspace:*",
+    "@cerebro/tsconfig": "workspace:*",
     "@clerk/clerk-sdk-node": "^4.12.20",
     "@types/cors": "^2.8.17",
     "@types/fs-extra": "^9.0.13",

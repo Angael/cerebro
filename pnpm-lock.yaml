@@ -12,7 +12,7 @@ importers:
         specifier: ^8.0.2
         version: 8.0.2
     devDependencies:
-      '@repo/typescript-config':
+      '@cerebro/tsconfig':
         specifier: workspace:*
         version: link:packages/typescript-config
       prettier:
@@ -27,6 +27,9 @@ importers:
       '@cerebro/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@cerebro/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@clerk/clerk-sdk-node':
         specifier: ^4.12.20
         version: 4.13.11(react@18.2.0)
@@ -185,6 +188,9 @@ importers:
         specifier: ^4.4.6
         version: 4.5.2(@types/react@18.2.46)(react@18.2.0)
     devDependencies:
+      '@cerebro/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@types/clamp':
         specifier: ^1.0.2
         version: 1.0.3
@@ -212,6 +218,9 @@ importers:
 
   packages/db:
     dependencies:
+      '@cerebro/tsconfig':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@prisma/client':
         specifier: ^5.10.2
         version: 5.10.2(prisma@5.10.2)

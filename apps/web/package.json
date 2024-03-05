@@ -30,6 +30,7 @@
     "zustand": "^4.4.6"
   },
   "devDependencies": {
+    "@cerebro/tsconfig": "workspace:*",
     "@types/clamp": "^1.0.2",
     "@types/node": "^20",
     "@types/numeral": "^2.0.4",

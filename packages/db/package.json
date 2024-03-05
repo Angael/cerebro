@@ -14,6 +14,7 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@cerebro/tsconfig": "workspace:*",
     "@prisma/client": "^5.10.2",
     "tslib": "2.5",
     "typescript": "^5.3.3"
