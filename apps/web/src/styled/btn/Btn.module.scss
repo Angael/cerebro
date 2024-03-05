@@ -18,7 +18,10 @@
   user-select: none;
   white-space: nowrap;
 
-  transition: background-color 0.1s, color 0.1s, border 0.1s;
+  transition:
+    background-color 0.1s,
+    color 0.1s,
+    border 0.1s;
 
   @include util.button-states;
 }

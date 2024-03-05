@@ -1,10 +1,10 @@
-@use "src/style/colors2";
-@use "src/style/css-variables";
-@use "src/style/typography";
-@use "src/style/inputs";
+@use 'src/style/colors2';
+@use 'src/style/css-variables';
+@use 'src/style/typography';
+@use 'src/style/inputs';
 
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
 
   color: var(--c-text);
   background-color: var(--c-bg);
