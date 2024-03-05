@@ -11,12 +11,6 @@
     "moduleDetection": "force",
     "isolatedModules": true,
 
-    // Aliases
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["*"]
-    },
-
     // strictness
     "strict": true,
     "noUncheckedIndexedAccess": true,

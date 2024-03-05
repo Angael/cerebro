@@ -1,3 +1,10 @@
 {
-  "extends": "@cerebro/tsconfig/tsconfig.node.json"
+  "extends": "@cerebro/tsconfig/tsconfig.node.json",
+  "compilerOptions": {
+    // Aliases
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    }
+  }
 }
