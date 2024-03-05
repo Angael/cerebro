@@ -11,10 +11,11 @@
 }
 
 .pages {
+  margin-right: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 48px;
+  gap: 32px;
 
   .pageLink {
     display: none;

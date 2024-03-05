@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
-import { Open_Sans } from 'next/font/google';
 import '@/style/global.scss';
 import { ClerkProvider } from '@clerk/nextjs';
 import css from './layout.module.scss';
 import Navbar from '@/lib/navbar/Navbar';
 import React from 'react';
-const open_Sans = Open_Sans({ subsets: ['latin'], display: 'swap' });
 
 import { Providers } from '@/app/providers';
 
@@ -18,7 +16,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <ClerkProvider>
       <Providers>
-        <html lang="en" className={open_Sans.className}>
+        <html lang="en">
+          <head>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={''} />
+            <link
+              href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,300..800&display=swap"
+              rel="stylesheet"
+            />
+          </head>
           <body className={css.body}>
             <Navbar />
             <div className={css.Layout}>{children}</div>
