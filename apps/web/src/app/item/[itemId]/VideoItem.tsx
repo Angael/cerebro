@@ -1,9 +1,9 @@
-import React from "react";
-import { VideoItem } from "@vanih/cerebro-contracts";
-import css from "./Item.module.scss";
+import React from 'react';
+import type { VideoItem as VideoItemType } from '@vanih/cerebro-contracts';
+import css from './Item.module.scss';
 
 type Props = {
-  item: VideoItem;
+  item: VideoItemType;
 };
 
 const VideoItem = ({ item }: Props) => {
@@ -21,7 +21,7 @@ const VideoItem = ({ item }: Props) => {
         height={height}
         key={src}
         controls
-        poster={item.thumbnail || ""}
+        poster={item.thumbnail || ''}
         autoPlay
         loop
         style={style}

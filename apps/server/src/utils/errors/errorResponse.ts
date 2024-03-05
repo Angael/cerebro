@@ -3,7 +3,7 @@ import { HttpError } from './HttpError.js';
 import logger from '../log.js';
 import { ZodError } from 'zod';
 
-export const errorResponse = (res: Response, e: Error) => {
+export const errorResponse = (res: Response, e: any) => {
   if (e instanceof HttpError) {
     res.sendStatus(e.status);
   } else if (e instanceof ZodError) {

@@ -1,9 +1,9 @@
-import React from "react";
-import { ImageItem } from "@vanih/cerebro-contracts";
-import css from "./Item.module.scss";
+import React from 'react';
+import type { ImageItem as ImageItemType } from '@vanih/cerebro-contracts';
+import css from './Item.module.scss';
 
 type Props = {
-  item: ImageItem;
+  item: ImageItemType;
 };
 
 const ImageItem = ({ item }: Props) => {
