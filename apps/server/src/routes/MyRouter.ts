@@ -25,7 +25,7 @@ const startRouter = () => {
 
   router.use(express.json());
 
-  if (process.env.NODE_ENV === 'production') {
+  if (isProd) {
     router.use(
       cors({
         origin: process.env.CORS_URL,
@@ -46,6 +46,11 @@ const startRouter = () => {
 
   router.listen(port, () => {
     log.info(`Router started on http://localhost:${port}/`);
+  });
+
+  // on error
+  router.on('error', (err) => {
+    log.error(err);
   });
 };
 

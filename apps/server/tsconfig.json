@@ -21,6 +21,9 @@
 
     // Transpilation
     "moduleResolution": "nodenext",
-    "module": "NodeNext"
+    "module": "NodeNext",
+
+    // Output
+    "noEmit": true
   }
 }
