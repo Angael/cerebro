@@ -1,7 +1,7 @@
 import React from 'react';
 import { BackendApi, getApiHeaders } from '@/utils/backend-api';
 import { auth } from '@clerk/nextjs';
-import { FrontItem } from '@cerebro/shared-types';
+import { FrontItem } from '@cerebro/shared';
 import ImageItem from '@/app/item/[itemId]/ImageItem';
 import VideoItem from '@/app/item/[itemId]/VideoItem';
 import GoBackLink from '@/app/item/[itemId]/GoBackLink';

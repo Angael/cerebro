@@ -1,5 +1,5 @@
 import { Item, Tag } from '@cerebro/db';
-import { FrontItem, QueryItems } from '@cerebro/shared-types';
+import { FrontItem, QueryItems } from '@cerebro/shared';
 import { prisma } from '@/db/db.js';
 import { S3DeleteMany } from '@/aws/s3-helpers.js';
 import { HttpError } from '@/utils/errors/HttpError.js';

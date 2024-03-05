@@ -4,7 +4,7 @@ import css from './ItemThumb.module.scss';
 import { getGridSpan } from './getGridSpan';
 import { mdiClockOutline, mdiEyeOff } from '@mdi/js';
 import { Icon } from '@mdi/react';
-import { FrontItem } from '@cerebro/shared-types';
+import { FrontItem } from '@cerebro/shared';
 import clsx from 'clsx';
 import Link from 'next/link';
 

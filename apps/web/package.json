@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@cerebro/tsconfig": "workspace:*",
-    "@cerebro/shared-types": "workspace:*",
+    "@cerebro/shared": "workspace:*",
     "@clerk/nextjs": "^4.26.2",
     "@mdi/js": "^7.3.67",
     "@mdi/react": "^1.6.1",

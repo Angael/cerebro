@@ -1,7 +1,7 @@
 import React from 'react';
 
 import css from './ItemGrid.module.scss';
-import { FrontItem } from '@cerebro/shared-types';
+import { FrontItem } from '@cerebro/shared';
 import ItemThumb from './item-thumb/ItemThumb';
 
 type Props = {

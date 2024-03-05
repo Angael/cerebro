@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ImageItem as ImageItemType } from '@cerebro/shared-types';
+import type { ImageItem as ImageItemType } from '@cerebro/shared';
 import css from './Item.module.scss';
 
 type Props = {

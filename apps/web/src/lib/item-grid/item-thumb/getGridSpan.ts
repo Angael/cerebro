@@ -1,4 +1,4 @@
-import type { FrontItem } from '@cerebro/shared-types';
+import type { FrontItem } from '@cerebro/shared';
 import { MD_CELL_SIZE } from '@/utils/consts';
 
 export const getGridSpan = (item: FrontItem): '' | 'tall' | 'wide' => {

@@ -30,7 +30,7 @@ importers:
       '@cerebro/db':
         specifier: workspace:*
         version: link:../../packages/db
-      '@cerebro/shared-types':
+      '@cerebro/shared':
         specifier: workspace:*
         version: link:../../packages/shared-types
       '@cerebro/tsconfig':
@@ -130,7 +130,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@cerebro/shared-types':
+      '@cerebro/shared':
         specifier: workspace:*
         version: link:../../packages/shared-types
       '@cerebro/tsconfig':

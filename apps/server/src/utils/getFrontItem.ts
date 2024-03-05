@@ -1,5 +1,5 @@
 import { Image, Item, Thumbnail, User, Video } from '@cerebro/db';
-import { BaseItem, FrontItem, ImageItem, VideoItem } from '@cerebro/shared-types';
+import { BaseItem, FrontItem, ImageItem, VideoItem } from '@cerebro/shared';
 import { s3PathToUrl } from './s3PathToUrl.js';
 import { HttpError } from './errors/HttpError.js';
 import logger from './log.js';

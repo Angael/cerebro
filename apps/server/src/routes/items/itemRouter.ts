@@ -1,7 +1,7 @@
 import express, { Request } from 'express';
 import multer from 'multer';
 import z from 'zod';
-import { QueryItems } from '@cerebro/shared-types';
+import { QueryItems } from '@cerebro/shared';
 
 import { deleteItem, getAllItems, getItem } from './itemFns.js';
 import { multerOptions } from './multerConfig.js';
