@@ -7,6 +7,6 @@ services:
     volumes:
       - C:/cerebro/db:/var/lib/mysql
     ports:
-      - "27017:27017"
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
