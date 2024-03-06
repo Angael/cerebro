@@ -8,6 +8,7 @@ export const useRequest = () => {
     baseURL: process.env.NEXT_PUBLIC_API_URL,
     transformRequest: [
       async (data, headers) => {
+        // TODO:  This clearly doesn't work, but it's a good starting point
         console.log('transforming elo');
         const token = await auth.getToken();
 
