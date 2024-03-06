@@ -3,16 +3,20 @@ import React from 'react';
 import numeral from 'numeral';
 import ProgressBar from '@/styled/progress-bar/ProgressBar';
 import { useQuery } from '@tanstack/react-query';
-import { useRequest } from '@/utils/useRequest';
+import { useAuthHeader } from '@/utils/useAuthHeader';
 import { GetUploadLimits } from '@cerebro/shared';
+import { ApiClient } from '@/utils/api.client';
 
 type Props = {};
 
 const UsedSpace = () => {
-  const request = useRequest();
+  const getAuthHeader = useAuthHeader();
   const { data, isFetching, isFetched, isError } = useQuery({
     queryKey: ['uploadLimits'],
-    queryFn: () => request.get<GetUploadLimits>('/account/limits').then((res) => res.data),
+    queryFn: async () =>
+      ApiClient.get<GetUploadLimits>('/account/limits', {
+        headers: await getAuthHeader(),
+      }).then((res) => res.data),
     retry: false,
   });
 
