@@ -1,9 +1,9 @@
 import NodeCache from 'node-cache';
 
 export const userTypeCache = new NodeCache({
-  stdTTL: 600,
+  stdTTL: 5,
 });
 
 export const usedSpaceCache = new NodeCache({
-  stdTTL: 30,
+  stdTTL: 5,
 });

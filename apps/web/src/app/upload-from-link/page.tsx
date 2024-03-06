@@ -1,20 +1,27 @@
-"use client";
-import React, { useState } from "react";
-import Textfield from "@/styled/textfield/Textfield";
-import { Btn } from "@/styled/btn/Btn";
-import css from "./ImportFromLink.module.scss";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import StatsFromLink from "./StatsFromLink";
-import { uploadFileFromLink } from "@/app/upload-from-link/requests/uploadFileFromLink";
-import { getStatsFromLink } from "@/app/upload-from-link/requests/getStatsFromLink";
-import { isUrl } from "@/utils/isUrl";
+'use client';
+import React, { useState } from 'react';
+import Textfield from '@/styled/textfield/Textfield';
+import { Btn } from '@/styled/btn/Btn';
+import css from './ImportFromLink.module.scss';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import StatsFromLink from './StatsFromLink';
+import { uploadFileFromLink } from '@/app/upload-from-link/requests/uploadFileFromLink';
+import { getStatsFromLink } from '@/app/upload-from-link/requests/getStatsFromLink';
+import { isUrl } from '@/utils/isUrl';
+import UsedSpace from '@/app/upload/used-space/UsedSpace';
+import { useInvalidateQueries } from '@/utils/useInvalidateQueries';
+import { QUERY_KEYS } from '@/utils/consts';
 
 const Page = () => {
-  const [link, setLink] = useState("");
+  const invalidateQueries = useInvalidateQueries();
+  const [link, setLink] = useState('');
   const isValidUrl = isUrl(link);
 
   const mutation = useMutation({
     mutationFn: () => uploadFileFromLink(link),
+    onSettled: async () => {
+      await invalidateQueries({ queryKey: [QUERY_KEYS.uploadLimits] });
+    },
   });
 
   const {
@@ -24,7 +31,7 @@ const Page = () => {
     isError,
   } = useQuery({
     enabled: isValidUrl,
-    queryKey: ["statsFromLink", link],
+    queryKey: ['statsFromLink', link],
     queryFn: () => getStatsFromLink(link),
     retry: false,
   });
@@ -38,36 +45,25 @@ const Page = () => {
 
   return (
     <form onSubmit={onSubmit} className={css.stack}>
+      <UsedSpace />
       <Textfield
         label="Import from link"
         input={{
           value: link,
           onChange: (e) => setLink(e.currentTarget.value),
-          placeholder: "https://example.com/watcg?v=123",
-          type: "url",
-          name: "video-link",
+          placeholder: 'https://example.com/watcg?v=123',
+          type: 'url',
+          name: 'video-link',
         }}
       />
 
-      <StatsFromLink
-        stats={videoStats}
-        isFetching={isFetching}
-        isError={isValidUrl && isError}
-      />
-      <Btn
-        disabled={disabled}
-        type="submit"
-        style={{ alignSelf: "flex-start" }}
-      >
+      <StatsFromLink stats={videoStats} isFetching={isFetching} isError={isValidUrl && isError} />
+      <Btn disabled={disabled} type="submit" style={{ alignSelf: 'flex-start' }}>
         Download from link
       </Btn>
 
-      {!mutation.isPending && mutation.isError && (
-        <p className="error">Error!</p>
-      )}
-      {!mutation.isPending && mutation.isSuccess && (
-        <p className="success">Success!</p>
-      )}
+      {!mutation.isPending && mutation.isError && <p className="error">Error!</p>}
+      {!mutation.isPending && mutation.isSuccess && <p className="success">Success!</p>}
     </form>
   );
 };

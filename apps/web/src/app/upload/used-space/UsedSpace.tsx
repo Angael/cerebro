@@ -6,31 +6,35 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthHeader } from '@/utils/useAuthHeader';
 import { GetUploadLimits } from '@cerebro/shared';
 import { ApiClient } from '@/utils/api.client';
+import { QUERY_KEYS } from '@/utils/consts';
 
-type Props = {};
+type Props = {
+  initialValue?: GetUploadLimits;
+};
 
-const UsedSpace = () => {
+const UsedSpace = (props: Props) => {
   const getAuthHeader = useAuthHeader();
   const { data, isFetching, isFetched, isError } = useQuery({
-    queryKey: ['uploadLimits'],
+    queryKey: [QUERY_KEYS.uploadLimits],
     queryFn: async () =>
       ApiClient.get<GetUploadLimits>('/account/limits', {
         headers: await getAuthHeader(),
       }).then((res) => res.data),
-    retry: false,
+    refetchOnWindowFocus: true,
+    initialData: props.initialValue,
   });
 
-  if (!data) {
-    // Todo add loader
-    return <ProgressBar id="used-space" label={'Used space: 0 b out of 0 b'} value={0} max={100} />;
-  }
-
-  const value = (100 * data.bytes.used) / data.bytes.max;
   const usageString =
-    numeral(data.bytes.used).format('0 b') + ' out of ' + numeral(data.bytes.max).format('0 b');
+    numeral(data?.bytes.used).format('0 b') + ' out of ' + numeral(data?.bytes.max).format('0 b');
 
   return (
-    <ProgressBar id="used-space" label={'Used space: ' + usageString} value={value} max={100} />
+    <ProgressBar
+      id="used-space"
+      label={'Used space: ' + usageString}
+      value={data ? (100 * data.bytes.used) / data.bytes.max : 0}
+      max={100}
+      isLoading={!data}
+    />
   );
 };
 

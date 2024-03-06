@@ -1,21 +1,24 @@
-"use client";
-import React, { Suspense, useRef, useState } from "react";
-import { nanoid } from "nanoid";
-import { useAuth } from "@clerk/nextjs";
-import PQueue from "p-queue";
+'use client';
+import React, { Suspense, useRef, useState } from 'react';
+import { nanoid } from 'nanoid';
+import { useAuth } from '@clerk/nextjs';
+import PQueue from 'p-queue';
 
-import { ExtendedFile, UPLOAD_STATUS } from "@/app/upload/files/uploadTypes";
-import FilesStats from "@/lib/files-preview/FilesStats";
+import { ExtendedFile, UPLOAD_STATUS } from '@/app/upload/files/uploadTypes';
+import FilesStats from '@/lib/files-preview/FilesStats';
 
-import FilesPreview from "@/lib/files-preview/FilesPreview";
-import { Btn, BtnLink } from "@/styled/btn/Btn";
-import { uploadFileToBackend } from "@/app/upload/files/uploadFileToBackend";
-import { preventLeave } from "@/client/preventLeave";
+import FilesPreview from '@/lib/files-preview/FilesPreview';
+import { Btn, BtnLink } from '@/styled/btn/Btn';
+import { uploadFileToBackend } from '@/app/upload/files/uploadFileToBackend';
+import { preventLeave } from '@/client/preventLeave';
+import { useInvalidateQueries } from '@/utils/useInvalidateQueries';
+import { QUERY_KEYS } from '@/utils/consts';
 
 const UploadFilesPage = () => {
-  const [tags, setTags] = useState<string[]>(["test"]);
+  const [tags, setTags] = useState<string[]>(['test']);
   const [files, setFiles] = useState<ExtendedFile[]>([]);
 
+  const invalidateQueries = useInvalidateQueries();
   // TODO: Not sure if queue in ref is a good idea
   const uploadQueue = useRef(new PQueue({ concurrency: 1 }));
   const { getToken } = useAuth();
@@ -42,14 +45,6 @@ const UploadFilesPage = () => {
     );
   };
 
-  const onInputFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) {
-      return;
-    }
-
-    addFiles(Array.from(event.target.files));
-  };
-
   const upload = () => {
     preventLeave(true);
     files.forEach((file) => {
@@ -57,7 +52,7 @@ const UploadFilesPage = () => {
         uploadFileToBackend({
           token: (await getToken()) as string, // page is guarded, token is always present
           file,
-          dir: "",
+          dir: '',
           private: false,
           tags,
           onProgress: (progress) => {
@@ -77,7 +72,10 @@ const UploadFilesPage = () => {
       );
     });
 
-    uploadQueue.current.onIdle().then(() => preventLeave(false));
+    uploadQueue.current.onIdle().then(async () => {
+      preventLeave(false);
+      await invalidateQueries({ queryKey: [QUERY_KEYS.uploadLimits] });
+    });
   };
 
   return (
@@ -87,14 +85,10 @@ const UploadFilesPage = () => {
           Upload
         </Btn>
 
-        <BtnLink href={"/upload-from-link"}>Import from link</BtnLink>
+        <BtnLink href={'/upload-from-link'}>Import from link</BtnLink>
       </div>
       <Suspense fallback={null}>
-        <FilesPreview
-          files={files}
-          onDelete={removeFile}
-          onAddFiles={addFiles}
-        />
+        <FilesPreview files={files} onDelete={removeFile} onAddFiles={addFiles} />
       </Suspense>
 
       <FilesStats files={files} />
