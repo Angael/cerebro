@@ -33,6 +33,8 @@ const startRouter = () => {
         maxAge: 600,
       }),
     );
+  } else {
+    router.use(cors());
   }
 
   router.use(ClerkExpressWithAuth());
