@@ -1,10 +1,10 @@
-import React from "react";
-import css from "./Navbar.module.scss";
-import IconBtn from "../../styled/icon-btn/IconBtn";
-import { currentUser, UserButton } from "@clerk/nextjs";
-import Link from "next/link";
-import Icon from "@mdi/react";
-import { mdiCog, mdiUpload, mdiViewGrid } from "@mdi/js";
+import React from 'react';
+import css from './Navbar.module.scss';
+import IconBtn from '../../styled/icon-btn/IconBtn';
+import { currentUser, UserButton } from '@clerk/nextjs';
+import Link from 'next/link';
+import Icon from '@mdi/react';
+import { mdiCog, mdiUpload, mdiViewGrid } from '@mdi/js';
 
 const Navbar = async () => {
   const user = await currentUser();
@@ -13,8 +13,8 @@ const Navbar = async () => {
     <header className={css.navbar}>
       <div className={css.navbarBg}>
         <div className={css.navbarFlex}>
-          <Link style={{ flex: 1 }} href="/">
-            <h1 className="h5">Cerebro</h1>
+          <Link style={{ marginRight: 'auto' }} href="/">
+            <h1 className="h4">Cerebro</h1>
           </Link>
 
           <IconBtn as={Link} href="/upload" title="Upload">
