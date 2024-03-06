@@ -4,6 +4,7 @@ import { usedSpaceCache, userTypeCache } from '../../cache/userCache.js';
 import { Prisma, UserType } from '@cerebro/db';
 import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '../../utils/errors/HttpError.js';
+import { GetUploadLimits } from '@cerebro/shared';
 
 export const getSpaceUsedByUser = async (uid: string): Promise<number> => {
   let used: number;
@@ -62,16 +63,13 @@ export async function getUserType(uid: string): Promise<UserType> {
   }
 }
 
-export async function getLimitsForUser(userId: string) {
+export async function getLimitsForUser(userId: string): Promise<GetUploadLimits> {
   const type = await getUserType(userId);
   const max = limitsConfig[type];
 
   const used: number = await getSpaceUsedByUser(userId);
 
-  return {
-    type,
-    bytes: { used, max },
-  };
+  return { type, bytes: { used, max } };
 }
 
 export async function doesUserHaveSpaceLeftForFile(userId: string, file: MyFile) {

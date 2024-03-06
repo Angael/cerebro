@@ -1,8 +1,8 @@
-import React from "react";
-import { BackendApi, getApiHeaders } from "@/utils/backend-api";
-import { auth } from "@clerk/nextjs";
-import Pagination from "@/lib/pagination/Pagination";
-import ItemGrid from "@/lib/item-grid/ItemGrid";
+import React from 'react';
+import { ApiServer, getApiHeaders } from '@/utils/api.server';
+import { auth } from '@clerk/nextjs';
+import Pagination from '@/lib/pagination/Pagination';
+import ItemGrid from '@/lib/item-grid/ItemGrid';
 
 type Props = {
   searchParams: { page?: string };
@@ -13,8 +13,8 @@ const BrowsePage = async ({ searchParams: { page } }: Props) => {
   // console.log("clerkToken", clerkToken);
   // console.log("Token: ", await clerkToken.getToken());
 
-  const pageNr = parseInt(page ?? "1");
-  const { data } = await BackendApi.get("/items", {
+  const pageNr = parseInt(page ?? '1');
+  const { data } = await ApiServer.get('/items', {
     params: { limit: 10, page: pageNr - 1 },
     headers: await getApiHeaders(clerkToken),
   });

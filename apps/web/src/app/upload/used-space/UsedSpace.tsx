@@ -1,26 +1,32 @@
-import React from "react";
-import numeral from "numeral";
-import { fetchAccountLimits } from "@/app/upload/used-space/fetchAccountLimits";
-import ProgressBar from "@/styled/progress-bar/ProgressBar";
+'use client';
+import React from 'react';
+import numeral from 'numeral';
+import ProgressBar from '@/styled/progress-bar/ProgressBar';
+import { useQuery } from '@tanstack/react-query';
+import { useRequest } from '@/utils/useRequest';
+import { GetUploadLimits } from '@cerebro/shared';
 
 type Props = {};
 
-const UsedSpace = async () => {
-  const limits = await fetchAccountLimits();
+const UsedSpace = () => {
+  const request = useRequest();
+  const { data, isFetching, isFetched, isError } = useQuery({
+    queryKey: ['uploadLimits'],
+    queryFn: () => request.get<GetUploadLimits>('/account/limits').then((res) => res.data),
+    retry: false,
+  });
 
-  const value = limits ? (100 * limits.bytes.used) / limits.bytes.max : 0;
+  if (!data) {
+    // Todo add loader
+    return <ProgressBar id="used-space" label={'Used space: 0 b out of 0 b'} value={0} max={100} />;
+  }
+
+  const value = (100 * data.bytes.used) / data.bytes.max;
   const usageString =
-    numeral(limits.bytes.used).format("0 b") +
-    " out of " +
-    numeral(limits.bytes.max).format("0 b");
+    numeral(data.bytes.used).format('0 b') + ' out of ' + numeral(data.bytes.max).format('0 b');
 
   return (
-    <ProgressBar
-      id="used-space"
-      label={"Used space: " + usageString}
-      value={value}
-      max={100}
-    />
+    <ProgressBar id="used-space" label={'Used space: ' + usageString} value={value} max={100} />
   );
 };
 

@@ -1,19 +1,12 @@
-"use server";
-import { auth } from "@clerk/nextjs";
-import { BackendApi, getApiHeaders } from "@/utils/backend-api";
+'use server';
+import { auth } from '@clerk/nextjs';
+import { ApiServer, getApiHeaders } from '@/utils/api.server';
+import { GetUploadLimits } from '@cerebro/shared';
 
-type Limits = {
-  type: string; //AccountType;
-  bytes: {
-    used: number;
-    max: number;
-  };
-};
-
-export const fetchAccountLimits = async (): Promise<Limits> => {
+export const fetchAccountLimits = async (): Promise<GetUploadLimits> => {
   const clerkToken = auth();
 
-  const limitsResponse = await BackendApi.get("/account/limits", {
+  const limitsResponse = await ApiServer.get('/account/limits', {
     headers: await getApiHeaders(clerkToken),
   });
 
