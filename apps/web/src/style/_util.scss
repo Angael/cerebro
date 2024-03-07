@@ -10,8 +10,8 @@ $layer-modal: 1010; // when radix ui dialog is removed lib, remove this
 $containerWidth: 1000px;
 
 @mixin container($width: $containerWidth) {
-  // max-width had problem with child grid wanting to use 100% of parent
-  width: min(calc(100vw - 32px), $width);
+  width: 100%;
+  max-width: $width;
   margin: 0 auto;
   padding: 16px;
 }
@@ -33,7 +33,7 @@ $containerWidth: 1000px;
     background-color: var(--c-primary-active);
   }
 
-  &[aria-disabled="true"],
+  &[aria-disabled='true'],
   &[disabled],
   &[data-disabled] {
     cursor: auto;

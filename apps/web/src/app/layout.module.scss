@@ -1,4 +1,4 @@
-@use "src/style/util";
+@use 'src/style/util';
 
 .body {
   display: flex;
@@ -8,7 +8,7 @@
 }
 
 .Layout {
-  @include util.container();
+  @include util.container;
   flex: 1;
 
   display: flex;

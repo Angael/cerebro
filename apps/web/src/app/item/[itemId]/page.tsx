@@ -15,11 +15,11 @@ type Props = {
 const ItemPage = async ({ params }: Props) => {
   const clerkToken = auth();
 
-  const { data } = await ApiServer.get(`/items/item/${params.itemId}`, {
+  const { data } = await ApiServer.get<FrontItem>(`/items/item/${params.itemId}`, {
     headers: await getApiHeaders(clerkToken),
   });
 
-  const { type } = data as FrontItem;
+  const { type } = data;
 
   return (
     <>
