@@ -13,7 +13,7 @@ const ItemBar = (props: Props) => {
   const router = useRouter();
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 wrap">
       <Link href="/browse" onClick={router.back} className="flex center">
         <Icon path={mdiArrowLeft} size={0.8} />
         Go back

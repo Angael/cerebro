@@ -93,4 +93,8 @@ details {
     justify-content: center;
     align-items: center;
   }
+
+  &.wrap {
+    flex-wrap: wrap;
+  }
 }
