@@ -13,7 +13,7 @@ export const betterUnlink = (paths: string | string[]) => {
       if (!(await fs.pathExists(path))) return Promise.resolve();
 
       return fs.unlink(path).catch((e) => {
-        retry();
+        retry(e);
       });
     });
   });

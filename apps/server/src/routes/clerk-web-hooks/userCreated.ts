@@ -1,14 +1,14 @@
 import { UserJSON } from '@clerk/clerk-sdk-node';
 import logger from '@/utils/log.js';
-import { User } from '@/models/User.js';
+import { afterCreateUser } from '@/models/User.js';
 
 export async function userCreated(data: UserJSON) {
   const { id, email_addresses } = data;
 
-  const email: string | undefined = email_addresses[0]?.email_address;
+  const email: string = email_addresses.find((u) => u.email_address)?.email_address ?? 'missing'; // This will probably bite me in the
 
   try {
-    await User.afterCreate(id, email);
+    await afterCreateUser(id, email);
 
     return;
   } catch (e) {

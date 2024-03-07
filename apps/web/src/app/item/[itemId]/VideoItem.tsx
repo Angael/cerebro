@@ -10,8 +10,10 @@ type Props = {
 const VideoItem = ({ item }: Props) => {
   const placeholder = item.thumbnail;
 
-  const [quality, setQuality] = useState('source');
-  const { width, height, bitrateKb, durationMs, src } = item.video;
+  const [quality, setQuality] = useState(item.videos[0].mediaType);
+  const { width, height, bitrateKb, durationMs, src } = item.videos.find(
+    (v) => v.mediaType === quality,
+  )!;
   const style = {
     backgroundImage: `url(${placeholder})`,
   } as React.CSSProperties;
@@ -19,7 +21,7 @@ const VideoItem = ({ item }: Props) => {
   const onSelectQuality = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const quality = e.target.value;
 
-    setQuality(quality);
+    setQuality(quality as any);
   };
 
   return (
@@ -37,9 +39,14 @@ const VideoItem = ({ item }: Props) => {
       >
         <source src={src} />
       </video>
+      <p>Bitrate: {bitrateKb}kbps</p>
+      <p>Duration: {durationMs}ms</p>
       <select onChange={onSelectQuality} value={quality}>
-        <option value="source">Source</option>
-        <option value="optimized">Optimized</option>
+        {item.videos.map((video) => (
+          <option key={video.mediaType} value={video.mediaType}>
+            {video.mediaType}
+          </option>
+        ))}
       </select>
     </div>
   );

@@ -6,7 +6,7 @@ export const findUncompressedVideoItem = async (): Promise<[Item, Video] | []> =
   const uncompressedItems: Item[] =
     await prisma.$queryRaw`select * FROM Item I WHERE optimized = 'NO' AND type = 'VIDEO' ORDER BY rand() LIMIT 1;`;
 
-  if (uncompressedItems.length !== 1) {
+  if (!uncompressedItems[0]) {
     return [];
   }
   const item = uncompressedItems[0];

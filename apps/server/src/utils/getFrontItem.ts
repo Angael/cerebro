@@ -37,30 +37,33 @@ export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem 
   }
 
   if (item.type === 'IMAGE' && sourceImage) {
-    const img = compressedImage ?? sourceImage;
+    const images = [sourceImage, compressedImage].filter(Boolean) as Image[];
+
     return {
       ...baseItem,
       type: 'IMAGE',
-      image: {
+      images: images.map((img) => ({
+        mediaType: img.mediaType,
         src: s3PathToUrl(img.path),
         height: img.height,
         width: img.width,
         animated: img.animated,
-      },
+      })),
     } satisfies ImageItem;
   } else if (item.type === 'VIDEO' && sourceVideo) {
-    const vid = compressedVideo ?? sourceVideo;
+    const videos = [sourceVideo, compressedVideo].filter(Boolean) as Video[];
 
     return {
       ...baseItem,
       type: 'VIDEO',
-      video: {
+      videos: videos.map((vid) => ({
+        mediaType: vid.mediaType,
         src: s3PathToUrl(vid.path),
         height: vid.height,
         width: vid.width,
         durationMs: vid.durationMs,
         bitrateKb: vid.bitrateKb,
-      },
+      })),
     } satisfies VideoItem;
   } else {
     logger.error('Error when converting item to FrontItem, itemId: %i', item.id);

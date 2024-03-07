@@ -8,6 +8,8 @@ interface ICache<T> {
   flushAll(): void;
 }
 
+type Key = string | number;
+
 // This allows for easier typing in code, because get returns good values
 export class Cache<T> implements ICache<T> {
   private cache: NodeCache;
@@ -16,19 +18,19 @@ export class Cache<T> implements ICache<T> {
     this.cache = new NodeCache(options);
   }
 
-  public has(key) {
+  public has(key: Key) {
     return this.cache.has(key);
   }
 
-  public get(key) {
+  public get(key: Key) {
     return this.cache.get(key) as T | undefined;
   }
 
-  public set(key, value) {
+  public set(key: Key, value: T) {
     this.cache.set(key, value);
   }
 
-  public del(key) {
+  public del(key: Key) {
     this.cache.del(key);
   }
 

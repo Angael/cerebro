@@ -1,10 +1,10 @@
-import logger from '../../../utils/log.js';
-import { S3Delete, S3SimpleUpload } from '../../../aws/s3-helpers.js';
-import { makeS3Path, replaceFileWithHash } from '../../../utils/makeS3Path.js';
-import { prisma } from '../../../db/db.js';
+import logger from '@/utils/log.js';
+import { S3Delete, S3SimpleUpload } from '@/aws/s3-helpers.js';
+import { makeS3Path, replaceFileWithHash } from '@/utils/makeS3Path.js';
+import { prisma } from '@/db/db.js';
 import { ItemType, Processed, Tag } from '@cerebro/db';
 import { analyzeVideo, VideoStats } from '@vanih/dunes-node';
-import { HttpError } from '../../../utils/errors/HttpError.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
 import { MyFile, uploadPayload } from './upload.type.js';
 
 async function insertIntoDb(
@@ -51,9 +51,9 @@ export async function uploadVideo({ file, userId, tags }: uploadPayload) {
 
   try {
     return await insertIntoDb(key, videoData, file, userId, tags);
-  } catch (e) {
+  } catch (e: any) {
     logger.error('Failed to insert video into DB. Error: %o', e.message);
-    S3Delete(file.path);
+    await S3Delete(file.path);
     throw new HttpError(500);
   }
 }

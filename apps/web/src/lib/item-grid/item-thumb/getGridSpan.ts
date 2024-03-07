@@ -1,16 +1,20 @@
 import type { FrontItem } from '@cerebro/shared';
 import { MD_CELL_SIZE } from '@/utils/consts';
 
-export const getGridSpan = (item: FrontItem): '' | 'tall' | 'wide' => {
-  let w, h;
+const getWH = (item: FrontItem): { w: number; h: number } => {
   if (item.type === 'VIDEO') {
-    w = item.video.width;
-    h = item.video.height;
+    const { width: w, height: h } = item.videos.find((v) => v.mediaType === 'SOURCE')!;
+    return { w, h };
   }
   if (item.type === 'IMAGE') {
-    w = item.image?.width;
-    h = item.image?.height;
+    const { width: w, height: h } = item.images.find((i) => i.mediaType === 'SOURCE')!;
+    return { w, h };
   }
+  return { w: 0, h: 0 };
+};
+
+export const getGridSpan = (item: FrontItem): '' | 'tall' | 'wide' => {
+  const { w, h } = getWH(item);
 
   if (!h || !w) {
     return '';

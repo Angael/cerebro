@@ -55,7 +55,7 @@ export class BaseProcessor<T extends { id: string | number }> {
       } else {
         throw new Error('Item cannot be processed');
       }
-    } catch (err) {
+    } catch (err: any) {
       await this.onItemError(item, err);
     }
   };

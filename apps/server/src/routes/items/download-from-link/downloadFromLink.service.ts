@@ -33,7 +33,7 @@ export const downloadFromLinkService = async (
       path: createdFilePath,
       size: (await fs.stat(createdFilePath)).size,
       originalname: filename,
-      mimetype: mime.lookup(createdFilePath),
+      mimetype: String(mime.lookup(createdFilePath)),
       filename,
     };
 

@@ -123,8 +123,8 @@ export async function S3Download(s3Path: string): Promise<string> {
     const downloadDestination = DOWNLOADS_DIR + '/' + nanoid() + extension;
     await downloadFile(url, downloadDestination);
     return downloadDestination;
-  } catch (e) {
-    this.logger.error(e);
+  } catch (e: any) {
+    logger.error(e);
     throw new Error(e);
   }
 }

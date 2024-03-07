@@ -14,13 +14,13 @@ type resizeArgs = {
   height: number;
 };
 
-async function measure(sharpPipeline): Promise<IThumbnailMeasure[]> {
+async function measure(sharpPipeline: Sharp): Promise<IThumbnailMeasure[]> {
   return sharpPipeline.metadata().then((metadata) => {
-    let frameHeight = metadata.pageHeight || metadata.height;
-    let frameWidth = metadata.width;
+    let frameHeight = metadata.pageHeight ?? metadata.height ?? 1;
+    let frameWidth = metadata.width ?? 1;
 
     // Swap width and height if orientation is portrait
-    if ([6, 8, 5, 7].includes(metadata.orientation)) {
+    if ([6, 8, 5, 7].includes(metadata.orientation as any)) {
       const temp = frameHeight;
       frameHeight = frameWidth;
       frameWidth = temp;
@@ -68,7 +68,7 @@ export async function generateThumbnails(filePath: string): Promise<IGeneratedTh
           });
       },
     );
-  } catch (e) {
+  } catch (e: any) {
     logger.error(e);
     throw new Error(e);
   }
@@ -115,7 +115,7 @@ export async function generateOptimizedSrc(filePath: string): Promise<OptimizedS
       size,
       animated: metadata.pages ? metadata.pages > 1 : false,
     };
-  } catch (e) {
+  } catch (e: any) {
     logger.error(e);
     throw new Error(e);
   }
