@@ -10,7 +10,7 @@ type Props = {
 const VideoItem = ({ item }: Props) => {
   const placeholder = item.thumbnail;
 
-  const [quality, setQuality] = useState(item.videos[0].mediaType);
+  const [quality, setQuality] = useState(item.videos.at(-1)!.mediaType);
   const { width, height, bitrateKb, durationMs, src } = item.videos.find(
     (v) => v.mediaType === quality,
   )!;
