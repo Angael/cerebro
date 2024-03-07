@@ -1,9 +1,7 @@
-import React, { ComponentPropsWithoutRef, forwardRef } from "react";
-import clsx from "clsx";
+import React, { ComponentPropsWithoutRef, forwardRef } from 'react';
+import clsx from 'clsx';
 
-type ComponentType =
-  | keyof JSX.IntrinsicElements
-  | React.ForwardRefExoticComponent<any>;
+type ComponentType = keyof JSX.IntrinsicElements | React.ForwardRefExoticComponent<any>;
 
 type StyledElementProps<T extends ComponentType, P = {}> = {
   as?: ComponentType;
@@ -16,6 +14,7 @@ export const styled = <T extends ComponentType, P>(
   baseClassName?: string,
   defaultProps = {},
 ) => {
+  // eslint-disable-next-line react/display-name
   return forwardRef<any, StyledElementProps<T, P>>(
     ({ as = defaultComponent, className, ...props }, ref) => {
       const _Component = as;

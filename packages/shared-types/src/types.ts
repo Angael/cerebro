@@ -1,8 +1,4 @@
-// Prisma generates this, manually update this with migrations
-export const ItemType = {
-  IMAGE: "IMAGE",
-  VIDEO: "VIDEO",
-} as const;
+import { ItemType } from '@cerebro/db';
 
 export type VideoData = {
   src: string;

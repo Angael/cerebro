@@ -5,9 +5,12 @@ const project = resolve(process.cwd(), 'tsconfig.json');
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
-  extends: ['eslint:recommended', 'eslint-config-turbo'],
+  extends: ['eslint:recommended', 'eslint-config-turbo', 'next'],
   rules: {
     'no-unused-vars': 'off',
+    '@next/next/no-img-element': 'off',
+    'react/no-unescaped-entities': 'off',
+    '@next/next/no-page-custom-font': 'off',
   },
   globals: {
     React: true,

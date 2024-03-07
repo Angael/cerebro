@@ -10,6 +10,7 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "@cerebro/tsconfig": "workspace:*"
+    "@cerebro/tsconfig": "workspace:*",
+    "@cerebro/db": "workspace:*"
   }
 }

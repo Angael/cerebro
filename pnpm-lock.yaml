@@ -246,6 +246,9 @@ importers:
 
   packages/shared-types:
     dependencies:
+      '@cerebro/db':
+        specifier: workspace:*
+        version: link:../db
       '@cerebro/tsconfig':
         specifier: workspace:*
         version: link:../typescript-config
