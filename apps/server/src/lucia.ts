@@ -1,7 +1,7 @@
 import { Lucia, TimeSpan } from 'lucia';
 import { Mysql2Adapter } from '@lucia-auth/adapter-mysql';
-import { dbPool } from './main.js';
-import { UserType } from './types.js';
+import { dbPool } from '@cerebro/db';
+import { UserType } from '@cerebro/db/src/types.js';
 
 const adapter = new Mysql2Adapter(dbPool, {
   user: 'user',
