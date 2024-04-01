@@ -1,16 +1,16 @@
 import { nanoid } from 'nanoid';
 import { downloadVideo, getVideoStats } from 'easy-yt-dlp';
-import { YT_DLP_PATH } from '../../../utils/env.js';
-import { DOWNLOADS_DIR, MAX_UPLOAD_SIZE } from '../../../utils/consts.js';
+import { env } from '@/utils/env.js';
+import { DOWNLOADS_DIR, MAX_UPLOAD_SIZE } from '@/utils/consts.js';
 import { MyFile } from '../upload/upload.type.js';
 import { parse } from 'path';
 import fs from 'fs-extra';
-import { HttpError } from '../../../utils/errors/HttpError.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
 import { doesUserHaveSpaceLeftForFile } from '../../limits/limits-service.js';
-import logger from '../../../utils/log.js';
-import { betterUnlink } from '../../../utils/betterUnlink.js';
+import logger from '@/utils/log.js';
+import { betterUnlink } from '@/utils/betterUnlink.js';
 import mime from 'mime-types';
-import { linkStatsCache } from '../../../cache/caches.js';
+import { linkStatsCache } from '@/cache/caches.js';
 
 export const downloadFromLinkService = async (
   link: string,
@@ -19,7 +19,7 @@ export const downloadFromLinkService = async (
 ): Promise<MyFile> => {
   const filenameNoExtension = nanoid();
   let { createdFilePath } = await downloadVideo({
-    ytDlpPath: YT_DLP_PATH,
+    ytDlpPath: env.YT_DLP_PATH,
     link,
     filename: filenameNoExtension,
     outputDir: DOWNLOADS_DIR,
@@ -57,21 +57,11 @@ export const downloadFromLinkService = async (
   }
 };
 
-// Move to contracts?
-// @ts-ignore
-type ReturnedVideoStats = {
-  title: string;
-  description: string;
-  thumbnail: string;
-  duration: number;
-  uploadDate: string;
-};
-
 export const getStatsFromLink = async (link: string) => {
   if (linkStatsCache.has(link)) {
     return linkStatsCache.get(link);
   } else {
-    const stats = (await getVideoStats(YT_DLP_PATH, link)) as any;
+    const stats = (await getVideoStats(env.YT_DLP_PATH, link)) as any;
     if (stats) {
       linkStatsCache.set(link, stats);
     }
