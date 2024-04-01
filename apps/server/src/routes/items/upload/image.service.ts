@@ -4,7 +4,7 @@ import logger from '../../../utils/log.js';
 import { S3Delete, S3SimpleUpload } from '../../../aws/s3-helpers.js';
 import { makeS3Path, replaceFileWithHash } from '../../../utils/makeS3Path.js';
 import { prisma } from '../../../db/db.js';
-import { ItemType, Processed, Tag } from '@cerebro/db';
+import { ItemType, Processed } from '@cerebro/db';
 import { HttpError } from '../../../utils/errors/HttpError.js';
 import { MyFile, uploadPayload } from './upload.type.js';
 
@@ -14,13 +14,7 @@ type Analysis = {
   animated: boolean;
 };
 
-async function insertIntoDb(
-  s3Key: string,
-  itemData: Analysis,
-  file: MyFile,
-  userId: string,
-  tags: Tag[],
-) {
+async function insertIntoDb(s3Key: string, itemData: Analysis, file: MyFile, userId: string) {
   return await prisma.item.create({
     data: {
       userUid: userId,
@@ -34,11 +28,6 @@ async function insertIntoDb(
           width: itemData.width,
           height: itemData.height,
           animated: itemData.animated,
-        },
-      },
-      tags: {
-        createMany: {
-          data: tags.map((tag) => ({ tagId: tag.id })),
         },
       },
     },
@@ -69,7 +58,7 @@ async function analyze(file: MyFile): Promise<Analysis> {
   });
 }
 
-export async function uploadImage({ file, userId, tags }: uploadPayload) {
+export async function uploadImage({ file, userId }: uploadPayload) {
   const imageData = await analyze(file);
 
   const key = makeS3Path(userId, 'source', replaceFileWithHash(file.originalname));
@@ -80,7 +69,7 @@ export async function uploadImage({ file, userId, tags }: uploadPayload) {
   });
 
   try {
-    return await insertIntoDb(key, imageData, file, userId, tags);
+    return await insertIntoDb(key, imageData, file, userId);
   } catch (e) {
     logger.error('Failed to insert image into DB, %O', e);
     S3Delete(file.path);

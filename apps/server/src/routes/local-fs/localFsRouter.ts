@@ -35,7 +35,6 @@ router.get('/file', async (req, res) => {
 const payloadZod = z.object({
   type: z.enum(['upload', 'move']),
   filePaths: z.array(z.string()),
-  tags: z.array(z.string()).optional(),
   moveDist: z.string().optional(),
 });
 

@@ -92,28 +92,6 @@ export async function deleteItem(itemId: Item['id'], userId: string) {
   }
 }
 
-export async function addTagsToItems(itemIds: Item['id'][], tags: Tag[]): Promise<void> {
-  const tagIds = tags.map((t) => t.id);
-
-  // find already added tags
-  const existingTags = await prisma.tagsOnItems.findMany({
-    where: { itemId: { in: itemIds }, tagId: { in: tagIds } },
-    select: { itemId: true, tagId: true },
-  });
-
-  await prisma.tagsOnItems.createMany({
-    data: itemIds
-      .map((itemId) =>
-        tagIds.map((tagId) => ({
-          tagId,
-          itemId,
-        })),
-      )
-      .flat()
-      .filter((TOI) => !existingTags.find((t) => t.itemId === TOI.itemId && t.tagId === TOI.tagId)),
-  });
-}
-
 export async function areItemsOwnedByUser(itemIds: Item['id'][], userId: string): Promise<boolean> {
   const items = await prisma.item.findMany({
     where: { id: { in: itemIds } },

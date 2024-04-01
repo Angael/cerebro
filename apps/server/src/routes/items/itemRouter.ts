@@ -12,8 +12,6 @@ import { useCache } from '@/middleware/expressCache.js';
 import { usedSpaceCache } from '@/cache/userCache.js';
 import { doesUserHaveSpaceLeftForFile } from '../limits/limits-service.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
-import { getItemTags } from '../tags/tags.service.js';
-import { arrayFromString } from '@/utils/arrayFromString.js';
 import { betterUnlink } from '@/utils/betterUnlink.js';
 import logger from '@/utils/log.js';
 import {
@@ -56,18 +54,6 @@ itemRouter.get('/items/item/:id', useCache(), async (req: Request, res) => {
   }
 });
 
-itemRouter.get('/items/item/:id/tags', useCache(60), async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const tags = await getItemTags(id);
-    logger.info('Getting tags for item %o', { userId: req.auth?.userId, id });
-    res.json(tags);
-  } catch (e) {
-    logger.error('Failed to get tags for user: %s', req.auth?.userId);
-    errorResponse(res, e);
-  }
-});
-
 const uploadMiddleware = multer(multerOptions);
 itemRouter.post(
   '/items/upload/file',
@@ -98,7 +84,7 @@ itemRouter.post(
         throw new HttpError(413);
       }
 
-      await uploadFileForUser({ file, userId: req.auth.userId, tags: [] });
+      await uploadFileForUser({ file, userId: req.auth.userId });
 
       logger.info('Uploaded file %o', { userId: req.auth?.userId, file });
       res.status(200).send();
@@ -134,7 +120,7 @@ itemRouter.post(
       const file = await downloadFromLinkService(link, req.auth.userId, format);
 
       try {
-        await uploadFileForUser({ file, userId: req.auth.userId, tags: [] });
+        await uploadFileForUser({ file, userId: req.auth.userId });
 
         res.status(200).send();
       } catch (e) {
