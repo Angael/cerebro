@@ -3,10 +3,12 @@ import { BaseItem, FrontItem, ImageItem, VideoItem } from '@cerebro/shared';
 import { s3PathToUrl } from './s3PathToUrl.js';
 import { HttpError } from './errors/HttpError.js';
 import logger from './log.js';
+import invariant from 'tiny-invariant';
 
 type ParamItem = Item & { Image: Image[]; Video: Video[]; thumbnails: Thumbnail[] };
 
 export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem {
+  invariant(false, 'getFrontItem needs implementation');
   const sourceImage = item.Image.find((e) => e.mediaType === 'SOURCE');
   const sourceVideo = item.Video.find((e) => e.mediaType === 'SOURCE');
 
