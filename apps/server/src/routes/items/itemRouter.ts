@@ -21,8 +21,8 @@ import {
   downloadFromLinkService,
   getStatsFromLink,
 } from './download-from-link/downloadFromLink.service.js';
-import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
 import { isPremium } from '@/middleware/isPremium.js';
+import { env } from '@/utils/env.js';
 
 const router = express.Router({ mergeParams: true });
 
@@ -79,7 +79,7 @@ router.get('/item/:id/tags', useCache(60), async (req, res) => {
 const uploadMiddleware = multer(multerOptions);
 router.post(
   '/upload/file',
-  ClerkExpressRequireAuth(),
+  RequireAuth(),
   isPremium,
   uploadMiddleware.single('file') as any, // deal with it later, maybe version mismatch. Monkey-patching request type breaks stuff
   async (req: ReqWithAuth, res) => {
@@ -95,7 +95,7 @@ router.post(
         throw new Error('File too big');
       }
 
-      if (process.env.MOCK_UPLOADS === 'true') {
+      if (env.MOCK_UPLOADS) {
         await new Promise((resolve) => setTimeout(resolve, 200));
         betterUnlink(file.path);
         res.status(200).send();
@@ -133,7 +133,7 @@ router.post(
     try {
       const { link, format } = fileFromLinkZod.parse(req.body);
 
-      if (process.env.MOCK_UPLOADS === 'true') {
+      if (env.MOCK_UPLOADS) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         res.status(200).send();
         return;

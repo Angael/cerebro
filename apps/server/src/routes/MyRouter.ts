@@ -7,28 +7,28 @@ import limitsRouter from './limits/limitsRouter.js';
 import tagsRouter from './tags/tagsRouter.js';
 import { MyRoute } from './express-helpers/routeType.js';
 import localFsRouter from './local-fs/localFsRouter.js';
-import { isProd } from '../utils/env.js';
-import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
+import { env } from '../utils/env.js';
 import webhooksRouter from './clerk-web-hooks/index.js';
+import invariant from 'tiny-invariant';
 
 const routes3: MyRoute[] = [
   itemRouter,
   limitsRouter,
   tagsRouter,
   webhooksRouter,
-  !isProd && localFsRouter,
+  !env.isProd && localFsRouter,
 ].filter((router): router is MyRoute => !!router);
 
 const startRouter = () => {
   const router = express();
-  const port = Number(process.env.PORT ?? 3000);
+  const port = env.PORT;
 
   router.use(express.json());
 
-  if (isProd) {
+  if (env.isProd) {
     router.use(
       cors({
-        origin: process.env.CORS_URL,
+        origin: env.CORS_URL,
         credentials: true,
         maxAge: 600,
       }),
@@ -37,7 +37,9 @@ const startRouter = () => {
     router.use(cors());
   }
 
-  router.use(ClerkExpressWithAuth());
+  // TODO Auth middleware
+  invariant(false, 'Auth middleware not implemented');
+
   router.get('/', (req, res) => {
     res.send('v0.8');
   });
