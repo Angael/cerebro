@@ -11,9 +11,9 @@ function getFileType(file: MyFile): ItemType {
   const { mimetype } = file;
 
   if (['image/png', 'image/gif', 'image/webp', 'image/jpeg'].includes(mimetype)) {
-    return ItemType.IMAGE;
+    return 'IMAGE';
   } else if (['video/mp4', 'video/webm'].includes(mimetype)) {
-    return ItemType.VIDEO;
+    return 'VIDEO';
   } else {
     throw new HttpError(415);
     // return ItemType.file;
