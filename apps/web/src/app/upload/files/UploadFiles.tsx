@@ -15,7 +15,6 @@ import { useInvalidateQueries } from '@/utils/useInvalidateQueries';
 import { QUERY_KEYS } from '@/utils/consts';
 
 const UploadFilesPage = () => {
-  const [tags, setTags] = useState<string[]>(['test']);
   const [files, setFiles] = useState<ExtendedFile[]>([]);
 
   const invalidateQueries = useInvalidateQueries();
@@ -54,7 +53,6 @@ const UploadFilesPage = () => {
           file,
           dir: '',
           private: false,
-          tags,
           onProgress: (progress) => {
             updateFile(file.id, {
               uploadProgress: progress,

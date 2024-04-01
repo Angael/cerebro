@@ -1,23 +1,20 @@
-import express from 'express';
+import express, { Router } from 'express';
 import cors from 'cors';
 import log from '../utils/log.js';
 
 import itemRouter from './items/itemRouter.js';
 import limitsRouter from './limits/limitsRouter.js';
-import tagsRouter from './tags/tagsRouter.js';
-import { MyRoute } from './express-helpers/routeType.js';
 import localFsRouter from './local-fs/localFsRouter.js';
 import { env } from '../utils/env.js';
 import webhooksRouter from './clerk-web-hooks/index.js';
 import invariant from 'tiny-invariant';
 
-const routes3: MyRoute[] = [
+const routes3: Router[] = [
   itemRouter,
   limitsRouter,
-  tagsRouter,
   webhooksRouter,
   !env.isProd && localFsRouter,
-].filter((router): router is MyRoute => !!router);
+].filter((router): router is Router => !!router);
 
 const startRouter = () => {
   const router = express();
@@ -44,8 +41,8 @@ const startRouter = () => {
     res.send('v0.8');
   });
 
-  routes3.forEach((myRoute) => {
-    router.use(myRoute.path, myRoute.router);
+  routes3.forEach((router) => {
+    router.use(router);
   });
 
   router.listen(port, () => {

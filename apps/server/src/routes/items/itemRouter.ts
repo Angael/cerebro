@@ -1,4 +1,4 @@
-import express, { Request } from 'express';
+import express, { Request, Router } from 'express';
 import multer from 'multer';
 import z from 'zod';
 import { QueryItems } from '@cerebro/shared';
@@ -8,7 +8,6 @@ import { multerOptions } from './multerConfig.js';
 import { MAX_UPLOAD_SIZE } from '@/utils/consts.js';
 import { uploadFileForUser } from './upload/upload.service.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
-import { MyRoute } from '../express-helpers/routeType.js';
 import { useCache } from '@/middleware/expressCache.js';
 import { usedSpaceCache } from '@/cache/userCache.js';
 import { doesUserHaveSpaceLeftForFile } from '../limits/limits-service.js';
@@ -24,24 +23,17 @@ import {
 import { isPremium } from '@/middleware/isPremium.js';
 import { env } from '@/utils/env.js';
 
-const router = express.Router({ mergeParams: true });
+const itemRouter = express.Router({ mergeParams: true });
 
 const limitZod = z.number().min(1).max(30);
 const pageZod = z.number().min(0).max(Number.MAX_SAFE_INTEGER);
 
-router.get('/', async (req, res) => {
+itemRouter.get('/items/', async (req, res) => {
   try {
     const limit = limitZod.parse(Number(req.query.limit));
     const page = pageZod.parse(Number(req.query.page));
-    const tags: number[] =
-      typeof req.query.tagIds === 'string' ? arrayFromString(req.query.tagIds).map(Number) : [];
 
-    const responseJson: QueryItems = await getAllItems(
-      limit,
-      page,
-      tags,
-      req.auth?.userId || undefined,
-    );
+    const responseJson: QueryItems = await getAllItems(limit, page, req.auth?.userId || undefined);
 
     logger.info('Listing items %o', { userId: req.auth?.userId, page, limit });
     res.json(responseJson);
@@ -51,7 +43,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/item/:id', useCache(), async (req: Request, res) => {
+itemRouter.get('/items/item/:id', useCache(), async (req: Request, res) => {
   try {
     const id = Number(req.params.id);
     const item = await getItem(id, req.auth?.userId || undefined);
@@ -64,7 +56,7 @@ router.get('/item/:id', useCache(), async (req: Request, res) => {
   }
 });
 
-router.get('/item/:id/tags', useCache(60), async (req, res) => {
+itemRouter.get('/items/item/:id/tags', useCache(60), async (req, res) => {
   try {
     const id = Number(req.params.id);
     const tags = await getItemTags(id);
@@ -77,8 +69,8 @@ router.get('/item/:id/tags', useCache(60), async (req, res) => {
 });
 
 const uploadMiddleware = multer(multerOptions);
-router.post(
-  '/upload/file',
+itemRouter.post(
+  '/items/upload/file',
   RequireAuth(),
   isPremium,
   uploadMiddleware.single('file') as any, // deal with it later, maybe version mismatch. Monkey-patching request type breaks stuff
@@ -125,8 +117,8 @@ const fileFromLinkZod = z.object({
   format: z.string().optional(),
 });
 
-router.post(
-  '/upload/file-from-link',
+itemRouter.post(
+  '/items/upload/file-from-link',
   ClerkExpressRequireAuth(),
   isPremium,
   async (req: ReqWithAuth, res) => {
@@ -163,36 +155,45 @@ const fileFromLinkParamsZod = z.object({
   link: z.string().url(),
 });
 
-router.get('/upload/file-from-link', isPremium, useCache(60), async (req: Request, res) => {
-  try {
-    const { link } = fileFromLinkParamsZod.parse(req.query);
-    logger.verbose('Stats for link %s', link);
+itemRouter.get(
+  '/items/upload/file-from-link',
+  isPremium,
+  useCache(60),
+  async (req: Request, res) => {
+    try {
+      const { link } = fileFromLinkParamsZod.parse(req.query);
+      logger.verbose('Stats for link %s', link);
 
-    const stats = await getStatsFromLink(link);
+      const stats = await getStatsFromLink(link);
 
-    res.status(200).json(stats);
-  } catch (e) {
-    logger.error('Failed to get stats from link for user: %s', req.auth?.userId);
-    errorResponse(res, e);
-  }
-});
-
-router.delete('/item/:id', ClerkExpressRequireAuth(), isPremium, async (req: ReqWithAuth, res) => {
-  const id = Number(req.params.id);
-
-  try {
-    if (!id || isNaN(id)) {
-      throw new Error('Bad id');
+      res.status(200).json(stats);
+    } catch (e) {
+      logger.error('Failed to get stats from link for user: %s', req.auth?.userId);
+      errorResponse(res, e);
     }
-    await deleteItem(id, req.auth.userId);
+  },
+);
 
-    usedSpaceCache.del(req.auth.userId);
-    res.status(200).send();
-  } catch (e) {
-    logger.error('Failed to delete item for user: %s', req.auth?.userId);
-    errorResponse(res, e);
-  }
-});
+itemRouter.delete(
+  '/items/item/:id',
+  ClerkExpressRequireAuth(),
+  isPremium,
+  async (req: ReqWithAuth, res) => {
+    const id = Number(req.params.id);
 
-const itemRouter: MyRoute = { path: '/items/', router };
-export default itemRouter;
+    try {
+      if (!id || isNaN(id)) {
+        throw new Error('Bad id');
+      }
+      await deleteItem(id, req.auth.userId);
+
+      usedSpaceCache.del(req.auth.userId);
+      res.status(200).send();
+    } catch (e) {
+      logger.error('Failed to delete item for user: %s', req.auth?.userId);
+      errorResponse(res, e);
+    }
+  },
+);
+
+export default itemRouter satisfies Router;

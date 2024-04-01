@@ -3,46 +3,30 @@ import { S3DeleteMany } from '@/aws/s3-helpers.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import logger from '@/utils/log.js';
 import { getFrontItem } from '@/utils/getFrontItem.js';
+import { db } from '@cerebro/db';
 
 export async function getAllItems(
   limit: number,
   page: number,
-  tagIds: number[],
-  userUid?: string,
+  userId?: number,
 ): Promise<QueryItems> {
-  const tagsWhere = tagIds.length
-    ? {
-        tags: { some: { tagId: { in: tagIds } } },
-      }
-    : {};
+  let query = db.selectFrom('item').where('private', '=', false);
 
-  const where = {
-    OR: [
-      { private: false, ...tagsWhere },
-      { userUid, ...tagsWhere },
-    ],
-  };
+  const _items = await query
+    .selectAll()
+    .limit(limit)
+    .offset(page * limit)
+    .orderBy('created_at', 'desc')
+    .execute();
 
-  const _items = await prisma.item.findMany({
-    where,
-    take: limit,
-    skip: page * limit,
-    include: {
-      Image: true,
-      Video: true,
-      thumbnails: true,
-    },
-    orderBy: { createdAt: 'desc' },
-  });
-
-  const count = await prisma.item.count({
-    where,
-  });
+  const { count } = await query
+    .select(({ fn }) => [fn.count<number>('id').as('count')])
+    .executeTakeFirstOrThrow();
 
   const items = _items
     .map((item) => {
       try {
-        return getFrontItem(item, userUid);
+        return getFrontItem(item, userId);
       } catch (e) {
         return null as any;
       }
