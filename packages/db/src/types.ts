@@ -4,10 +4,10 @@ export interface Database {
   user: UserTable;
   user_session: SessionTable;
 
-  item: Item; // TODO rename to Table
-  thumbnail: Thumbnail;
-  image: Image;
-  video: Video;
+  item: ItemTable;
+  thumbnail: ThumbnailTable;
+  image: ImageTable;
+  video: VideoTable;
 }
 
 export type UserType = 'PREMIUM' | 'FREE' | 'ADMIN';
@@ -33,7 +33,7 @@ export type ItemType = 'IMAGE' | 'VIDEO';
 
 export type Processed = 'NO' | 'STARTED' | 'FAIL' | 'V1';
 
-interface Item {
+interface ItemTable {
   id: Generated<number>;
   user_id: number;
 
@@ -47,7 +47,7 @@ interface Item {
 
 export type ThumbnailType = 'XS' | 'SM' | 'MD';
 
-interface Thumbnail {
+interface ThumbnailTable {
   id: Generated<number>;
   item_id: number;
 
@@ -62,7 +62,7 @@ interface Thumbnail {
 
 export type MediaType = 'SOURCE' | 'COMPRESSED'; // Later 720p, 1080p, 4k, etc.
 
-interface Image {
+interface ImageTable {
   id: Generated<number>;
   item_id: number;
 
@@ -75,7 +75,7 @@ interface Image {
   created_at: Generated<Date>;
 }
 
-interface Video {
+interface VideoTable {
   id: Generated<number>;
   item_id: number;
 
