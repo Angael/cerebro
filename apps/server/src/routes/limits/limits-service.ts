@@ -4,41 +4,43 @@ import { db, UserType } from '@cerebro/db';
 import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import { GetUploadLimits } from '@cerebro/shared';
+import { sql } from 'kysely';
+import invariant from 'tiny-invariant';
 
 export const getSpaceUsedByUser = async (uid: number): Promise<number> => {
   let used: number;
   if (usedSpaceCache.has(uid)) {
     used = usedSpaceCache.get(uid) as number;
   } else {
-    const items = await prisma.item.findMany({
-      where: { userUid: uid },
-      include: {
-        Image: true,
-        Video: true,
-        thumbnails: true,
-      },
-    });
+    // SELECT SUM(size) AS total_size
+    // FROM (
+    //      SELECT size FROM Image
+    //      UNION ALL
+    //      SELECT size FROM Video
+    //      UNION ALL
+    //      SELECT size FROM Thumbnail
+    //  ) AS combined_sizes;
+    const images_size_sum = await db
+      .selectFrom('image')
+      .select((eb) => eb.fn.sum('size').as('size_sum'))
+      .where((eb) =>
+        eb('image.item_id', 'in', eb.selectFrom('item').select('id').where('user_id', '=', uid)),
+      );
 
-    used = items.reduce((_sum, item) => {
-      const imagesSize = item.Image.reduce((sum, image) => {
-        return sum + image.size;
-      }, 0);
+    const used_size = await sql<number>`SELECT SUM(size) AS total_size
+    FROM (
+      SELECT size FROM Image WHERE Image.item_id IN (SELECT id FROM Item WHERE user_id = ${uid})
+      UNION ALL
+      SELECT size FROM Video WHERE Video.item_id IN (SELECT id FROM Item WHERE user_id = ${uid})
+      UNION ALL
+      SELECT size FROM Thumbnail WHERE Thumbnail.item_id IN (SELECT id FROM Item WHERE user_id = ${uid})
+    ) AS combined_sizes;`.execute(db);
+    throw new Error('i am not sure what this returns!!!');
 
-      const videoSize = item.Video.reduce((sum, image) => {
-        return sum + image.size;
-      }, 0);
-
-      const thumbnailsSize = item.thumbnails.reduce((sum, image) => {
-        return sum + image.size;
-      }, 0);
-
-      return _sum + imagesSize + videoSize + thumbnailsSize;
-    }, 0);
-
-    usedSpaceCache.set(uid, used);
+    usedSpaceCache.set(uid, used_size.rows[0]);
   }
 
-  return used;
+  return used_size;
 };
 
 export async function getUserType(uid: number): Promise<UserType> {

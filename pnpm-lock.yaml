@@ -93,6 +93,9 @@ importers:
       fs-extra:
         specifier: ^11.1.0
         version: 11.2.0
+      kysely:
+        specifier: ^0.27.3
+        version: 0.27.3
       lucia:
         specifier: ^3.1.1
         version: 3.1.1
