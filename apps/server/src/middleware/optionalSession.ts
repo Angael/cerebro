@@ -10,7 +10,7 @@ type UnwrappedReturnType<T extends (...args: any) => Promise<any>> = T extends (
   : never;
 
 // TODO rename to not use hook like name?
-export const useOptionalSession = async (req: Request): ReturnType<typeof lucia.validateSession> => {
+export const optionalSession = async (req: Request): ReturnType<typeof lucia.validateSession> => {
   // Optimization to not query db twice
   const { user, session } = req as any;
   if (user && session) {

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import logger from '@/utils/log.js';
-import { useOptionalSession } from '@/middleware/useOptionalSession.js';
+import { optionalSession } from '@/middleware/optionalSession.js';
 
 export const isPremium = async (req: Request, res: Response, next: NextFunction) => {
-  const { user } = await useOptionalSession(req);
+  const { user } = await optionalSession(req);
   if (user?.type === 'PREMIUM') {
     next();
   } else {

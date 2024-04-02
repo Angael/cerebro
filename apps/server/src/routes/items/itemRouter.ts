@@ -20,7 +20,7 @@ import {
 } from './download-from-link/downloadFromLink.service.js';
 import { isPremium } from '@/middleware/isPremium.js';
 import { env } from '@/utils/env.js';
-import { useOptionalSession } from '@/middleware/useOptionalSession.js';
+import { optionalSession } from '@/middleware/optionalSession.js';
 import invariant from 'tiny-invariant';
 import { requireSession } from '@/middleware/requireSession.js';
 
@@ -30,7 +30,7 @@ const limitZod = z.number().min(1).max(30);
 const pageZod = z.number().min(0).max(Number.MAX_SAFE_INTEGER);
 
 itemRouter.get('/items/', async (req, res) => {
-  const { user } = await useOptionalSession(req);
+  const { user } = await optionalSession(req);
   try {
     const limit = limitZod.parse(Number(req.query.limit));
     const page = pageZod.parse(Number(req.query.page));
@@ -46,7 +46,7 @@ itemRouter.get('/items/', async (req, res) => {
 });
 
 itemRouter.get('/items/item/:id', useCache(), async (req: Request, res) => {
-  const { user } = await useOptionalSession(req);
+  const { user } = await optionalSession(req);
   try {
     const id = Number(req.params.id);
     const item = await getItem(id, user?.id ?? undefined);
@@ -148,7 +148,7 @@ itemRouter.get(
   isPremium,
   useCache(60),
   async (req: Request, res) => {
-    const { user } = await useOptionalSession(req);
+    const { user } = await optionalSession(req);
     invariant(user, 'User not found');
 
     try {
