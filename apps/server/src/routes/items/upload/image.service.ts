@@ -1,12 +1,10 @@
 import sharp from 'sharp';
-// import imghash from 'imghash';
-import logger from '../../../utils/log.js';
-import { S3Delete, S3SimpleUpload } from '../../../aws/s3-helpers.js';
-import { makeS3Path, replaceFileWithHash } from '../../../utils/makeS3Path.js';
-import { prisma } from '../../../db/db.js';
-import { ItemType, Processed } from '@cerebro/db';
-import { HttpError } from '../../../utils/errors/HttpError.js';
+import logger from '@/utils/log.js';
+import { S3Delete, S3SimpleUpload } from '@/aws/s3-helpers.js';
+import { makeS3Path, replaceFileWithHash } from '@/utils/makeS3Path.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
 import { MyFile, uploadPayload } from './upload.type.js';
+import { db } from '@cerebro/db';
 
 type Analysis = {
   width: number;
@@ -15,23 +13,27 @@ type Analysis = {
 };
 
 async function insertIntoDb(s3Key: string, itemData: Analysis, file: MyFile, userId: string) {
-  return await prisma.item.create({
-    data: {
-      userUid: userId,
-      type: ItemType.IMAGE,
+  const { insertId } = await db
+    .insertInto('item')
+    .values({
+      type: 'IMAGE',
       private: false,
-      processed: Processed.NO,
-      Image: {
-        create: {
-          path: s3Key,
-          size: file.size,
-          width: itemData.width,
-          height: itemData.height,
-          animated: itemData.animated,
-        },
-      },
-    },
-  });
+      user_id: userId,
+      processed: 'NO',
+    })
+    .executeTakeFirstOrThrow();
+
+  await db
+    .insertInto('image')
+    .values({
+      item_id: Number(insertId),
+      media_type: 'SOURCE',
+      path: s3Key,
+      size: file.size,
+      width: itemData.width,
+      height: itemData.height,
+    })
+    .execute();
 }
 
 async function analyze(file: MyFile): Promise<Analysis> {
@@ -41,14 +43,6 @@ async function analyze(file: MyFile): Promise<Analysis> {
     const frameHeight = metadata.pageHeight ?? metadata.height ?? 0;
     const frameWidth = metadata.width ?? 0;
     const isAnimated = metadata.pages ? metadata.pages > 1 : false;
-
-    // let hash = '';
-    // if (!isAnimated) {
-    //   hash = (await imghash
-    //     .hash(file.path)
-    //     .then((hash) => hash)
-    //     .catch((err) => '')) as string;
-    // }
 
     return {
       width: frameWidth,
@@ -69,7 +63,9 @@ export async function uploadImage({ file, userId }: uploadPayload) {
   });
 
   try {
-    return await insertIntoDb(key, imageData, file, userId);
+    await insertIntoDb(key, imageData, file, userId);
+
+    return { path: key };
   } catch (e) {
     logger.error('Failed to insert image into DB, %O', e);
     S3Delete(file.path);

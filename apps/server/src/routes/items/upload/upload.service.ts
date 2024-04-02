@@ -20,18 +20,20 @@ function getFileType(file: MyFile): ItemType {
   }
 }
 
-export async function uploadFileForUser({ file, userId }: uploadPayload): Promise<Item> {
-  let item: Item | undefined;
+export async function uploadFileForUser({ file, userId }: uploadPayload) {
+  let path: string = '';
 
   try {
     const itemType = getFileType(file);
 
     if (itemType === 'IMAGE') {
-      item = await uploadImage({ file, userId });
+      const result = await uploadImage({ file, userId });
+      path = result.path;
     } else if (itemType === 'VIDEO') {
-      item = await uploadVideo({ file, userId });
+      const result = await uploadVideo({ file, userId });
+      path = result.path;
     }
-    logger.verbose('uploaded file %s', file.filename);
+    logger.verbose('uploaded file %s', path);
     usedSpaceCache.del(userId);
   } catch (e) {
     logger.error(e);
@@ -40,9 +42,7 @@ export async function uploadFileForUser({ file, userId }: uploadPayload): Promis
     betterUnlink(file.path);
   }
 
-  if (!item) {
+  if (!path) {
     throw new HttpError(500);
   }
-
-  return item;
 }
