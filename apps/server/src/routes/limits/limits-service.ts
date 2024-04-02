@@ -6,41 +6,70 @@ import { HttpError } from '@/utils/errors/HttpError.js';
 import { GetUploadLimits } from '@cerebro/shared';
 import { sql } from 'kysely';
 import invariant from 'tiny-invariant';
+import logger from '@/utils/log.js';
 
-export const getSpaceUsedByUser = async (uid: number): Promise<number> => {
+/* TODO
+This would be good as single query to get sum of all sizes
+SELECT SUM(size) AS total_size
+  FROM (
+    SELECT size FROM Image WHERE Image.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
+    UNION ALL
+    SELECT size FROM Video WHERE Video.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
+    UNION ALL
+    SELECT size FROM Thumbnail WHERE Thumbnail.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
+  ) AS combined_sizes;
+ */
+
+export const getSpaceUsedByUser = async (user_id: number): Promise<number> => {
   let used: number;
-  if (usedSpaceCache.has(uid)) {
-    used = usedSpaceCache.get(uid) as number;
+  if (usedSpaceCache.has(user_id)) {
+    used = usedSpaceCache.get(user_id) as number;
   } else {
-    // SELECT SUM(size) AS total_size
-    // FROM (
-    //      SELECT size FROM Image
-    //      UNION ALL
-    //      SELECT size FROM Video
-    //      UNION ALL
-    //      SELECT size FROM Thumbnail
-    //  ) AS combined_sizes;
-    const images_size_sum = await db
+    const images_used_space = (await db
       .selectFrom('image')
-      .select((eb) => eb.fn.sum('size').as('size_sum'))
+      .select((eb) => eb.fn.sum<number>('size').as('used_space'))
       .where((eb) =>
-        eb('image.item_id', 'in', eb.selectFrom('item').select('id').where('user_id', '=', uid)),
-      );
+        eb(
+          'image.item_id',
+          'in',
+          eb.selectFrom('item').select(['id', 'size']).where('user_id', '=', user_id),
+        ),
+      )
+      .executeTakeFirst()) ?? { used_space: 0 };
 
-    const used_size = await sql<number>`SELECT SUM(size) AS total_size
-    FROM (
-      SELECT size FROM Image WHERE Image.item_id IN (SELECT id FROM Item WHERE user_id = ${uid})
-      UNION ALL
-      SELECT size FROM Video WHERE Video.item_id IN (SELECT id FROM Item WHERE user_id = ${uid})
-      UNION ALL
-      SELECT size FROM Thumbnail WHERE Thumbnail.item_id IN (SELECT id FROM Item WHERE user_id = ${uid})
-    ) AS combined_sizes;`.execute(db);
-    throw new Error('i am not sure what this returns!!!');
+    const videos_used_space = (await db
+      .selectFrom('video')
+      .select((eb) => eb.fn.sum<number>('size').as('used_space'))
+      .where((eb) =>
+        eb(
+          'video.item_id',
+          'in',
+          eb.selectFrom('item').select(['id', 'size']).where('user_id', '=', user_id),
+        ),
+      )
+      .executeTakeFirst()) ?? { used_space: 0 };
 
-    usedSpaceCache.set(uid, used_size.rows[0]);
+    const thumbnails_used_space = (await db
+      .selectFrom('thumbnail')
+      .select((eb) => eb.fn.sum<number>('size').as('used_space'))
+      .where((eb) =>
+        eb(
+          'thumbnail.item_id',
+          'in',
+          eb.selectFrom('item').select(['id', 'size']).where('user_id', '=', user_id),
+        ),
+      )
+      .executeTakeFirst()) ?? { used_space: 0 };
+
+    used =
+      images_used_space.used_space +
+      videos_used_space.used_space +
+      thumbnails_used_space.used_space;
+
+    usedSpaceCache.set(user_id, used);
   }
 
-  return used_size;
+  return used;
 };
 
 export async function getUserType(uid: number): Promise<UserType> {
@@ -48,18 +77,17 @@ export async function getUserType(uid: number): Promise<UserType> {
     return userTypeCache.get(uid) as UserType;
   } else {
     try {
-      const user = await prisma.user.findFirstOrThrow({ where: { uid }, select: { type: true } });
-      if (user.type) {
-        userTypeCache.set(uid, user.type);
-      }
-      return user.type;
+      const { type } = await db
+        .selectFrom('user')
+        .select('type')
+        .where('id', '=', uid)
+        .executeTakeFirstOrThrow();
+
+      userTypeCache.set(uid, type);
+      return type;
     } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          throw new HttpError(404);
-        }
-      }
-      throw e;
+      logger.error('Failed to get userType for uid: %n, %o', uid, e);
+      throw new HttpError(404);
     }
   }
 }

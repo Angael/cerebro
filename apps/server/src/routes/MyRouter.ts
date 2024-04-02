@@ -39,7 +39,6 @@ const startRouter = () => {
     router.use(router);
   });
 
-  /* tslint:disable-next-line */
   router.use((err: any, req: any, res: any, _next: any) => {
     logger.error('General error route');
     errorResponse(res, err);
