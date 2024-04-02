@@ -1,26 +1,30 @@
 import { mapSeries } from 'modern-async';
-import { S3Download } from '../../../aws/s3-helpers.js';
+import { db, Item, Video } from '@cerebro/db';
+import { createThumbnail } from '@vanih/dunes-node';
+import { join } from 'path';
+import { nanoid } from 'nanoid';
+import fs from 'fs-extra';
+
+import { S3Download } from '@/aws/s3-helpers.js';
 import {
   IGeneratedThumbnail,
   IThumbnailBeforeUpload,
   IThumbnailMeasure,
-} from '../../../models/IThumbnail.js';
-import { getNameFromS3Path, makeS3Path } from '../../../utils/makeS3Path.js';
-import { changeExtension } from '../../../utils/changeExtension.js';
-import { betterUnlink } from '../../../utils/betterUnlink.js';
-import { prisma } from '../../../db/db.js';
+} from '@/models/IThumbnail.js';
+import { getNameFromS3Path, makeS3Path } from '@/utils/makeS3Path.js';
+import { changeExtension } from '@/utils/changeExtension.js';
+import { betterUnlink } from '@/utils/betterUnlink.js';
 import { uploadThumbnails } from '../uploadThumbnails.js';
-import { Item, Video } from '@cerebro/db';
-import { calculateThumbnailDimensions } from '../../../utils/calculateThumbnailDimensions.js';
-import { createThumbnail } from '@vanih/dunes-node';
-import { join } from 'path';
-import { THUMBNAILS_DIR } from '../../../utils/consts.js';
-import { nanoid } from 'nanoid';
-import logger from '../../../utils/log.js';
-import fs from 'fs-extra';
+import { calculateThumbnailDimensions } from '@/utils/calculateThumbnailDimensions.js';
+import { THUMBNAILS_DIR } from '@/utils/consts.js';
+import logger from '@/utils/log.js';
 
 function fetchDetails(item: Item) {
-  return prisma.video.findFirstOrThrow({ where: { itemId: item.id, mediaType: 'SOURCE' } });
+  return db
+    .selectFrom('video')
+    .where('item_id', '=', item.id)
+    .where('media_type', '=', 'SOURCE')
+    .executeTakeFirstOrThrow();
 }
 
 type UploadedThumbnail = { dimension: IThumbnailMeasure; outPath: string };
