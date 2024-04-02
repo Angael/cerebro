@@ -40,7 +40,10 @@ interface ItemTable {
 
   private: boolean;
   type: ItemType;
-  processed: Processed;
+
+  // TODO: These two should not be part of this table, but part of another table 'queue' perhaps?
+  processed: Processed; // thumbnails
+  optimized: Processed; // sharp/ffmpeg compressed versions
 
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
