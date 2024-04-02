@@ -2,16 +2,20 @@ import express, { Router } from 'express';
 import cors from 'cors';
 import log from '../utils/log.js';
 
-import itemRouter from './items/itemRouter.js';
-import limitsRouter from './limits/limitsRouter.js';
+import itemRouter from './items/item.routes.js';
+import limitsRoutes from './limits/limits.routes.js';
 import localFsRouter from './local-fs/localFsRouter.js';
 import { env } from '../utils/env.js';
 import logger from '@/utils/log.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
+import authRouter from '@/routes/register/auth.routes.js';
 
-const routes3: Router[] = [itemRouter, limitsRouter, !env.isProd && localFsRouter].filter(
-  (router): router is Router => !!router,
-);
+const routes3: Router[] = [
+  itemRouter,
+  authRouter,
+  limitsRoutes,
+  !env.isProd && localFsRouter,
+].filter((router): router is Router => !!router);
 
 const startRouter = () => {
   const router = express();

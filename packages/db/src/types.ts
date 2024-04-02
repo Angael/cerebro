@@ -13,7 +13,7 @@ export interface Database {
 export type UserType = 'PREMIUM' | 'FREE' | 'ADMIN';
 
 interface UserTable {
-  id: Generated<number>;
+  id: string;
   email: string;
   hashed_password: string;
   type: UserType;
@@ -36,7 +36,7 @@ export type Processed = 'NO' | 'STARTED' | 'FAIL' | 'V1';
 
 interface ItemTable {
   id: Generated<number>;
-  user_id: number;
+  user_id: string;
 
   private: boolean;
   type: ItemType;

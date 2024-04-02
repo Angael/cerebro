@@ -7,7 +7,7 @@ import invariant from 'tiny-invariant';
 
 type ParamItem = Item & { Image: Image[]; Video: Video[]; thumbnails: Thumbnail[] };
 
-export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem {
+export function getFrontItem(item: ParamItem, user_id?: string): FrontItem {
   invariant(false, 'getFrontItem needs implementation');
   const sourceImage = item.Image.find((e) => e.mediaType === 'SOURCE');
   const sourceVideo = item.Video.find((e) => e.mediaType === 'SOURCE');
@@ -25,7 +25,7 @@ export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem 
 
   const baseItem: BaseItem = {
     id: item.id,
-    isMine: item.userUid === userUid,
+    isMine: item.userUid === user_id,
     private: item.private,
     createdAt: item.createdAt.toISOString(),
     size,

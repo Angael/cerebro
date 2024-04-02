@@ -10,5 +10,5 @@ export type MyFile =
 
 export type uploadPayload = {
   file: MyFile;
-  userId: number;
+  userId: string;
 };

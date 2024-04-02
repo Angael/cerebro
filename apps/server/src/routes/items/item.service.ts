@@ -8,7 +8,7 @@ import { db } from '@cerebro/db';
 export async function getAllItems(
   limit: number,
   page: number,
-  userId?: number,
+  userId?: string,
 ): Promise<QueryItems> {
   let query = db.selectFrom('item').where('private', '=', false);
 
@@ -36,7 +36,7 @@ export async function getAllItems(
   return { items, count };
 }
 
-export async function getItem(id: number, userId?: number): Promise<FrontItem> {
+export async function getItem(id: number, userId?: string): Promise<FrontItem> {
   const item = await db.selectFrom('item').selectAll().where('id', '=', id).executeTakeFirst();
 
   if (item) {
@@ -46,7 +46,7 @@ export async function getItem(id: number, userId?: number): Promise<FrontItem> {
   }
 }
 
-export async function deleteItem(itemId: number, userId: number) {
+export async function deleteItem(itemId: number, userId: string) {
   // const row = (await db.select('account_uid').from(DB_TABLE.item).where({ id: itemId }))[0];
   const row = await db
     .selectFrom('item')

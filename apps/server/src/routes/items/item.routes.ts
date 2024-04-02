@@ -3,14 +3,14 @@ import multer from 'multer';
 import z from 'zod';
 import { QueryItems } from '@cerebro/shared';
 
-import { deleteItem, getAllItems, getItem } from './itemFns.js';
+import { deleteItem, getAllItems, getItem } from './item.service.js';
 import { multerOptions } from './multerConfig.js';
 import { MAX_UPLOAD_SIZE } from '@/utils/consts.js';
 import { uploadFileForUser } from './upload/upload.service.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import { useCache } from '@/middleware/expressCache.js';
 import { usedSpaceCache } from '@/cache/userCache.js';
-import { doesUserHaveSpaceLeftForFile } from '../limits/limits-service.js';
+import { doesUserHaveSpaceLeftForFile } from '../limits/limits.service.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import { betterUnlink } from '@/utils/betterUnlink.js';
 import logger from '@/utils/log.js';
@@ -24,12 +24,12 @@ import { optionalSession } from '@/middleware/optionalSession.js';
 import invariant from 'tiny-invariant';
 import { requireSession } from '@/middleware/requireSession.js';
 
-const itemRouter = express.Router({ mergeParams: true });
+const itemRoutes = express.Router({ mergeParams: true });
 
 const limitZod = z.number().min(1).max(30);
 const pageZod = z.number().min(0).max(Number.MAX_SAFE_INTEGER);
 
-itemRouter.get('/items/', async (req, res) => {
+itemRoutes.get('/items/', async (req, res) => {
   const { user } = await optionalSession(req);
   try {
     const limit = limitZod.parse(Number(req.query.limit));
@@ -45,7 +45,7 @@ itemRouter.get('/items/', async (req, res) => {
   }
 });
 
-itemRouter.get('/items/item/:id', useCache(), async (req: Request, res) => {
+itemRoutes.get('/items/item/:id', useCache(), async (req: Request, res) => {
   const { user } = await optionalSession(req);
   try {
     const id = Number(req.params.id);
@@ -60,7 +60,7 @@ itemRouter.get('/items/item/:id', useCache(), async (req: Request, res) => {
 });
 
 const uploadMiddleware = multer(multerOptions);
-itemRouter.post(
+itemRoutes.post(
   '/items/upload/file',
   isPremium,
   uploadMiddleware.single('file') as any, // deal with it later, maybe version mismatch. Monkey-patching request type breaks stuff
@@ -109,7 +109,7 @@ const fileFromLinkZod = z.object({
   format: z.string().optional(),
 });
 
-itemRouter.post('/items/upload/file-from-link', isPremium, async (req, res) => {
+itemRoutes.post('/items/upload/file-from-link', isPremium, async (req, res) => {
   const { user } = await requireSession(req);
   try {
     const { link, format } = fileFromLinkZod.parse(req.body);
@@ -143,7 +143,7 @@ const fileFromLinkParamsZod = z.object({
   link: z.string().url(),
 });
 
-itemRouter.get(
+itemRoutes.get(
   '/items/upload/file-from-link',
   isPremium,
   useCache(60),
@@ -165,7 +165,7 @@ itemRouter.get(
   },
 );
 
-itemRouter.delete('/items/item/:id', isPremium, async (req, res) => {
+itemRoutes.delete('/items/item/:id', isPremium, async (req, res) => {
   const id = Number(req.params.id);
   const { user } = await requireSession(req);
 
@@ -180,4 +180,4 @@ itemRouter.delete('/items/item/:id', isPremium, async (req, res) => {
   }
 });
 
-export default itemRouter satisfies Router;
+export default itemRoutes satisfies Router;
