@@ -1,14 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import logger from '@/utils/log.js';
-import { lucia } from '@/lucia.js';
-
-const useSession = (req: Request) => {
-  const sessionId = lucia.readSessionCookie(req.headers.cookie ?? '');
-  return lucia.validateSession(sessionId ?? '');
-};
+import { useOptionalSession } from '@/middleware/useOptionalSession.js';
 
 export const isPremium = async (req: Request, res: Response, next: NextFunction) => {
-  const { user } = await useSession(req);
+  const { user } = await useOptionalSession(req);
   if (user?.type === 'PREMIUM') {
     next();
   } else {

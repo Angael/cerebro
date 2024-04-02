@@ -14,7 +14,7 @@ import { linkStatsCache } from '@/cache/caches.js';
 
 export const downloadFromLinkService = async (
   link: string,
-  userId: string,
+  userId: number,
   format?: string,
 ): Promise<MyFile> => {
   const filenameNoExtension = nanoid();

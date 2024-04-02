@@ -20,6 +20,9 @@ import {
 } from './download-from-link/downloadFromLink.service.js';
 import { isPremium } from '@/middleware/isPremium.js';
 import { env } from '@/utils/env.js';
+import { useOptionalSession } from '@/middleware/useOptionalSession.js';
+import invariant from 'tiny-invariant';
+import { requireSession } from '@/middleware/requireSession.js';
 
 const itemRouter = express.Router({ mergeParams: true });
 
@@ -27,29 +30,31 @@ const limitZod = z.number().min(1).max(30);
 const pageZod = z.number().min(0).max(Number.MAX_SAFE_INTEGER);
 
 itemRouter.get('/items/', async (req, res) => {
+  const { user } = await useOptionalSession(req);
   try {
     const limit = limitZod.parse(Number(req.query.limit));
     const page = pageZod.parse(Number(req.query.page));
 
-    const responseJson: QueryItems = await getAllItems(limit, page, req.auth?.userId || undefined);
+    const responseJson: QueryItems = await getAllItems(limit, page, user?.id ?? undefined);
 
-    logger.info('Listing items %o', { userId: req.auth?.userId, page, limit });
+    logger.info('Listing items %o', { userId: user?.id, page, limit });
     res.json(responseJson);
   } catch (e) {
-    logger.error('Failed to list items for user: %s', req.auth?.userId);
+    logger.error('Failed to list items for user: %s', user?.id);
     errorResponse(res, e);
   }
 });
 
 itemRouter.get('/items/item/:id', useCache(), async (req: Request, res) => {
+  const { user } = await useOptionalSession(req);
   try {
     const id = Number(req.params.id);
-    const item = await getItem(id, req.auth?.userId || undefined);
+    const item = await getItem(id, user?.id ?? undefined);
 
-    logger.info('Getting item %o', { userId: req.auth?.userId, id });
+    logger.info('Getting item %o', { userId: user?.id, id });
     res.json(item);
   } catch (e) {
-    logger.error('Failed to get item for user: %s', req.auth?.userId);
+    logger.error('Failed to get item for user: %s', user?.id);
     errorResponse(res, e);
   }
 });
@@ -57,10 +62,11 @@ itemRouter.get('/items/item/:id', useCache(), async (req: Request, res) => {
 const uploadMiddleware = multer(multerOptions);
 itemRouter.post(
   '/items/upload/file',
-  RequireAuth(),
   isPremium,
   uploadMiddleware.single('file') as any, // deal with it later, maybe version mismatch. Monkey-patching request type breaks stuff
-  async (req: ReqWithAuth, res) => {
+  async (req, res) => {
+    const { user } = await requireSession(req);
+    invariant(user, 'User not found');
     const file = req.file;
 
     try {
@@ -80,16 +86,16 @@ itemRouter.post(
         return;
       }
 
-      if (!(await doesUserHaveSpaceLeftForFile(req.auth.userId, file))) {
+      if (!(await doesUserHaveSpaceLeftForFile(user.id, file))) {
         throw new HttpError(413);
       }
 
-      await uploadFileForUser({ file, userId: req.auth.userId });
+      await uploadFileForUser({ file, userId: user.id });
 
-      logger.info('Uploaded file %o', { userId: req.auth?.userId, file });
+      logger.info('Uploaded file %o', { userId: user.id, file });
       res.status(200).send();
     } catch (e) {
-      logger.error('Failed to upload file for user: %s', req.auth?.userId);
+      logger.error('Failed to upload file for user: %s', user!.id);
       if (file) {
         betterUnlink(file?.path);
       }
@@ -103,39 +109,35 @@ const fileFromLinkZod = z.object({
   format: z.string().optional(),
 });
 
-itemRouter.post(
-  '/items/upload/file-from-link',
-  ClerkExpressRequireAuth(),
-  isPremium,
-  async (req: ReqWithAuth, res) => {
-    try {
-      const { link, format } = fileFromLinkZod.parse(req.body);
+itemRouter.post('/items/upload/file-from-link', isPremium, async (req, res) => {
+  const { user } = await requireSession(req);
+  try {
+    const { link, format } = fileFromLinkZod.parse(req.body);
 
-      if (env.MOCK_UPLOADS) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        res.status(200).send();
-        return;
-      }
-
-      const file = await downloadFromLinkService(link, req.auth.userId, format);
-
-      try {
-        await uploadFileForUser({ file, userId: req.auth.userId });
-
-        res.status(200).send();
-      } catch (e) {
-        logger.error(e);
-        throw e;
-      } finally {
-        logger.info('Uploaded file from link %o', { userId: req.auth?.userId, link });
-        await betterUnlink(file.path);
-      }
-    } catch (e) {
-      logger.error('Failed to upload file from link for user: %s', req.auth?.userId);
-      errorResponse(res, e);
+    if (env.MOCK_UPLOADS) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      res.status(200).send();
+      return;
     }
-  },
-);
+
+    const file = await downloadFromLinkService(link, user.id, format);
+
+    try {
+      await uploadFileForUser({ file, userId: user.id });
+
+      res.status(200).send();
+    } catch (e) {
+      logger.error(e);
+      throw e;
+    } finally {
+      logger.info('Uploaded file from link %o', { userId: user.id, link });
+      await betterUnlink(file.path);
+    }
+  } catch (e) {
+    logger.error('Failed to upload file from link for user: %s', user!.id);
+    errorResponse(res, e);
+  }
+});
 
 const fileFromLinkParamsZod = z.object({
   link: z.string().url(),
@@ -146,6 +148,9 @@ itemRouter.get(
   isPremium,
   useCache(60),
   async (req: Request, res) => {
+    const { user } = await useOptionalSession(req);
+    invariant(user, 'User not found');
+
     try {
       const { link } = fileFromLinkParamsZod.parse(req.query);
       logger.verbose('Stats for link %s', link);
@@ -154,32 +159,25 @@ itemRouter.get(
 
       res.status(200).json(stats);
     } catch (e) {
-      logger.error('Failed to get stats from link for user: %s', req.auth?.userId);
+      logger.error('Failed to get stats from link for user: %s', user.id);
       errorResponse(res, e);
     }
   },
 );
 
-itemRouter.delete(
-  '/items/item/:id',
-  ClerkExpressRequireAuth(),
-  isPremium,
-  async (req: ReqWithAuth, res) => {
-    const id = Number(req.params.id);
+itemRouter.delete('/items/item/:id', isPremium, async (req, res) => {
+  const id = Number(req.params.id);
+  const { user } = await requireSession(req);
 
-    try {
-      if (!id || isNaN(id)) {
-        throw new Error('Bad id');
-      }
-      await deleteItem(id, req.auth.userId);
+  try {
+    await deleteItem(id, user.id);
 
-      usedSpaceCache.del(req.auth.userId);
-      res.status(200).send();
-    } catch (e) {
-      logger.error('Failed to delete item for user: %s', req.auth?.userId);
-      errorResponse(res, e);
-    }
-  },
-);
+    usedSpaceCache.del(user.id);
+    res.status(200).send();
+  } catch (e) {
+    logger.error('Failed to delete item for user: %s', user.id);
+    errorResponse(res, e);
+  }
+});
 
 export default itemRouter satisfies Router;

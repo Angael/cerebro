@@ -1,12 +1,11 @@
-import { limitsConfig } from '../../utils/limits.js';
-import { prisma } from '../../db/db.js';
+import { limitsConfig } from '@/utils/limits.js';
 import { usedSpaceCache, userTypeCache } from '../../cache/userCache.js';
-import { Prisma, UserType } from '@cerebro/db';
+import { db, UserType } from '@cerebro/db';
 import { MyFile } from '../items/upload/upload.type.js';
-import { HttpError } from '../../utils/errors/HttpError.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
 import { GetUploadLimits } from '@cerebro/shared';
 
-export const getSpaceUsedByUser = async (uid: string): Promise<number> => {
+export const getSpaceUsedByUser = async (uid: number): Promise<number> => {
   let used: number;
   if (usedSpaceCache.has(uid)) {
     used = usedSpaceCache.get(uid) as number;
@@ -42,7 +41,7 @@ export const getSpaceUsedByUser = async (uid: string): Promise<number> => {
   return used;
 };
 
-export async function getUserType(uid: string): Promise<UserType> {
+export async function getUserType(uid: number): Promise<UserType> {
   if (userTypeCache.has(uid)) {
     return userTypeCache.get(uid) as UserType;
   } else {
@@ -63,7 +62,7 @@ export async function getUserType(uid: string): Promise<UserType> {
   }
 }
 
-export async function getLimitsForUser(userId: string): Promise<GetUploadLimits> {
+export async function getLimitsForUser(userId: number): Promise<GetUploadLimits> {
   const type = await getUserType(userId);
   const max = limitsConfig[type];
 
@@ -72,7 +71,7 @@ export async function getLimitsForUser(userId: string): Promise<GetUploadLimits>
   return { type, bytes: { used, max } };
 }
 
-export async function doesUserHaveSpaceLeftForFile(userId: string, file: MyFile) {
+export async function doesUserHaveSpaceLeftForFile(userId: number, file: MyFile) {
   const limits = await getLimitsForUser(userId);
 
   const spaceLeft = limits.bytes.max - limits.bytes.used;

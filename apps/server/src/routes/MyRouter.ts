@@ -6,15 +6,12 @@ import itemRouter from './items/itemRouter.js';
 import limitsRouter from './limits/limitsRouter.js';
 import localFsRouter from './local-fs/localFsRouter.js';
 import { env } from '../utils/env.js';
-import webhooksRouter from './clerk-web-hooks/index.js';
-import invariant from 'tiny-invariant';
+import logger from '@/utils/log.js';
+import { errorResponse } from '@/utils/errors/errorResponse.js';
 
-const routes3: Router[] = [
-  itemRouter,
-  limitsRouter,
-  webhooksRouter,
-  !env.isProd && localFsRouter,
-].filter((router): router is Router => !!router);
+const routes3: Router[] = [itemRouter, limitsRouter, !env.isProd && localFsRouter].filter(
+  (router): router is Router => !!router,
+);
 
 const startRouter = () => {
   const router = express();
@@ -34,15 +31,18 @@ const startRouter = () => {
     router.use(cors());
   }
 
-  // TODO Auth middleware
-  invariant(false, 'Auth middleware not implemented');
-
   router.get('/', (req, res) => {
     res.send('v0.8');
   });
 
   routes3.forEach((router) => {
     router.use(router);
+  });
+
+  /* tslint:disable-next-line */
+  router.use((err: any, req: any, res: any, _next: any) => {
+    logger.error('General error route');
+    errorResponse(res, err);
   });
 
   router.listen(port, () => {
