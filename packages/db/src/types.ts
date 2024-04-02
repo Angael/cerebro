@@ -1,4 +1,4 @@
-import type { Generated } from 'kysely';
+import type { Generated, Selectable } from 'kysely';
 
 export interface Database {
   user: UserTable;
@@ -22,6 +22,7 @@ interface UserTable {
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }
+export type User = Selectable<UserTable>;
 
 interface SessionTable {
   id: string;
@@ -44,6 +45,7 @@ interface ItemTable {
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }
+export type Item = Selectable<ItemTable>;
 
 export type ThumbnailType = 'XS' | 'SM' | 'MD';
 
@@ -59,6 +61,7 @@ interface ThumbnailTable {
 
   created_at: Generated<Date>;
 }
+export type Thumbnail = Selectable<ThumbnailTable>;
 
 export type MediaType = 'SOURCE' | 'COMPRESSED'; // Later 720p, 1080p, 4k, etc.
 
@@ -74,6 +77,7 @@ interface ImageTable {
 
   created_at: Generated<Date>;
 }
+export type Image = Selectable<ImageTable>;
 
 interface VideoTable {
   id: Generated<number>;
@@ -89,6 +93,7 @@ interface VideoTable {
 
   created_at: Generated<Date>;
 }
+export type Video = Selectable<VideoTable>;
 
 // export type Person = Selectable<PersonTable>;
 // export type NewPerson = Insertable<PersonTable>;

@@ -36,4 +36,4 @@ export const db = new Kysely<Database>({
   dialect,
 });
 
-export type { Database, MediaType, ItemType, UserType, ThumbnailType, Processed } from './types.js';
+export type * from './types.js';
