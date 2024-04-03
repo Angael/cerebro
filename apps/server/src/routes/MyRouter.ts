@@ -8,7 +8,7 @@ import localFsRouter from './local-fs/localFsRouter.js';
 import { env } from '../utils/env.js';
 import logger from '@/utils/log.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
-import authRouter from '@/routes/register/auth.routes.js';
+import authRouter from '@/routes/auth/auth.routes.js';
 
 const routes3: Router[] = [
   itemRouter,
