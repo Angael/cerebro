@@ -1,10 +1,11 @@
-import { betterUnlink } from '../../../utils/betterUnlink.js';
-import logger from '../../../utils/log.js';
+import { ItemType } from '@cerebro/db';
+
+import { betterUnlink } from '@/utils/betterUnlink.js';
+import logger from '@/utils/log.js';
 import { uploadImage } from './image.service.js';
 import { uploadVideo } from './video.service.js';
-import { Item, ItemType } from '@cerebro/db';
-import { HttpError } from '../../../utils/errors/HttpError.js';
-import { usedSpaceCache } from '../../../cache/userCache.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
+import { usedSpaceCache } from '@/cache/userCache.js';
 import { MyFile, uploadPayload } from './upload.type.js';
 
 function getFileType(file: MyFile): ItemType {
@@ -16,7 +17,6 @@ function getFileType(file: MyFile): ItemType {
     return 'VIDEO';
   } else {
     throw new HttpError(415);
-    // return ItemType.file;
   }
 }
 

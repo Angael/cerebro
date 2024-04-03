@@ -4,6 +4,8 @@ import { HttpError } from '@/utils/errors/HttpError.js';
 import logger from '@/utils/log.js';
 import { getFrontItem } from '@/utils/getFrontItem.js';
 import { db } from '@cerebro/db';
+import { queryAndMergeItems } from '@/utils/queryAndMergeItems.js';
+import invariant from 'tiny-invariant';
 
 export async function getAllItems(
   limit: number,
@@ -23,24 +25,28 @@ export async function getAllItems(
     .select(({ fn }) => [fn.count<number>('id').as('count')])
     .executeTakeFirstOrThrow();
 
-  const items = _items
-    .map((item) => {
+  const mergedItems = await queryAndMergeItems(_items);
+  const frontendItems = mergedItems
+    .map((mergedItem) => {
       try {
-        return getFrontItem(item, userId);
+        return getFrontItem(mergedItem, userId);
       } catch (e) {
+        logger.error('Failed to getFrontItem %n', mergedItem.item.id);
         return null as any;
       }
     })
     .filter(Boolean);
 
-  return { items, count };
+  return { items: frontendItems, count };
 }
 
 export async function getItem(id: number, userId?: string): Promise<FrontItem> {
   const item = await db.selectFrom('item').selectAll().where('id', '=', id).executeTakeFirst();
 
   if (item) {
-    return getFrontItem(item, userId);
+    const [mergedItem] = await queryAndMergeItems([item]);
+    invariant(mergedItem, 'mergedItem is undefined');
+    return getFrontItem(mergedItem, userId);
   } else {
     throw new HttpError(404);
   }

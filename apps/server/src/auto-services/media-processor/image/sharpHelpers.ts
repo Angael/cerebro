@@ -1,12 +1,13 @@
 import sharp, { OutputInfo, Sharp } from 'sharp';
 import async, { AsyncResultCallback } from 'async';
 import { nanoid } from 'nanoid';
-import logger from '../../../utils/log.js';
-import { IGeneratedThumbnail, IThumbnailMeasure } from '../../../models/IThumbnail.js';
-import { calculateThumbnailDimensions } from '../../../utils/calculateThumbnailDimensions.js';
-import { OPTIMIZATION_DIR, THUMBNAILS_DIR } from '../../../utils/consts.js';
 import { join } from 'path';
 import fs from 'fs-extra';
+
+import logger from '@/utils/log.js';
+import { IGeneratedThumbnail, IThumbnailMeasure } from '@/models/IThumbnail.js';
+import { calculateThumbnailDimensions } from '@/utils/calculateThumbnailDimensions.js';
+import { OPTIMIZATION_DIR, THUMBNAILS_DIR } from '@/utils/consts.js';
 
 type resizeArgs = {
   pipeline: Sharp;

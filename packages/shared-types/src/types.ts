@@ -14,7 +14,6 @@ export type ImageData = {
   src: string;
   width: number;
   height: number;
-  animated: boolean;
 };
 
 export type BaseItem = {

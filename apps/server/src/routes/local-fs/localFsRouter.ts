@@ -1,8 +1,8 @@
 import express from 'express';
 import z from 'zod';
-import { errorResponse } from '../../utils/errors/errorResponse.js';
+import { errorResponse } from '@/utils/errors/errorResponse.js';
 import { ensureIsFile, getFileListFromFolder, moveFiles } from './localFsFns.js';
-import { betterUnlink } from '../../utils/betterUnlink.js';
+import { betterUnlink } from '@/utils/betterUnlink.js';
 
 const localFsRouter = express.Router({ mergeParams: true });
 
