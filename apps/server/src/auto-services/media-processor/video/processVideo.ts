@@ -22,6 +22,7 @@ import logger from '@/utils/log.js';
 function fetchDetails(item: Item) {
   return db
     .selectFrom('video')
+    .selectAll()
     .where('item_id', '=', item.id)
     .where('media_type', '=', 'SOURCE')
     .executeTakeFirstOrThrow();
@@ -78,12 +79,12 @@ export async function processVideo(item: Item) {
 
     let thumbnails: IThumbnailBeforeUpload[] = generatedThumbs.map((t) => ({
       thumbnail: {
-        itemId: item.id,
+        item_id: item.id,
         type: t.dimensions.type,
         width: t.dimensions.width,
         height: t.dimensions.height,
         path: makeS3Path(
-          item.userUid,
+          item.user_id,
           t.dimensions.type,
           changeExtension(getNameFromS3Path(videoRow.path), 'webp'),
         ),

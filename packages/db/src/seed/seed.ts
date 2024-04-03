@@ -13,7 +13,7 @@ const main = async () => {
   await db
     .insertInto('user')
     .values({
-      id: 2137,
+      id: 'qwertyuiop',
       email: 'user@user.com',
       hashed_password:
         // password: ???
