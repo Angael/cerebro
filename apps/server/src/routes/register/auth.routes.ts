@@ -4,27 +4,18 @@ import { lucia } from '@/lucia.js';
 import { db } from '@cerebro/db';
 import { Argon2id } from 'oslo/password';
 import bodyParser from 'body-parser';
+import z from 'zod';
 
 const authRouter = express.Router({ mergeParams: true });
 authRouter.use(bodyParser.urlencoded({ extended: true }));
 
-authRouter.post('/signup', async (req, res) => {
-  throw new Error('not implemented');
-  console.log(req.body);
-  const formData = await req.body; // TODO zod check
-  const email = formData['email'];
+const signupZod = z.object({
+  email: z.string().email().min(6), // a@a.aa
+  password: z.string().min(8),
+});
 
-  function isValidEmail(email: string): boolean {
-    return /.+@.+/.test(email);
-  }
-
-  if (!email || typeof email !== 'string' || !isValidEmail(email)) {
-    return res.status(400).send('Invalid email');
-  }
-  const password = formData['password'];
-  if (!password || typeof password !== 'string' || password.length < 6) {
-    return res.status(400).send('Invalid password');
-  }
+authRouter.post('/auth/signup', async (req, res) => {
+  const { email, password } = signupZod.parse(req.body);
 
   const hashedPassword = await new Argon2id().hash(password);
   const userId = generateId(15);
@@ -46,18 +37,13 @@ authRouter.post('/signup', async (req, res) => {
   }
 });
 
-authRouter.post('/signin', async (req, res) => {
-  throw new Error('not implemented');
-  const formData = await req.body; // TODO zod check
-  const email = formData['email'];
-  const password = formData['password'];
+const signinZod = z.object({
+  email: z.string().min(3),
+  password: z.string().min(3),
+});
 
-  if (!email || typeof email !== 'string') {
-    return res.status(400).send('Invalid email');
-  }
-  if (!password || typeof password !== 'string') {
-    return res.status(400).send('Invalid password');
-  }
+authRouter.post('/auth/signin', async (req, res) => {
+  const { email, password } = signinZod.parse(req.body);
 
   const user = await db
     .selectFrom('user')
@@ -78,7 +64,6 @@ authRouter.post('/signin', async (req, res) => {
   const sessionCookie = lucia.createSessionCookie(session.id);
 
   res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-  res.cookie('TestName', 'TestValue', { maxAge: 9999 });
   res.redirect('http://localhost:3000/');
 });
 
