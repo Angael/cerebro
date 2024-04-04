@@ -29,7 +29,7 @@ const itemRoutes = express.Router({ mergeParams: true });
 const limitZod = z.number().min(1).max(30);
 const pageZod = z.number().min(0).max(Number.MAX_SAFE_INTEGER);
 
-itemRoutes.get('/items/', async (req, res) => {
+itemRoutes.get('/items', async (req, res) => {
   const { user } = await optionalSession(req);
   try {
     const limit = limitZod.parse(Number(req.query.limit));

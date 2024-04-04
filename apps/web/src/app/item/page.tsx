@@ -9,7 +9,7 @@ import { API } from '@/utils/API';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 
-const ItemPage = async () => {
+const ItemPage = () => {
   const searchParams = useSearchParams();
   const itemId = searchParams.get('itemId')!;
 

@@ -39,8 +39,8 @@ const startRouter = () => {
     res.send('v0.8');
   });
 
-  routes3.forEach((router) => {
-    router.use(router);
+  routes3.forEach((nestedRouter) => {
+    router.use(nestedRouter);
   });
 
   router.use((err: any, req: any, res: any, _next: any) => {

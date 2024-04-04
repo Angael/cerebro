@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import css from './Navbar.module.scss';
 import IconBtn from '../../styled/icon-btn/IconBtn';
