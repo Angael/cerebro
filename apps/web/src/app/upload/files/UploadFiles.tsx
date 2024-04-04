@@ -1,7 +1,6 @@
 'use client';
 import React, { Suspense, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
-import { useAuth } from '@clerk/nextjs';
 import PQueue from 'p-queue';
 
 import { ExtendedFile, UPLOAD_STATUS } from '@/app/upload/files/uploadTypes';
@@ -18,9 +17,7 @@ const UploadFilesPage = () => {
   const [files, setFiles] = useState<ExtendedFile[]>([]);
 
   const invalidateQueries = useInvalidateQueries();
-  // TODO: Not sure if queue in ref is a good idea
   const uploadQueue = useRef(new PQueue({ concurrency: 1 }));
-  const { getToken } = useAuth();
 
   const addFiles = (acceptedFiles: File[]) => {
     const files: ExtendedFile[] = acceptedFiles.map((file) => ({
@@ -49,10 +46,7 @@ const UploadFilesPage = () => {
     files.forEach((file) => {
       uploadQueue.current.add(async () =>
         uploadFileToBackend({
-          token: (await getToken()) as string, // page is guarded, token is always present
           file,
-          dir: '',
-          private: false,
           onProgress: (progress) => {
             updateFile(file.id, {
               uploadProgress: progress,

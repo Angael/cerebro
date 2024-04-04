@@ -1,13 +1,18 @@
 import React from 'react';
 import css from './Navbar.module.scss';
 import IconBtn from '../../styled/icon-btn/IconBtn';
-import { currentUser, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import Icon from '@mdi/react';
 import { mdiCog, mdiUpload, mdiViewGrid } from '@mdi/js';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/utils/consts';
+import { API } from '@/utils/API';
 
-const Navbar = async () => {
-  const user = await currentUser();
+const Navbar = () => {
+  const user = useQuery({
+    queryKey: [QUERY_KEYS.user],
+    queryFn: () => API.get('/api/user').then((res) => res.data),
+  });
 
   return (
     <header className={css.navbar}>
@@ -29,10 +34,12 @@ const Navbar = async () => {
             <Icon path={mdiCog} />
           </IconBtn>
 
-          {user && (
+          {user.data ? (
             <div style={{ width: 32, height: 32 }}>
-              <UserButton afterSignOutUrl="/" />
+              <pre>{JSON.stringify(user.data, null, 2)}</pre>
             </div>
+          ) : (
+            <div>Loading user...</div>
           )}
         </div>
       </div>
