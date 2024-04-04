@@ -31,7 +31,6 @@ jobs:
           tokenSuffix: '}'
           files: '[".env.template"]'
         env:
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           AWS_USER: ${{ secrets.AWS_USER }}
           AWS_KEY: ${{ secrets.AWS_KEY }}
           AWS_SECRET: ${{ secrets.AWS_SECRET }}
