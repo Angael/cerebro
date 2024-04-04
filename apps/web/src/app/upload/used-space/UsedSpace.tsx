@@ -5,7 +5,7 @@ import ProgressBar from '@/styled/progress-bar/ProgressBar';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthHeader } from '@/utils/useAuthHeader';
 import { GetUploadLimits } from '@cerebro/shared';
-import { ApiClient } from '@/utils/api.client';
+import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 
 type Props = {
@@ -17,7 +17,7 @@ const UsedSpace = (props: Props) => {
   const { data, isFetching, isFetched, isError } = useQuery({
     queryKey: [QUERY_KEYS.uploadLimits],
     queryFn: async () =>
-      ApiClient.get<GetUploadLimits>('/account/limits', {
+      API.get<GetUploadLimits>('/account/limits', {
         headers: await getAuthHeader(),
       }).then((res) => res.data),
     refetchOnWindowFocus: true,

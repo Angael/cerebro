@@ -1,20 +1,16 @@
-import { NEXT_PUBLIC_API_URL } from "@/utils/env";
+import { env } from '@/utils/env';
 
 type Callbacks = {
   onProgress: (percentage: number) => void;
 };
 
-export function uploadFile(
-  token: string,
-  formData: FormData,
-  { onProgress }: Callbacks,
-) {
+export function uploadFile(token: string, formData: FormData, { onProgress }: Callbacks) {
   return new Promise<void>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    const uploadUrl = `${NEXT_PUBLIC_API_URL}/items/upload/file`;
+    const uploadUrl = `${env.API_URL}/items/upload/file`;
 
-    xhr.open("POST", uploadUrl, true);
-    xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+    xhr.open('POST', uploadUrl, true);
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 
     xhr.upload.onprogress = function (event) {
       if (event.lengthComputable) {
@@ -26,16 +22,16 @@ export function uploadFile(
 
     xhr.onload = function () {
       if (xhr.status === 200) {
-        console.log("File uploaded successfully");
+        console.log('File uploaded successfully');
         resolve();
       } else {
-        console.error("File upload failed. Status:", xhr.status);
+        console.error('File upload failed. Status:', xhr.status);
         reject();
       }
     };
 
     xhr.onerror = function () {
-      console.error("File upload failed. Network error.");
+      console.error('File upload failed. Network error.');
       reject();
     };
 

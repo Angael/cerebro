@@ -1,25 +1,32 @@
+'use client';
 import React from 'react';
-import { ApiServer, getApiHeaders } from '@/utils/api.server';
-import { auth } from '@clerk/nextjs';
 import Pagination from '@/lib/pagination/Pagination';
 import ItemGrid from '@/lib/item-grid/ItemGrid';
+import { useQuery } from '@tanstack/react-query';
+import { API } from '@/utils/API';
+import { QueryItems } from '@cerebro/shared';
+import { QUERY_KEYS } from '@/utils/consts';
 
 type Props = {
   searchParams: { page?: string };
 };
 
-const BrowsePage = async ({ searchParams: { page } }: Props) => {
-  const clerkToken = auth();
-  // console.log("clerkToken", clerkToken);
-  // console.log("Token: ", await clerkToken.getToken());
-
+const BrowsePage = ({ searchParams: { page } }: Props) => {
   const pageNr = parseInt(page ?? '1');
-  const { data } = await ApiServer.get('/items', {
-    params: { limit: 10, page: pageNr - 1 },
-    headers: await getApiHeaders(clerkToken),
+  const { data, isFetched } = useQuery({
+    queryKey: [QUERY_KEYS.items, { limit: 10, page: pageNr - 1 }],
+    queryFn: () =>
+      API.get<QueryItems>('/items', {
+        params: { limit: 10, page: pageNr - 1 },
+      }).then((res) => res.data),
   });
-  const { count, items } = data;
 
+  if (!data) {
+    // TODO: Better skeleton
+    return <div>Loading...</div>;
+  }
+
+  const { items, count } = data;
   const pageCount = Math.ceil(count / 10);
 
   return (

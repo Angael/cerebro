@@ -1,8 +1,9 @@
-const verifyEnv = <T = string>(env: T | undefined): T => {
-  if (!env) {
-    throw new Error(`Missing env variable`);
-  }
-  return env;
-};
+import { z } from 'zod';
 
-export const NEXT_PUBLIC_API_URL = verifyEnv(process.env.NEXT_PUBLIC_API_URL);
+export const env = z
+  .object({
+    API_URL: z.string(),
+  })
+  .parse({
+    API_URL: process.env.NEXT_PUBLIC_API_URL,
+  });
