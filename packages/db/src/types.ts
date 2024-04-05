@@ -86,13 +86,13 @@ interface VideoTable {
   id: Generated<number>;
   item_id: number;
 
-  media_type: MediaType;
   path: string;
   size: number;
   width: number;
   height: number;
-  duration_ms: number;
   bitrate_kb: number;
+  duration_ms: number;
+  media_type: MediaType;
 
   created_at: Generated<Date>;
 }

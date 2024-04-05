@@ -6,7 +6,6 @@
   "types": "src/main.ts",
   "scripts": {
     "build": "tsup-node src/main.ts",
-    "migrate": "tsup-node src/migrate.ts & dotenv -e .env -- node dist/migrate.js",
     "lint": "tsc"
   },
   "dependencies": {
