@@ -1,5 +1,5 @@
-create database if not exists cerebro;
-use cerebro;
+create database if not exists cerebro2;
+use cerebro2;
 
 create table user
 (
@@ -93,5 +93,20 @@ create table video
     constraint video_item_id_fkey
         foreign key (item_id) references item (id)
             on update cascade
-)
+);
 
+# migrate old data
+INSERT IGNORE INTO cerebro2.user (id, email, hashed_password, type, last_login_at)
+SELECT uid, email, '', type, CURRENT_TIMESTAMP(3) FROM cerebro.User;
+
+INSERT IGNORE INTO cerebro2.item (id, user_id, type, private, processed, optimized, created_at, updated_at)
+SELECT id, userUid, type, private, processed, optimized, createdAt, updatedAt FROM cerebro.Item;
+
+INSERT IGNORE INTO cerebro2.image (id, item_id, path, size, width, height, media_type, created_at)
+SELECT id, itemId, path, size, width, height, mediaType, createdAt FROM cerebro.Image;
+
+INSERT IGNORE INTO cerebro2.video (id, item_id, path, size, width, height, bitrate_kb, duration_ms, media_type, created_at)
+SELECT id, itemId, path, size, width, height, bitrateKb, durationMs, mediaType, createdAt FROM cerebro.Video;
+
+INSERT IGNORE INTO cerebro2.thumbnail (id, item_id, type, width, height, path, size, created_at)
+SELECT id, itemId, type, width, height, path, size, createdAt FROM cerebro.Thumbnail;
