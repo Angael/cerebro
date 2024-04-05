@@ -1,3 +1,6 @@
+create database if not exists cerebro;
+use cerebro;
+
 create table user
 (
     id              varchar(64)                       not null primary key,
@@ -7,8 +10,8 @@ create table user
     type            enum ('FREE', 'PREMIUM', 'ADMIN') not null,
 
     last_login_at   datetime(3),
-    created_at      datetime(3) default CURRENT_TIMESTAMP,
-    updated_at      datetime(3) default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+    created_at      datetime(3) default CURRENT_TIMESTAMP(3),
+    updated_at      datetime(3) default CURRENT_TIMESTAMP(3) on update CURRENT_TIMESTAMP(3)
 );
 
 create table user_session
@@ -28,8 +31,8 @@ create table item
     processed  enum ('NO', 'STARTED', 'FAIL', 'V1') default 'NO' not null,
     optimized  enum ('NO', 'STARTED', 'FAIL', 'V1') default 'NO' not null,
 
-    created_at datetime(3)                          default CURRENT_TIMESTAMP,
-    updated_at datetime(3)                          default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+    created_at datetime(3)                          default CURRENT_TIMESTAMP(3),
+    updated_at datetime(3)                          default CURRENT_TIMESTAMP(3) on update CURRENT_TIMESTAMP(3),
 
     constraint item_user_id_fkey
         foreign key (user_id) references user (id) on update cascade
@@ -46,7 +49,7 @@ create table image
     height     int unsigned                  not null,
     media_type enum ('SOURCE', 'COMPRESSED') not null,
 
-    created_at datetime(3) default CURRENT_TIMESTAMP,
+    created_at datetime(3) default CURRENT_TIMESTAMP(3),
 
     constraint image_item_id_fkey
         foreign key (item_id) references item (id)
@@ -65,7 +68,7 @@ create table thumbnail
     path       varchar(256)            not null,
     size       int unsigned            not null,
 
-    created_at datetime(3) default CURRENT_TIMESTAMP,
+    created_at datetime(3) default CURRENT_TIMESTAMP(3),
 
     constraint thumbnail_item_id_fkey
         foreign key (item_id) references item (id)
