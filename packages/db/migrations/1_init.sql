@@ -5,7 +5,7 @@ create table user
 (
     id              varchar(64)                       not null primary key,
 
-    email           varchar(254)                      not null,
+    email           varchar(254)                      not null unique,
     hashed_password varchar(256)                      not null,
     type            enum ('FREE', 'PREMIUM', 'ADMIN') not null,
 
@@ -17,8 +17,8 @@ create table user
 create table user_session
 (
     id           varchar(64) not null primary key,
-    user_session varchar(64) not null,
-    user_id      varchar(64) not null
+    user_id      varchar(64) not null unique,
+    expires_at   datetime(3) not null
 );
 
 create table item

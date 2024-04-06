@@ -3,11 +3,10 @@ import { generateId } from 'lucia';
 import { lucia } from '@/lucia.js';
 import { db } from '@cerebro/db';
 import { Argon2id } from 'oslo/password';
-import bodyParser from 'body-parser';
 import z from 'zod';
+import { errorResponse } from '@/utils/errors/errorResponse.js';
 
 const authRouter = express.Router({ mergeParams: true });
-authRouter.use(bodyParser.urlencoded({ extended: true }));
 
 const signupZod = z.object({
   email: z.string().email().min(6), // a@a.aa
@@ -33,7 +32,7 @@ authRouter.post('/auth/signup', async (req, res) => {
     res.redirect('http://localhost:3000/');
   } catch (e) {
     // db error, email taken, etc
-    return res.status(400).json(e);
+    errorResponse(res, e);
   }
 });
 

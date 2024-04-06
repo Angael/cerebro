@@ -75,9 +75,6 @@ importers:
       aws-sdk:
         specifier: ^2.1282.0
         version: 2.1569.0
-      body-parser:
-        specifier: ^1.20.2
-        version: 1.20.2
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -136,9 +133,6 @@ importers:
         specifier: ^3.8.2
         version: 3.11.0
     devDependencies:
-      '@types/body-parser':
-        specifier: ^1.19.5
-        version: 1.19.5
       '@types/express':
         specifier: 4.17.21
         version: 4.17.21

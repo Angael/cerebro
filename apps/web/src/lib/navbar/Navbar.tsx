@@ -4,7 +4,7 @@ import css from './Navbar.module.scss';
 import IconBtn from '../../styled/icon-btn/IconBtn';
 import Link from 'next/link';
 import Icon from '@mdi/react';
-import { mdiCog, mdiUpload, mdiViewGrid } from '@mdi/js';
+import { mdiAccount, mdiCog, mdiLogout, mdiUpload, mdiViewGrid } from '@mdi/js';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
@@ -14,6 +14,8 @@ const Navbar = () => {
   const user = useQuery({
     queryKey: [QUERY_KEYS.user],
     queryFn: () => API.get<UserMe>('/user/me').then((res) => res.data),
+    // Potential optimization:
+    // retry: (failCount, err) => !err,
   });
 
   return (
@@ -37,11 +39,13 @@ const Navbar = () => {
           </IconBtn>
 
           {user.data ? (
-            <div style={{ width: 32, height: 32 }}>
-              <pre>{JSON.stringify(user.data, null, 2)}</pre>
-            </div>
+            <IconBtn as={Link} href="/signout" title="Signout">
+              <Icon path={mdiLogout} />
+            </IconBtn>
           ) : (
-            <div>Loading user...</div>
+            <IconBtn as={Link} href="/signin" title="Login">
+              <Icon path={mdiAccount} />
+            </IconBtn>
           )}
         </div>
       </div>
