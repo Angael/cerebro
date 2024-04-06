@@ -10,7 +10,7 @@ import { API } from '@/utils/API';
 import { useMutation } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 
-const page = () => {
+const Page = () => {
   const invalidateQueries = useInvalidateQueries();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,4 +59,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

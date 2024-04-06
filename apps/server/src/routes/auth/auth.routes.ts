@@ -41,12 +41,9 @@ const signinZod = z.object({
   password: z.string().min(3),
 });
 
-const redirectZod = z.string().url();
-
 authRouter.post('/auth/signin', async (req, res) => {
   try {
     const { email, password } = signinZod.parse(req.body);
-    const redirectUrl = redirectZod.parse(req.query.redirect);
 
     const user = await db
       .selectFrom('user')
@@ -67,7 +64,6 @@ authRouter.post('/auth/signin', async (req, res) => {
     const sessionCookie = lucia.createSessionCookie(session.id);
 
     res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-    res.redirect(redirectUrl);
   } catch (e) {
     errorResponse(res, e);
   }

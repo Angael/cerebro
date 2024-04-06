@@ -1,18 +1,30 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '@/styled/card/Card';
 import Textfield from '@/styled/textfield/Textfield';
 import { Btn } from '@/styled/btn/Btn';
 import Link from 'next/link';
+import { useInvalidateQueries } from '@/utils/useInvalidateQueries';
+import { useMutation } from '@tanstack/react-query';
+import { API } from '@/utils/API';
+import { QUERY_KEYS } from '@/utils/consts';
 
-const page = () => {
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+const Page = () => {
+  const invalidateQueries = useInvalidateQueries();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const mutation = useMutation({
+    mutationFn: () => API.post('/auth/signin', { email, password }),
+    onSettled: async () => {
+      await invalidateQueries({ queryKey: [QUERY_KEYS.user] });
+    },
+  });
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    console.log(email, password);
+    mutation.mutate();
   };
 
   return (
@@ -21,14 +33,34 @@ const page = () => {
         <h1 className="h1 ">Sign In</h1>
 
         <form className="flex col gap-2" onSubmit={onSubmit}>
-          <Textfield label={'Email'} input={{ name: 'email', type: 'email' }} />
-          <Textfield label={'Password'} input={{ name: 'password', type: 'password' }} />
-          <Btn type="submit">Sign In</Btn>
+          <Textfield
+            label={'Email'}
+            input={{
+              name: 'email',
+              type: 'email',
+              value: email,
+              onChange: (e) => setEmail(e.target.value),
+            }}
+          />
+          <Textfield
+            label={'Password'}
+            input={{
+              name: 'password',
+              type: 'password',
+              value: password,
+              onChange: (e) => setPassword(e.target.value),
+            }}
+          />
+          <Btn type="submit" style={{ marginLeft: 'auto' }}>
+            Sign In
+          </Btn>
         </form>
-        <Link href="/signup">Sign Up</Link>
+        <Link href="/signup" style={{ marginLeft: 'auto' }}>
+          Sign Up
+        </Link>
       </Card>
     </main>
   );
 };
 
-export default page;
+export default Page;
