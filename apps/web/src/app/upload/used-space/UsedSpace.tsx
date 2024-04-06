@@ -14,7 +14,7 @@ type Props = {
 const UsedSpace = (props: Props) => {
   const { data, isFetching, isFetched, isError } = useQuery({
     queryKey: [QUERY_KEYS.uploadLimits],
-    queryFn: async () => API.get<GetUploadLimits>('/account/limits').then((res) => res.data),
+    queryFn: async () => API.get<GetUploadLimits>('/user/limits').then((res) => res.data),
     refetchOnWindowFocus: true,
     initialData: props.initialValue,
   });

@@ -6,7 +6,7 @@ import { MyFile } from '../upload/upload.type.js';
 import { parse } from 'path';
 import fs from 'fs-extra';
 import { HttpError } from '@/utils/errors/HttpError.js';
-import { doesUserHaveSpaceLeftForFile } from '@/routes/limits/limits.service.js';
+import { doesUserHaveSpaceLeftForFile } from '@/routes/user/user.service.js';
 import logger from '@/utils/log.js';
 import { betterUnlink } from '@/utils/betterUnlink.js';
 import mime from 'mime-types';

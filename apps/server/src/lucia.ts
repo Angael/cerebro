@@ -38,4 +38,11 @@ declare module 'lucia' {
       type: UserType;
     };
   }
+
+  // One way
+  interface User {
+    id: string;
+    email: string;
+    type: UserType;
+  }
 }

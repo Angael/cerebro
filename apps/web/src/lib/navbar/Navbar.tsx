@@ -8,11 +8,12 @@ import { mdiCog, mdiUpload, mdiViewGrid } from '@mdi/js';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
+import { UserMe } from '@cerebro/shared';
 
 const Navbar = () => {
   const user = useQuery({
     queryKey: [QUERY_KEYS.user],
-    queryFn: () => API.get('/api/user').then((res) => res.data),
+    queryFn: () => API.get<UserMe>('/user/me').then((res) => res.data),
   });
 
   return (

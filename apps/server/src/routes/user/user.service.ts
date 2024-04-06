@@ -1,5 +1,5 @@
 import { limitsConfig } from '@/utils/limits.js';
-import { usedSpaceCache, userTypeCache } from '../../cache/userCache.js';
+import { usedSpaceCache, userTypeCache } from '@/cache/userCache.js';
 import { db, UserType } from '@cerebro/db';
 import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '@/utils/errors/HttpError.js';

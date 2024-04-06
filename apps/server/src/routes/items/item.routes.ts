@@ -10,7 +10,7 @@ import { uploadFileForUser } from './upload/upload.service.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import { useCache } from '@/middleware/expressCache.js';
 import { usedSpaceCache } from '@/cache/userCache.js';
-import { doesUserHaveSpaceLeftForFile } from '../limits/limits.service.js';
+import { doesUserHaveSpaceLeftForFile } from '@/routes/user/user.service.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import { betterUnlink } from '@/utils/betterUnlink.js';
 import logger from '@/utils/log.js';
