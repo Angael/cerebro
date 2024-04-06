@@ -60,10 +60,12 @@ authRouter.post('/auth/signin', async (req, res) => {
       return res.status(400).send('Invalid password');
     }
 
+    await db.deleteFrom('user_session').where('user_id', '=', user.id).execute();
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
 
     res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    res.sendStatus(204);
   } catch (e) {
     errorResponse(res, e);
   }

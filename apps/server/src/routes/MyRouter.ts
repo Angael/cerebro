@@ -20,17 +20,13 @@ const startRouter = () => {
 
   router.use(express.json());
 
-  if (env.isProd) {
-    router.use(
-      cors({
-        origin: env.CORS_URL,
-        credentials: true,
-        maxAge: 600,
-      }),
-    );
-  } else {
-    router.use(cors());
-  }
+  router.use(
+    cors({
+      origin: env.CORS_URL,
+      credentials: true,
+      maxAge: 600,
+    }),
+  );
 
   router.get('/', (req, res) => {
     res.send('v0.8');
