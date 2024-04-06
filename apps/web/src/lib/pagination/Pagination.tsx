@@ -9,14 +9,17 @@ type Props = {
   pageCount: number;
 };
 
-const getHref = (page: number) => `/browse?page=${page}`;
+const getHref = (page: number) => `/browse/?pageNr=${page}`;
 
 const Pagination = ({ page, pageCount }: Props) => {
   const canGoBack = page > 1;
   const canGoForward = page < pageCount;
 
   const shownButtons = getPagination(page, pageCount, 11);
-
+  console.log({
+    page,
+    shownButtons,
+  });
   return (
     <nav className={css.paginationStack}>
       <BtnLink href={getHref(page - 1)} aria-disabled={!canGoBack}>
