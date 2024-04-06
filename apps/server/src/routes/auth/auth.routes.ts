@@ -14,12 +14,12 @@ const signupZod = z.object({
 });
 
 authRouter.post('/auth/signup', async (req, res) => {
-  const { email, password } = signupZod.parse(req.body);
-
-  const hashedPassword = await new Argon2id().hash(password);
-  const userId = generateId(15);
-
   try {
+    const { email, password } = signupZod.parse(req.body);
+
+    const hashedPassword = await new Argon2id().hash(password);
+    const userId = generateId(15);
+
     await db
       .insertInto('user')
       .values({ id: userId, type: 'FREE', email, hashed_password: hashedPassword })
@@ -44,29 +44,33 @@ const signinZod = z.object({
 const redirectZod = z.string().url();
 
 authRouter.post('/auth/signin', async (req, res) => {
-  const { email, password } = signinZod.parse(req.body);
-  const redirectUrl = redirectZod.parse(req.query.redirect);
+  try {
+    const { email, password } = signinZod.parse(req.body);
+    const redirectUrl = redirectZod.parse(req.query.redirect);
 
-  const user = await db
-    .selectFrom('user')
-    .selectAll()
-    .where('email', '=', email)
-    .executeTakeFirst();
+    const user = await db
+      .selectFrom('user')
+      .selectAll()
+      .where('email', '=', email)
+      .executeTakeFirst();
 
-  if (!user) {
-    return res.status(400).send('User not found');
+    if (!user) {
+      return res.status(400).send('User not found');
+    }
+
+    const isValidPassword = await new Argon2id().verify(user.hashed_password, password);
+    if (!isValidPassword) {
+      return res.status(400).send('Invalid password');
+    }
+
+    const session = await lucia.createSession(user.id, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+
+    res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    res.redirect(redirectUrl);
+  } catch (e) {
+    errorResponse(res, e);
   }
-
-  const isValidPassword = await new Argon2id().verify(user.hashed_password, password);
-  if (!isValidPassword) {
-    return res.status(400).send('Invalid password');
-  }
-
-  const session = await lucia.createSession(user.id, {});
-  const sessionCookie = lucia.createSessionCookie(session.id);
-
-  res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-  res.redirect(redirectUrl);
 });
 
 export default authRouter;
