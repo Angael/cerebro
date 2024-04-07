@@ -29,7 +29,7 @@ authRouter.post('/auth/signup', async (req, res) => {
     const sessionCookie = lucia.createSessionCookie(session.id);
     console.log({ sessionCookie });
     res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-    res.redirect('http://localhost:3000/');
+    res.sendStatus(204);
   } catch (e) {
     // db error, email taken, etc
     errorResponse(res, e);
