@@ -22,6 +22,13 @@ const config = z
 export const dbPool = createPool({
   ...config,
   connectionLimit: 10,
+  typeCast(field, next) {
+    if (field.type === 'TINY' && field.length === 1) {
+      return field.string() === '1';
+    } else {
+      return next();
+    }
+  },
 });
 
 const dialect = new MysqlDialect({
