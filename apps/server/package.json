@@ -4,7 +4,7 @@
   "type": "module",
   "main": "src/main.ts",
   "scripts": {
-    "start": "node -r source-map-support/register dist/main.js",
+    "start": "dotenv -e .env -- node -r source-map-support/register dist/main.js",
     "dev": "tsup-node src/main.ts --env.NODE_ENV=development --watch --onSuccess \"dotenv -e .env -- node -r source-map-support/register dist/main.js\"",
     "build": "tsup-node src/main.ts --env.NODE_ENV=production",
     "lint": "tsc",
