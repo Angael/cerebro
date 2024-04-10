@@ -6,4 +6,8 @@
 
   margin: 0 auto;
   overflow: hidden;
+
+  .videoItem {
+    max-height: calc(100svh - 100px);
+  }
 }
