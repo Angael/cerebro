@@ -24,13 +24,16 @@ userRoutes.get('/user/me', async (req, res) => {
 });
 
 userRoutes.get('/user/limits', async (req, res) => {
-  const { user } = await requireSession(req);
   try {
-    res.json(await getLimitsForUser(user.id));
-  } catch (e) {
-    logger.error('Failed to list limits for user: %n', user.id);
-    errorResponse(res, e);
-  }
+    const { user } = await requireSession(req);
+    try {
+      const uploadLimits = await getLimitsForUser(user.id);
+      res.json(uploadLimits);
+    } catch (e) {
+      logger.error('Failed to list limits for user: %n', user.id);
+      errorResponse(res, e);
+    }
+  } catch (e) {}
 });
 
 export default userRoutes;
