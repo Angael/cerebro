@@ -27,17 +27,21 @@ const Navbar = () => {
             <h1 className="h4">Cerebro</h1>
           </Link>
 
-          <IconBtn as={Link} href="/upload" title="Upload">
-            <Icon path={mdiUpload} />
-          </IconBtn>
+          {user.data && (
+            <IconBtn as={Link} href="/upload" title="Upload">
+              <Icon path={mdiUpload} />
+            </IconBtn>
+          )}
 
           <IconBtn as={Link} href="/browse" title="Browse">
             <Icon path={mdiViewGrid} />
           </IconBtn>
 
-          <IconBtn as={Link} href="/settings" title="Settings">
-            <Icon path={mdiCog} />
-          </IconBtn>
+          {user.data && (
+            <IconBtn as={Link} href="/settings" title="Settings" disabled>
+              <Icon path={mdiCog} />
+            </IconBtn>
+          )}
 
           {user.data ? (
             <IconBtn

@@ -8,8 +8,10 @@ import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,6 +20,9 @@ const Page = () => {
     mutationFn: () => API.post('/auth/signin', { email, password }),
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] });
+    },
+    onSuccess: () => {
+      router.push('/');
     },
   });
 
