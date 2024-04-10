@@ -28,7 +28,7 @@ authRouter.post('/auth/signup', async (req, res) => {
 
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
-    console.log({ sessionCookie });
+
     res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
     res.sendStatus(204);
   } catch (e) {

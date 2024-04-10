@@ -6,14 +6,40 @@ import { useRouter } from 'next/navigation';
 import Icon from '@mdi/react';
 import { mdiArrowLeft } from '@mdi/js';
 import Link from 'next/link';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/utils/consts';
+import { API } from '@/utils/API';
+import { FrontItem, QueryItems } from '@cerebro/shared';
 
 type Props = {
+  itemId: string;
   isMine?: boolean;
 };
 
-const ItemBar = ({ isMine }: Props) => {
+const ItemBar = ({ itemId, isMine }: Props) => {
+  const queryClient = useQueryClient();
   const router = useRouter();
+
+  const deleteMut = useMutation({
+    mutationFn: () => API.delete(`/items/item/${itemId}`),
+    onSuccess: async () => {
+      queryClient.setQueriesData(
+        { queryKey: [QUERY_KEYS.items] },
+        (old: QueryItems | undefined) => {
+          if (!old) return;
+          return {
+            ...old,
+            items: old.items.filter((item: FrontItem) => item.id !== Number(itemId)),
+          };
+        },
+      );
+
+      await queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.items],
+      });
+      router.push('/browse');
+    },
+  });
 
   return (
     <div className="flex gap-1 wrap">
@@ -28,7 +54,11 @@ const ItemBar = ({ isMine }: Props) => {
       </Link>
       <Btn>Download</Btn>
       <Btn>Share</Btn>
-      {isMine && <Btn>Delete</Btn>}
+      {isMine && (
+        <Btn disabled={deleteMut.isPending} onClick={() => deleteMut.mutate()}>
+          Delete
+        </Btn>
+      )}
     </div>
   );
 };
