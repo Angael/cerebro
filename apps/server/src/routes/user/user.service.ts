@@ -1,6 +1,8 @@
 import { limitsConfig } from '@/utils/limits.js';
 import { usedSpaceCache, userTypeCache } from '@/cache/userCache.js';
 import { db, UserType } from '@cerebro/db';
+import { sql } from 'kysely';
+
 import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import { GetUploadLimits } from '@cerebro/shared';
@@ -23,46 +25,16 @@ export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   if (usedSpaceCache.has(user_id)) {
     used = usedSpaceCache.get(user_id) as number;
   } else {
-    const images_used_space = (await db
-      .selectFrom('image')
-      .select((eb) => eb.fn.sum<number>('size').as('used_space'))
-      .where((eb) =>
-        eb(
-          'image.item_id',
-          'in',
-          eb.selectFrom('item').select(['id', 'size']).where('user_id', '=', user_id),
-        ),
-      )
-      .executeTakeFirst()) ?? { used_space: 0 };
+    const { rows } = await sql<{ total: number }>`SELECT SUM(size) AS total
+  FROM (
+    SELECT size FROM Image WHERE Image.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
+    UNION ALL
+    SELECT size FROM Video WHERE Video.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
+    UNION ALL
+    SELECT size FROM Thumbnail WHERE Thumbnail.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
+  ) AS combined_sizes;`.execute(db);
 
-    const videos_used_space = (await db
-      .selectFrom('video')
-      .select((eb) => eb.fn.sum<number>('size').as('used_space'))
-      .where((eb) =>
-        eb(
-          'video.item_id',
-          'in',
-          eb.selectFrom('item').select(['id', 'size']).where('user_id', '=', user_id),
-        ),
-      )
-      .executeTakeFirst()) ?? { used_space: 0 };
-
-    const thumbnails_used_space = (await db
-      .selectFrom('thumbnail')
-      .select((eb) => eb.fn.sum<number>('size').as('used_space'))
-      .where((eb) =>
-        eb(
-          'thumbnail.item_id',
-          'in',
-          eb.selectFrom('item').select(['id', 'size']).where('user_id', '=', user_id),
-        ),
-      )
-      .executeTakeFirst()) ?? { used_space: 0 };
-
-    used =
-      images_used_space.used_space +
-      videos_used_space.used_space +
-      thumbnails_used_space.used_space;
+    used = rows[0]?.total || 0;
 
     usedSpaceCache.set(user_id, used);
   }
