@@ -70,6 +70,7 @@ create table thumbnail
 
     created_at datetime(3) default CURRENT_TIMESTAMP(3),
 
+    constraint thumbnail_item_id_type_unique unique (item_id, type),
     constraint thumbnail_item_id_fkey
         foreign key (item_id) references item (id)
             on update cascade
