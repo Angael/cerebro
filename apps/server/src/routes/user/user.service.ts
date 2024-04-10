@@ -27,11 +27,11 @@ export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   } else {
     const { rows } = await sql<{ total: number }>`SELECT SUM(size) AS total
   FROM (
-    SELECT size FROM Image WHERE Image.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
+    SELECT size FROM image WHERE image.item_id IN (SELECT id FROM item WHERE item.user_id = ${user_id})
     UNION ALL
-    SELECT size FROM Video WHERE Video.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
+    SELECT size FROM video WHERE video.item_id IN (SELECT id FROM item WHERE item.user_id = ${user_id})
     UNION ALL
-    SELECT size FROM Thumbnail WHERE Thumbnail.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
+    SELECT size FROM thumbnail WHERE thumbnail.item_id IN (SELECT id FROM item WHERE item.user_id = ${user_id})
   ) AS combined_sizes;`.execute(db);
 
     used = rows[0]?.total || 0;
