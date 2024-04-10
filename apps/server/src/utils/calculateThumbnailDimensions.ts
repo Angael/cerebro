@@ -27,7 +27,7 @@ export const calculateThumbnailDimensions = (w: number, h: number): IThumbnailMe
     ...resizeWithSameAspectRatio(w, h, allowedPixelsModifier * MD_CELL_SIZE * MD_CELL_SIZE),
   });
   arr.push({
-    type: 'MD',
+    type: 'XS',
     ...resizeWithSameAspectRatio(w, h, allowedPixelsModifier * XS_CELL_SIZE * XS_CELL_SIZE),
   });
 

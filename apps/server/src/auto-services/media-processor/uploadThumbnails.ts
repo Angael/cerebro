@@ -6,14 +6,17 @@ import { IThumbnailBeforeUpload } from '@/models/IThumbnail.js';
 import { db } from '@cerebro/db';
 
 async function dbInsert(thumbnail: IThumbnailBeforeUpload['thumbnail']) {
-  return db.insertInto('thumbnail').values({
-    type: thumbnail.type,
-    path: thumbnail.path,
-    size: thumbnail.size,
-    width: thumbnail.width,
-    height: thumbnail.height,
-    item_id: thumbnail.item_id,
-  });
+  return db
+    .insertInto('thumbnail')
+    .values({
+      type: thumbnail.type,
+      path: thumbnail.path,
+      size: thumbnail.size,
+      width: thumbnail.width,
+      height: thumbnail.height,
+      item_id: thumbnail.item_id,
+    })
+    .execute();
 }
 
 export async function uploadThumbnails(thumbnails: IThumbnailBeforeUpload[]) {

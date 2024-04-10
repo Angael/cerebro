@@ -32,7 +32,7 @@ export async function processImage(item: Item) {
   try {
     await db.updateTable('item').set({ optimized: 'STARTED' }).where('id', '=', item.id).execute();
 
-    const { diskPath, width, height, size, animated } = await generateOptimizedSrc(download);
+    const { diskPath, width, height, size } = await generateOptimizedSrc(download);
 
     const s3Path = makeS3Path(item.user_id, 'optimized', changeExtension(sourceFileName, 'webp'));
 
@@ -55,7 +55,7 @@ export async function processImage(item: Item) {
 
     await db.updateTable('item').set({ optimized: 'V1' }).where('id', '=', item.id).execute();
 
-    betterUnlink(diskPath);
+    await betterUnlink(diskPath);
   } catch (e) {
     logger.error('Failed to generate optimized src for item.id %i', item.id);
     error = true;
@@ -86,14 +86,14 @@ export async function processImage(item: Item) {
       logger.error('Failed to upload thumbnails for item.id %i', item.id);
       error = true;
     } finally {
-      forEach(thumbnails, (t) => betterUnlink(t.diskPath));
+      await forEach(thumbnails, (t) => betterUnlink(t.diskPath));
     }
   } catch (e) {
     logger.error('Failed to generate thumbnails for item.id %i', item.id);
     error = true;
   }
 
-  betterUnlink(download);
+  await betterUnlink(download);
 
   if (error) {
     throw new Error('Failed to process image');
