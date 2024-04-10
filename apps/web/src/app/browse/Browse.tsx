@@ -18,6 +18,7 @@ const Browse = () => {
       API.get<QueryItems>('/items', {
         params: { limit: 10, page: pageNr - 1 },
       }).then((res) => res.data),
+    placeholderData: (previousData, previousQuery) => previousData,
   });
 
   if (!data) {
@@ -30,7 +31,7 @@ const Browse = () => {
   return (
     <>
       <Pagination page={pageNr} pageCount={pageCount} />
-      {items?.length > 0 && <ItemGrid items={items} key={pageNr} />}
+      {items?.length > 0 && <ItemGrid items={items} isLoading={!isFetched} />}
       <Pagination page={pageNr} pageCount={pageCount} />
     </>
   );

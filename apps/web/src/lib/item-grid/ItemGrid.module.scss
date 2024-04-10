@@ -1,4 +1,4 @@
-@use "src/style/breakpoints";
+@use 'src/style/breakpoints';
 
 .ItemGrid {
   display: grid;
@@ -16,4 +16,6 @@
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: 200px;
   }
+
+  transition: opacity 0.1s;
 }
