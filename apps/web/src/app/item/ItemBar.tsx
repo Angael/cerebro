@@ -6,10 +6,13 @@ import { useRouter } from 'next/navigation';
 import Icon from '@mdi/react';
 import { mdiArrowLeft } from '@mdi/js';
 import Link from 'next/link';
+import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 
-type Props = {};
+type Props = {
+  isMine?: boolean;
+};
 
-const ItemBar = (props: Props) => {
+const ItemBar = ({ isMine }: Props) => {
   const router = useRouter();
 
   return (
@@ -23,10 +26,9 @@ const ItemBar = (props: Props) => {
         <Icon path={mdiArrowLeft} size={0.8} />
         Go back
       </Link>
-
       <Btn>Download</Btn>
       <Btn>Share</Btn>
-      <Btn>Delete</Btn>
+      {isMine && <Btn>Delete</Btn>}
     </div>
   );
 };

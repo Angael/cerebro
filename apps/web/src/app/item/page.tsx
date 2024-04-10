@@ -20,7 +20,7 @@ const ItemPage = () => {
 
   return (
     <>
-      <ItemBar />
+      <ItemBar isMine={data?.isMine} />
       {data?.type === 'IMAGE' && <ImageItem item={data} />}
       {data?.type === 'VIDEO' && <VideoItem item={data} />}
     </>

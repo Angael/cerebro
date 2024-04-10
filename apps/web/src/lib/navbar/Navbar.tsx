@@ -5,18 +5,13 @@ import IconBtn from '../../styled/icon-btn/IconBtn';
 import Link from 'next/link';
 import Icon from '@mdi/react';
 import { mdiAccount, mdiCog, mdiLogout, mdiUpload, mdiViewGrid } from '@mdi/js';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
-import { UserMe } from '@cerebro/shared';
+import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 
 const Navbar = () => {
-  const user = useQuery({
-    queryKey: [QUERY_KEYS.user],
-    queryFn: () => API.get<UserMe>('/user/me').then((res) => res.data),
-    // Potential optimization:
-    // retry: (failCount, err) => !err,
-  });
+  const user = useCurrentUser();
 
   const queryClient = useQueryClient();
   const logout = useMutation({

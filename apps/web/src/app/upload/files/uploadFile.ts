@@ -9,6 +9,7 @@ export function uploadFile(formData: FormData, { onProgress }: Callbacks) {
     const xhr = new XMLHttpRequest();
     const uploadUrl = `${env.API_URL}/items/upload/file`;
 
+    xhr.withCredentials = true;
     xhr.open('POST', uploadUrl, true);
 
     xhr.upload.onprogress = function (event) {

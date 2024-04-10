@@ -33,7 +33,9 @@ userRoutes.get('/user/limits', async (req, res) => {
       logger.error('Failed to list limits for user: %n', user.id);
       errorResponse(res, e);
     }
-  } catch (e) {}
+  } catch (e) {
+    res.sendStatus(401);
+  }
 });
 
 export default userRoutes;
