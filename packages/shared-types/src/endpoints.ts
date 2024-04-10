@@ -10,9 +10,9 @@ export type GetUploadLimits = {
   bytes: { used: number; max: number };
 };
 
-export interface UserMe {
+export type UserMe = {
   id: string;
   email: string;
   type: string;
   sessionExpiresAt: Date;
-}
+} | null;

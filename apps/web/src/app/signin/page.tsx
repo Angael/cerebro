@@ -5,20 +5,19 @@ import Card from '@/styled/card/Card';
 import Textfield from '@/styled/textfield/Textfield';
 import { Btn } from '@/styled/btn/Btn';
 import Link from 'next/link';
-import { useInvalidateQueries } from '@/utils/useInvalidateQueries';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 
 const Page = () => {
-  const invalidateQueries = useInvalidateQueries();
+  const queryClient = useQueryClient();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const mutation = useMutation({
     mutationFn: () => API.post('/auth/signin', { email, password }),
     onSettled: async () => {
-      await invalidateQueries({ queryKey: [QUERY_KEYS.user] });
+      await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] });
     },
   });
 

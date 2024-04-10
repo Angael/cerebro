@@ -5,6 +5,7 @@ import { db } from '@cerebro/db';
 import { Argon2id } from 'oslo/password';
 import z from 'zod';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
+import { requireSession } from '@/middleware/requireSession.js';
 
 const authRouter = express.Router({ mergeParams: true });
 
@@ -64,6 +65,21 @@ authRouter.post('/auth/signin', async (req, res) => {
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
 
+    res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    res.sendStatus(204);
+  } catch (e) {
+    errorResponse(res, e);
+  }
+});
+
+authRouter.delete('/auth/signout', async (req, res) => {
+  try {
+    const { user, session } = await requireSession(req);
+
+    await db.deleteFrom('user_session').where('user_id', '=', user.id).execute();
+    await lucia.invalidateUserSessions(user.id);
+
+    const sessionCookie = lucia.createBlankSessionCookie();
     res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
     res.sendStatus(204);
   } catch (e) {

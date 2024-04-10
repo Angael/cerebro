@@ -5,7 +5,7 @@ import IconBtn from '../../styled/icon-btn/IconBtn';
 import Link from 'next/link';
 import Icon from '@mdi/react';
 import { mdiAccount, mdiCog, mdiLogout, mdiUpload, mdiViewGrid } from '@mdi/js';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { UserMe } from '@cerebro/shared';
@@ -16,6 +16,12 @@ const Navbar = () => {
     queryFn: () => API.get<UserMe>('/user/me').then((res) => res.data),
     // Potential optimization:
     // retry: (failCount, err) => !err,
+  });
+
+  const queryClient = useQueryClient();
+  const logout = useMutation({
+    mutationFn: () => API.delete('/auth/signout').then((res) => res.data),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] }),
   });
 
   return (
@@ -39,7 +45,11 @@ const Navbar = () => {
           </IconBtn>
 
           {user.data ? (
-            <IconBtn as={Link} href="/signout" title="Signout">
+            <IconBtn
+              onClick={() => logout.mutate()}
+              title="Signout"
+              style={{ opacity: logout.isPending ? 0.5 : 1 }}
+            >
               <Icon path={mdiLogout} />
             </IconBtn>
           ) : (

@@ -10,13 +10,13 @@ import FilesPreview from '@/lib/files-preview/FilesPreview';
 import { Btn, BtnLink } from '@/styled/btn/Btn';
 import { uploadFileToBackend } from '@/app/upload/files/uploadFileToBackend';
 import { preventLeave } from '@/client/preventLeave';
-import { useInvalidateQueries } from '@/utils/useInvalidateQueries';
 import { QUERY_KEYS } from '@/utils/consts';
+import { useQueryClient } from '@tanstack/react-query';
 
 const UploadFilesPage = () => {
   const [files, setFiles] = useState<ExtendedFile[]>([]);
 
-  const invalidateQueries = useInvalidateQueries();
+  const queryClient = useQueryClient();
   const uploadQueue = useRef(new PQueue({ concurrency: 1 }));
 
   const addFiles = (acceptedFiles: File[]) => {
@@ -66,7 +66,7 @@ const UploadFilesPage = () => {
 
     uploadQueue.current.onIdle().then(async () => {
       preventLeave(false);
-      await invalidateQueries({ queryKey: [QUERY_KEYS.uploadLimits] });
+      await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.uploadLimits] });
     });
   };
 

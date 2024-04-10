@@ -18,7 +18,8 @@ userRoutes.get('/user/me', async (req, res) => {
     } satisfies UserMe);
   } catch (e) {
     logger.verbose('Not logged in');
-    errorResponse(res, e);
+
+    res.json(null satisfies UserMe);
   }
 });
 
