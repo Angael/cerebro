@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Btn } from '@/styled/btn/Btn';
 import { useRouter } from 'next/navigation';
 import Icon from '@mdi/react';
@@ -41,6 +41,17 @@ const ItemBar = ({ itemId, isMine }: Props) => {
     },
   });
 
+  const [copied, setCopied] = useState(false);
+  const onShare = async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      setCopied(true);
+    } catch (e) {
+      setCopied(false);
+      console.error('Failed to copy to clipboard', e);
+    }
+  };
+
   return (
     <div className="flex gap-1 wrap">
       <Link
@@ -52,8 +63,7 @@ const ItemBar = ({ itemId, isMine }: Props) => {
         <Icon path={mdiArrowLeft} size={0.8} />
         Go back
       </Link>
-      <Btn>Download</Btn>
-      <Btn>Share</Btn>
+      <Btn onClick={onShare}>{copied ? 'Copied!' : 'Share'}</Btn>
       {isMine && (
         <Btn disabled={deleteMut.isPending} onClick={() => deleteMut.mutate()}>
           Delete
