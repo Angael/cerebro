@@ -113,19 +113,22 @@ jobs:
           script: |
             which -a node
             echo $PATH
-            cd ${{ secrets.FTP_DIST_TEMP_DIR }}/
+            cd ${{ secrets.FTP_DIST_TEMP_DIR }}
             tar -xzvf artifacts.tar.gz
             rm artifacts.tar.gz
             yarn install --production
-      
             cd /
-            pm2 stop cerebro_api
-            service mysql stop
-            rm -r ${{ secrets.FTP_DIST_DIR }} | exit 0
-            
-            mv ${{ secrets.FTP_DIST_TEMP_DIR }} ${{ secrets.FTP_DIST_DIR }} 
-            cd ${{ secrets.FTP_DIST_DIR }}
-            pm2 start cerebro_api
-            service mysql start
+            # pm2 stop cerebro_api
+            # service mysql stop
+
+            rm -r ${{ vars.FTP_DIST_MONOREPO_DIR }} | exit 0
+            mv ${{ secrets.FTP_DIST_TEMP_DIR }} ${{ vars.FTP_DIST_MONOREPO_DIR }} 
+            mv ${{ secrets.FTP_DIST_TEMP_DIR }}/apps/web/out ${{ vars.FTP_DIST_FRONT_DIR }} 
+            rm -r ${{ secrets.FTP_DIST_TEMP_DIR }} | exit 0
+
+            cd ${{ vars.FTP_DIST_MONOREPO_DIR }}
+            cd apps/server/
+            # pm2 start cerebro_api
+            # service mysql start
 
             
