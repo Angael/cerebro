@@ -1,7 +1,7 @@
 import { Thumbnail, ThumbnailType } from '@cerebro/db';
 
 export interface IThumbnailBeforeUpload {
-  thumbnail: Omit<Thumbnail, 'id' | 'createdAt' | 'updatedAt'>;
+  thumbnail: Omit<Thumbnail, 'id' | 'created_at'>;
   diskPath: string;
 }
 

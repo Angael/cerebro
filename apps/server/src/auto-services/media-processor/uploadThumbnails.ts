@@ -1,25 +1,22 @@
 import { mapSeries } from 'modern-async';
 
-import { S3Delete, S3SimpleUpload } from '../../aws/s3-helpers.js';
-import { prisma } from '../../db/db.js';
-import logger from '../../utils/log.js';
-import { IThumbnailBeforeUpload } from '../../models/IThumbnail.js';
+import { S3Delete, S3SimpleUpload } from '@/aws/s3-helpers.js';
+import logger from '@/utils/log.js';
+import { IThumbnailBeforeUpload } from '@/models/IThumbnail.js';
+import { db } from '@cerebro/db';
 
 async function dbInsert(thumbnail: IThumbnailBeforeUpload['thumbnail']) {
-  await prisma.thumbnail.create({
-    data: {
+  return db
+    .insertInto('thumbnail')
+    .values({
       type: thumbnail.type,
       path: thumbnail.path,
       size: thumbnail.size,
       width: thumbnail.width,
       height: thumbnail.height,
-      Item: {
-        connect: {
-          id: thumbnail.itemId,
-        },
-      },
-    },
-  });
+      item_id: thumbnail.item_id,
+    })
+    .execute();
 }
 
 export async function uploadThumbnails(thumbnails: IThumbnailBeforeUpload[]) {
@@ -33,7 +30,7 @@ export async function uploadThumbnails(thumbnails: IThumbnailBeforeUpload[]) {
     } catch (e) {
       logger.error(
         'Error inserting thumbnail into db. Delete s3 thumb for itemId %i',
-        t.thumbnail.itemId,
+        t.thumbnail.item_id,
       );
       await S3Delete(t.thumbnail.path);
       throw e;

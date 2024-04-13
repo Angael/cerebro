@@ -1,11 +1,10 @@
 import { CompressionOptions } from '@vanih/dunes-node';
-import { convertRange } from '../../utils/convertRange.js';
+import { convertRange } from '@/utils/convertRange.js';
 
 type VideoStats = {
   width: number;
   height: number;
   size: number; //bytes
-  bitrateKb: number;
 };
 
 type DecideSettings = CompressionOptions & {

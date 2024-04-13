@@ -1,5 +1,3 @@
-import { Tag } from '@cerebro/db';
-
 export type MyFile =
   | Express.Multer.File
   | {
@@ -13,5 +11,4 @@ export type MyFile =
 export type uploadPayload = {
   file: MyFile;
   userId: string;
-  tags: Tag[];
 };

@@ -1,34 +1,8 @@
 import React from 'react';
-import { ApiServer, getApiHeaders } from '@/utils/api.server';
-import { auth } from '@clerk/nextjs';
-import Pagination from '@/lib/pagination/Pagination';
-import ItemGrid from '@/lib/item-grid/ItemGrid';
+import Browse from '@/app/browse/Browse';
 
-type Props = {
-  searchParams: { page?: string };
-};
-
-const BrowsePage = async ({ searchParams: { page } }: Props) => {
-  const clerkToken = auth();
-  // console.log("clerkToken", clerkToken);
-  // console.log("Token: ", await clerkToken.getToken());
-
-  const pageNr = parseInt(page ?? '1');
-  const { data } = await ApiServer.get('/items', {
-    params: { limit: 10, page: pageNr - 1 },
-    headers: await getApiHeaders(clerkToken),
-  });
-  const { count, items } = data;
-
-  const pageCount = Math.ceil(count / 10);
-
-  return (
-    <>
-      <Pagination page={pageNr} pageCount={pageCount} />
-      {items?.length > 0 && <ItemGrid items={items} key={page} />}
-      <Pagination page={pageNr} pageCount={pageCount} />
-    </>
-  );
+const BrowsePage = () => {
+  return <Browse />;
 };
 
 export default BrowsePage;

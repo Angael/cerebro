@@ -1,9 +1,7 @@
-import { ItemType, MediaType } from '@cerebro/db';
-
-export type { ItemType } from '@cerebro/db';
+import { MediaType } from '@cerebro/db';
 
 export type VideoData = {
-  mediaType: keyof typeof MediaType;
+  mediaType: MediaType;
   src: string;
   width: number;
   height: number;
@@ -12,11 +10,10 @@ export type VideoData = {
 };
 
 export type ImageData = {
-  mediaType: keyof typeof MediaType;
+  mediaType: MediaType;
   src: string;
   width: number;
   height: number;
-  animated: boolean;
 };
 
 export type BaseItem = {
@@ -31,12 +28,12 @@ export type BaseItem = {
 };
 
 export type ImageItem = {
-  type: typeof ItemType.IMAGE;
+  type: 'IMAGE';
   images: ImageData[];
 } & BaseItem;
 
 export type VideoItem = {
-  type: typeof ItemType.VIDEO;
+  type: 'VIDEO';
   videos: VideoData[];
 } & BaseItem;
 

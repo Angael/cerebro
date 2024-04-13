@@ -1,5 +1,5 @@
 import { format, createLogger, transports } from 'winston';
-import { isProd } from '@/utils/env.js';
+import { env } from '@/utils/env.js';
 
 const timeAndPrintf = format.combine(
   format.splat(),
@@ -8,7 +8,7 @@ const timeAndPrintf = format.combine(
 );
 
 export const logger = createLogger({
-  level: isProd ? 'info' : 'debug',
+  level: env.isProd ? 'info' : 'debug',
   transports: [
     new transports.Console({
       format: format.combine(format.colorize(), timeAndPrintf),

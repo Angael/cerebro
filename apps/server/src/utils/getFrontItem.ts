@@ -1,31 +1,31 @@
-import { Image, Item, Thumbnail, User, Video } from '@cerebro/db';
+import { Image, Video } from '@cerebro/db';
 import { BaseItem, FrontItem, ImageItem, VideoItem } from '@cerebro/shared';
 import { s3PathToUrl } from './s3PathToUrl.js';
 import { HttpError } from './errors/HttpError.js';
 import logger from './log.js';
+import { MergedItem } from '@/utils/queryAndMergeItems.js';
 
-type ParamItem = Item & { Image: Image[]; Video: Video[]; thumbnails: Thumbnail[] };
+export function getFrontItem(merged: MergedItem, user_id?: string): FrontItem {
+  const { item, videos, images, thumbnails } = merged;
+  const sourceImage = images.find((e) => e.media_type === 'SOURCE');
+  const sourceVideo = videos.find((e) => e.media_type === 'SOURCE');
 
-export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem {
-  const sourceImage = item.Image.find((e) => e.mediaType === 'SOURCE');
-  const sourceVideo = item.Video.find((e) => e.mediaType === 'SOURCE');
-
-  const compressedImage = item.Image.find((e) => e.mediaType === 'COMPRESSED');
-  const compressedVideo = item.Video.find((e) => e.mediaType === 'COMPRESSED');
+  const compressedImage = images.find((e) => e.media_type === 'COMPRESSED');
+  const compressedVideo = videos.find((e) => e.media_type === 'COMPRESSED');
 
   if (!sourceImage?.size && !sourceVideo?.size) {
     throw new HttpError(404);
   }
 
   const size = sourceImage?.size ?? sourceVideo?.size ?? 0;
-  const thumbnail = item.thumbnails.find((e) => e.type === 'MD');
-  const icon = item.thumbnails.find((e) => e.type === 'XS');
+  const thumbnail = thumbnails.find((e) => e.type === 'MD');
+  const icon = thumbnails.find((e) => e.type === 'XS');
 
   const baseItem: BaseItem = {
     id: item.id,
-    isMine: item.userUid === userUid,
+    isMine: item.user_id === user_id,
     private: item.private,
-    createdAt: item.createdAt.toISOString(),
+    createdAt: item.created_at.toISOString(),
     size,
     thumbnail: s3PathToUrl(thumbnail?.path),
     icon: s3PathToUrl(icon?.path),
@@ -43,11 +43,10 @@ export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem 
       ...baseItem,
       type: 'IMAGE',
       images: images.map((img) => ({
-        mediaType: img.mediaType,
+        mediaType: img.media_type,
         src: s3PathToUrl(img.path),
         height: img.height,
         width: img.width,
-        animated: img.animated,
       })),
     } satisfies ImageItem;
   } else if (item.type === 'VIDEO' && sourceVideo) {
@@ -57,12 +56,12 @@ export function getFrontItem(item: ParamItem, userUid?: User['uid']): FrontItem 
       ...baseItem,
       type: 'VIDEO',
       videos: videos.map((vid) => ({
-        mediaType: vid.mediaType,
+        mediaType: vid.media_type,
         src: s3PathToUrl(vid.path),
         height: vid.height,
         width: vid.width,
-        durationMs: vid.durationMs,
-        bitrateKb: vid.bitrateKb,
+        durationMs: vid.duration_ms,
+        bitrateKb: vid.bitrate_kb,
       })),
     } satisfies VideoItem;
   } else {

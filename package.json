@@ -10,6 +10,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@types/node": "^20.12.2",
     "prettier": "^3.1.1",
     "turbo": "latest"
   },
@@ -19,7 +20,10 @@
   },
   "dependencies": {
     "@cerebro/tsconfig": "workspace:*",
+    "dotenv": "^16.0.3",
+    "dotenv-cli": "^7.2.1",
     "tsup": "^8.0.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "zod": "^3.22.4"
   }
 }

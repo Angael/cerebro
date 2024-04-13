@@ -6,19 +6,15 @@
   "types": "src/main.ts",
   "scripts": {
     "build": "tsup-node src/main.ts",
-    "prisma:seed": "prisma db seed",
-    "prisma:generate": "prisma generate",
-    "prisma:validate": "prisma validate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:deploy": "dotenv -e .env.production -- prisma migrate deploy",
-    "prisma:studio": "prisma studio"
+    "lint": "tsc"
   },
   "dependencies": {
     "@cerebro/tsconfig": "workspace:*",
-    "@prisma/client": "^5.10.2",
+    "kysely": "^0.27.3",
+    "mysql2": "^3.9.3",
     "tslib": "2.5"
   },
   "devDependencies": {
-    "prisma": "^5.10.2"
+    "@types/node": "^20.12.2"
   }
 }

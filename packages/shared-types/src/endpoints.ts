@@ -9,3 +9,10 @@ export type GetUploadLimits = {
   type: string;
   bytes: { used: number; max: number };
 };
+
+export type UserMe = {
+  id: string;
+  email: string;
+  type: string;
+  sessionExpiresAt: Date;
+} | null;

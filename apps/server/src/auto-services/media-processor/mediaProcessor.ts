@@ -1,16 +1,15 @@
 import logger from '../../utils/log.js';
 import { BaseProcessor } from '../base-processor/BaseProcessor.js';
-import { Item, ItemType, Processed } from '@cerebro/db';
-import { prisma } from '../../db/db.js';
+import { db, Item } from '@cerebro/db';
 import { processImage } from './image/processImage.js';
 import { processVideo } from './video/processVideo.js';
 
 const mediaProcessor = new BaseProcessor<Item>({
   concurrency: 1,
   processItem: async (item: Item) => {
-    if (item.type === ItemType.IMAGE) {
+    if (item.type === 'IMAGE') {
       await processImage(item);
-    } else if (item.type === ItemType.VIDEO) {
+    } else if (item.type === 'VIDEO') {
       await processVideo(item);
     } else {
       throw new Error('Tried to optimize unsupported unknown filetype');
@@ -19,41 +18,31 @@ const mediaProcessor = new BaseProcessor<Item>({
   checkInterval: 5000,
 
   getItems: () => {
-    return prisma.item.findMany({
-      take: 10,
-      where: { processed: Processed.NO },
-    });
+    return db.selectFrom('item').selectAll().where('processed', '=', 'NO').limit(10).execute();
   },
 
   canProcessItem: async (item) => {
-    const itemRow = await prisma.item.findFirst({
-      where: { id: item.id },
-    });
+    const { processed } = await db
+      .selectFrom('item')
+      .select('processed')
+      .where('id', '=', item.id)
+      .executeTakeFirstOrThrow();
 
-    return itemRow?.processed === Processed.NO;
+    return processed === 'NO';
   },
 
   setItemStarted: async (item) => {
-    await prisma.item.update({
-      where: { id: item.id },
-      data: { processed: Processed.STARTED },
-    });
+    await db.updateTable('item').set('processed', 'STARTED').where('id', '=', item.id).execute();
   },
 
   setItemProcessed: async (item) => {
     logger.verbose('Processed item %i', item.id);
-    await prisma.item.update({
-      where: { id: item.id },
-      data: { processed: Processed.V1 },
-    });
+    await db.updateTable('item').set('processed', 'V1').where('id', '=', item.id).execute();
   },
 
   onItemError: async (item, error) => {
     logger.error('Error processing item %i, %o', item.id, error);
-    await prisma.item.update({
-      where: { id: item.id },
-      data: { processed: Processed.FAIL },
-    });
+    await db.updateTable('item').set('processed', 'FAIL').where('id', '=', item.id).execute();
   },
 });
 

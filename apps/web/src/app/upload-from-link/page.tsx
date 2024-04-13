@@ -3,24 +3,22 @@ import React, { useState } from 'react';
 import Textfield from '@/styled/textfield/Textfield';
 import { Btn } from '@/styled/btn/Btn';
 import css from './ImportFromLink.module.scss';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import StatsFromLink from './StatsFromLink';
-import { uploadFileFromLink } from '@/app/upload-from-link/requests/uploadFileFromLink';
-import { getStatsFromLink } from '@/app/upload-from-link/requests/getStatsFromLink';
 import { isUrl } from '@/utils/isUrl';
 import UsedSpace from '@/app/upload/used-space/UsedSpace';
-import { useInvalidateQueries } from '@/utils/useInvalidateQueries';
 import { QUERY_KEYS } from '@/utils/consts';
+import { API } from '@/utils/API';
 
 const Page = () => {
-  const invalidateQueries = useInvalidateQueries();
+  const queryClient = useQueryClient();
   const [link, setLink] = useState('');
   const isValidUrl = isUrl(link);
 
   const mutation = useMutation({
-    mutationFn: () => uploadFileFromLink(link),
+    mutationFn: () => API.post('/items/upload/file-from-link', { link }),
     onSettled: async () => {
-      await invalidateQueries({ queryKey: [QUERY_KEYS.uploadLimits] });
+      await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.uploadLimits] });
     },
   });
 
@@ -32,7 +30,10 @@ const Page = () => {
   } = useQuery({
     enabled: isValidUrl,
     queryKey: ['statsFromLink', link],
-    queryFn: () => getStatsFromLink(link),
+    queryFn: () =>
+      API.get<any>('/items/upload/file-from-link', {
+        params: { link },
+      }).then((res) => res.data),
     retry: false,
   });
 

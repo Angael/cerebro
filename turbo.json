@@ -8,18 +8,12 @@
       "outputs": [".next/**", "!.next/cache/**", "dist", "out", "build"]
     },
     "lint": {
-      "dependsOn": ["prisma:generate", "^lint"]
+      "dependsOn": ["^lint"]
     },
     "dev": {
-      "dependsOn": ["^prisma:generate", "^build"],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
-    },
-    "prisma:validate": {
-      "dependsOn": ["^prisma:validate"]
-    },
-    "prisma:generate": {
-      "dependsOn": ["^prisma:validate"]
     },
     "start": {
       "dependsOn": ["build"],
