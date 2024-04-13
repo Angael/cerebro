@@ -17,7 +17,7 @@ const ItemThumb = ({ item }: IProps) => {
   const gridSpanClass = getGridSpan(item);
 
   return (
-    <Link href={`/item/${item.id}`} className={clsx(css.itemBtn, gridSpanClass)}>
+    <Link href={`/item?itemId=${item.id}`} className={clsx(css.itemBtn, gridSpanClass)}>
       {item.private && <Icon path={mdiEyeOff} size={1} className={css.private} />}
       <div className={css.thumbnailContainer}>
         {!thumbnailSrc ? (

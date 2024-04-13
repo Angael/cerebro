@@ -9,5 +9,5 @@ process.on('exit', () => {
 });
 
 process.on('uncaughtException', (e) => {
-  logger.error('Uncaught exception:', e);
+  logger.error('Uncaught exception: %s', e);
 });

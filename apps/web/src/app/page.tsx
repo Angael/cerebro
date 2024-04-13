@@ -1,7 +1,8 @@
-import { redirect } from "next/navigation";
+import React from 'react';
+import Browse from '@/app/browse/Browse';
 
-export default function HomePage(props: any) {
-  redirect("/browse");
+const BrowsePage = () => {
+  return <Browse />;
+};
 
-  return null;
-}
+export default BrowsePage;

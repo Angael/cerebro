@@ -1,20 +1,25 @@
-import { prisma } from '../../db/db.js';
 import logger from '../../utils/log.js';
-import { Item, Video } from '@cerebro/db';
+import { db, Item, Video } from '@cerebro/db';
 
 export const findUncompressedVideoItem = async (): Promise<[Item, Video] | []> => {
-  const uncompressedItems: Item[] =
-    await prisma.$queryRaw`select * FROM Item I WHERE optimized = 'NO' AND type = 'VIDEO' ORDER BY rand() LIMIT 1;`;
+  const uncompressedItem = await db
+    .selectFrom('item')
+    .selectAll()
+    .where('optimized', '=', 'NO')
+    .where('type', '=', 'VIDEO')
+    .limit(1)
+    .executeTakeFirst();
 
-  if (!uncompressedItems[0]) {
+  if (!uncompressedItem) {
     return [];
   }
-  const item = uncompressedItems[0];
-  logger.debug('compressing video itemId %i', item.id);
+  logger.debug('compressing video itemId %i', uncompressedItem.id);
 
-  const originalVid = await prisma.video.findFirstOrThrow({
-    where: { itemId: item.id },
-  });
+  const sourceVideo = await db
+    .selectFrom('video')
+    .selectAll()
+    .where('item_id', '=', uncompressedItem.id)
+    .executeTakeFirstOrThrow();
 
-  return [item, originalVid];
+  return [uncompressedItem, sourceVideo];
 };

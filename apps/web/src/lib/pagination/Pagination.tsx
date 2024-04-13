@@ -9,7 +9,7 @@ type Props = {
   pageCount: number;
 };
 
-const getHref = (page: number) => `/browse?page=${page}`;
+const getHref = (page: number) => `/browse/?pageNr=${page}`;
 
 const Pagination = ({ page, pageCount }: Props) => {
   const canGoBack = page > 1;

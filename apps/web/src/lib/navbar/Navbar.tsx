@@ -1,13 +1,23 @@
+'use client';
 import React from 'react';
 import css from './Navbar.module.scss';
 import IconBtn from '../../styled/icon-btn/IconBtn';
-import { currentUser, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import Icon from '@mdi/react';
-import { mdiCog, mdiUpload, mdiViewGrid } from '@mdi/js';
+import { mdiAccount, mdiCog, mdiLogout, mdiUpload, mdiViewGrid } from '@mdi/js';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/utils/consts';
+import { API } from '@/utils/API';
+import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 
-const Navbar = async () => {
-  const user = await currentUser();
+const Navbar = () => {
+  const user = useCurrentUser();
+
+  const queryClient = useQueryClient();
+  const logout = useMutation({
+    mutationFn: () => API.delete('/auth/signout').then((res) => res.data),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] }),
+  });
 
   return (
     <header className={css.navbar}>
@@ -17,22 +27,34 @@ const Navbar = async () => {
             <h1 className="h4">Cerebro</h1>
           </Link>
 
-          <IconBtn as={Link} href="/upload" title="Upload">
-            <Icon path={mdiUpload} />
-          </IconBtn>
+          {user.data && (
+            <IconBtn as={Link} href="/upload" title="Upload">
+              <Icon path={mdiUpload} />
+            </IconBtn>
+          )}
 
           <IconBtn as={Link} href="/browse" title="Browse">
             <Icon path={mdiViewGrid} />
           </IconBtn>
 
-          <IconBtn as={Link} href="/settings" title="Settings">
-            <Icon path={mdiCog} />
-          </IconBtn>
+          {user.data && (
+            <IconBtn as={Link} href="/settings" title="Settings" disabled>
+              <Icon path={mdiCog} />
+            </IconBtn>
+          )}
 
-          {user && (
-            <div style={{ width: 32, height: 32 }}>
-              <UserButton afterSignOutUrl="/" />
-            </div>
+          {user.data ? (
+            <IconBtn
+              onClick={() => logout.mutate()}
+              title="Signout"
+              style={{ opacity: logout.isPending ? 0.5 : 1 }}
+            >
+              <Icon path={mdiLogout} />
+            </IconBtn>
+          ) : (
+            <IconBtn as={Link} href="/signin" title="Login">
+              <Icon path={mdiAccount} />
+            </IconBtn>
           )}
         </div>
       </div>

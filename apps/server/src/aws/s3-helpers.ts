@@ -8,6 +8,7 @@ import { downloadFile } from '../utils/downloadFile.js';
 import { s3PathToUrl } from '../utils/s3PathToUrl.js';
 import { nanoid } from 'nanoid';
 import { getContentType } from './getContentType.js';
+import { env } from '@/utils/env.js';
 
 export async function S3CreateBucket(bucketName: string) {
   const bucket = bucketName;
@@ -22,7 +23,7 @@ export async function S3CreateBucket(bucketName: string) {
     logger.warn(`Bucket not found! Creating one now...`, { bucket, Buckets });
     s3.createBucket(
       {
-        Bucket: process.env.AWS_BUCKET_NAME,
+        Bucket: env.AWS_BUCKET_NAME,
         ACL: 'public-read',
       },
       (err, data) => {
@@ -47,7 +48,7 @@ export function S3SimpleUpload({
   filePath: string;
 }): Promise<void> {
   const params: AWS.S3.PutObjectRequest = {
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: env.AWS_BUCKET_NAME,
     Key: key,
     Body: fs.createReadStream(filePath),
     ACL: 'public-read',
@@ -69,7 +70,7 @@ export function S3SimpleUpload({
 
 export function S3Delete(Key: string): Promise<void> {
   const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: env.AWS_BUCKET_NAME,
     Key,
   };
 
@@ -92,7 +93,7 @@ export function S3DeleteMany(keys: string[]): Promise<void> {
   }
 
   const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: env.AWS_BUCKET_NAME,
     Delete: {
       Objects: keys.map((Key) => ({ Key })),
       Quiet: false,
