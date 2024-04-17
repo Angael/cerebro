@@ -61,7 +61,7 @@ const ItemBar = ({ itemId, isMine }: Props) => {
         style={{ marginRight: 'auto' }}
       >
         <Icon path={mdiArrowLeft} size={0.8} />
-        Go back
+        Back
       </Link>
       <Btn onClick={onShare}>{copied ? 'Copied!' : 'Share'}</Btn>
       {isMine && (

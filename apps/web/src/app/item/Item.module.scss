@@ -1,3 +1,5 @@
+@use 'src/style/breakpoints';
+
 .container {
   display: flex;
   flex-flow: column;
@@ -9,5 +11,21 @@
 
   .videoItem {
     max-height: calc(100svh - 100px);
+  }
+}
+
+.videoStats {
+  display: flex;
+  flex-flow: column;
+  margin-left: auto;
+
+  justify-content: space-between;
+  padding: 16px;
+  margin-top: 10px;
+  background-color: var(--c-bg-paper);
+  border-radius: 8px;
+
+  @include breakpoints.onlyMobile {
+    width: 100%;
   }
 }

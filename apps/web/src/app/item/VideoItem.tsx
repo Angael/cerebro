@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import type { VideoItem as VideoItemType } from '@cerebro/shared';
 import css from './Item.module.scss';
+import numeral from 'numeral';
 
 type Props = {
   item: VideoItemType;
@@ -24,6 +25,9 @@ const VideoItem = ({ item }: Props) => {
     setQuality(quality as any);
   };
 
+  const sizeStr = numeral(bitrateKb * 1000).format('0.00 b');
+  const durationStr = numeral(durationMs / 1000).format('00:00:00');
+
   return (
     <div className={css.container}>
       <video
@@ -39,15 +43,21 @@ const VideoItem = ({ item }: Props) => {
       >
         <source src={src} />
       </video>
-      <p>Bitrate: {bitrateKb}kbps</p>
-      <p>Duration: {durationMs}ms</p>
-      <select onChange={onSelectQuality} value={quality}>
-        {item.videos.map((video) => (
-          <option key={video.mediaType} value={video.mediaType}>
-            {video.mediaType}
-          </option>
-        ))}
-      </select>
+
+      <div className={css.videoStats} style={{ marginLeft: 'auto' }}>
+        <p>
+          Resolution: {width}x{height}
+        </p>
+        <p>Bitrate: {sizeStr}/s</p>
+        <p>Duration: {durationStr}</p>
+        <select onChange={onSelectQuality} value={quality}>
+          {item.videos.map((video) => (
+            <option key={video.mediaType} value={video.mediaType}>
+              {video.mediaType}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 };
