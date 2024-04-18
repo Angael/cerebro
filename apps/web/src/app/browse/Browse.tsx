@@ -7,6 +7,7 @@ import { API } from '@/utils/API';
 import { QueryItems } from '@cerebro/shared';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useSearchParams } from 'next/navigation';
+import PageLoader from '@/lib/page-loader/PageLoader';
 
 const Browse = () => {
   const searchParams = useSearchParams();
@@ -22,7 +23,7 @@ const Browse = () => {
   });
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <PageLoader />;
   }
 
   const { items, count } = data;
