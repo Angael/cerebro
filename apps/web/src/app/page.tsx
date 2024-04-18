@@ -1,12 +1,8 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import Browse from '@/app/browse/Browse';
 
 const BrowsePage = () => {
-  return (
-    <Suspense>
-      <Browse />
-    </Suspense>
-  );
+  return <Browse />;
 };
 
 export default BrowsePage;
