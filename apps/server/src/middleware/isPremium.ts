@@ -4,7 +4,7 @@ import { optionalSession } from '@/middleware/optionalSession.js';
 
 export const isPremium = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = await optionalSession(req);
-  if (user?.type === 'PREMIUM') {
+  if (user?.type === 'PREMIUM' || user?.type === 'ADMIN') {
     next();
   } else {
     const { method, url } = req;
