@@ -10,8 +10,8 @@ import { requireSession } from '@/middleware/requireSession.js';
 const authRouter = express.Router({ mergeParams: true });
 
 const signupZod = z.object({
-  email: z.string().email().min(6), // a@a.aa
-  password: z.string().min(8),
+  email: z.string().email().min(6).trim(), // a@a.aa
+  password: z.string().min(8).trim(),
 });
 
 authRouter.post('/auth/signup', async (req, res) => {
@@ -38,8 +38,8 @@ authRouter.post('/auth/signup', async (req, res) => {
 });
 
 const signinZod = z.object({
-  email: z.string().min(3),
-  password: z.string().min(3),
+  email: z.string().min(3).trim(),
+  password: z.string().min(3).trim(),
 });
 
 authRouter.post('/auth/signin', async (req, res) => {

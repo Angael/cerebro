@@ -105,7 +105,7 @@ itemRoutes.post(
 );
 
 const fileFromLinkZod = z.object({
-  link: z.string().url(),
+  link: z.string().url().trim(),
   format: z.string().optional(),
 });
 
@@ -140,7 +140,7 @@ itemRoutes.post('/items/upload/file-from-link', isPremium, async (req, res) => {
 });
 
 const fileFromLinkParamsZod = z.object({
-  link: z.string().url(),
+  link: z.string().url().trim(),
 });
 
 itemRoutes.get(
