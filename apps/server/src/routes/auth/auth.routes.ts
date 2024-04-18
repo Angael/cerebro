@@ -10,8 +10,8 @@ import { requireSession } from '@/middleware/requireSession.js';
 const authRouter = express.Router({ mergeParams: true });
 
 const signupZod = z.object({
-  email: z.string().email().min(6).trim(), // a@a.aa
-  password: z.string().min(8).trim(),
+  email: z.string().email('Provide a valid email').min(6, 'Email is too short').trim(), // a@a.aa
+  password: z.string().min(8, 'Password is too short').trim(),
 });
 
 authRouter.post('/auth/signup', async (req, res) => {
@@ -20,6 +20,15 @@ authRouter.post('/auth/signup', async (req, res) => {
 
     const hashedPassword = await new Argon2id().hash(password);
     const userId = generateId(15);
+
+    const userExists = await db
+      .selectFrom('user')
+      .selectAll()
+      .where('email', '=', email)
+      .executeTakeFirst();
+    if (userExists) {
+      return res.status(400).json({ msg: 'Email already taken' });
+    }
 
     await db
       .insertInto('user')

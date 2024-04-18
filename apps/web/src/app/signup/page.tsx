@@ -9,6 +9,7 @@ import { API } from '@/utils/API';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
+import { parseErrorResponse, parseZodError } from '@/utils/parseErrorResponse';
 
 const Page = () => {
   const router = useRouter();
@@ -20,7 +21,6 @@ const Page = () => {
     mutationFn: () => API.post('/auth/signup', { email, password }),
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] });
-      router.push('/');
     },
     onSuccess: () => {
       router.push('/');
@@ -31,6 +31,10 @@ const Page = () => {
     e.preventDefault();
     mutation.mutate();
   };
+
+  const emailError = parseZodError(mutation.error, 'email');
+  const passwordError = parseZodError(mutation.error, 'password');
+  const errorMsg = parseErrorResponse(mutation.error);
 
   return (
     <main style={{ margin: 'auto' }}>
@@ -46,6 +50,7 @@ const Page = () => {
               value: email,
               onChange: (e) => setEmail(e.target.value),
             }}
+            error={emailError}
           />
           <Textfield
             label={'Password'}
@@ -55,7 +60,9 @@ const Page = () => {
               value: password,
               onChange: (e) => setPassword(e.target.value),
             }}
+            error={passwordError}
           />
+          {errorMsg && <p className="body2 error">{errorMsg}</p>}
           <Btn type="submit">Sign Up</Btn>
         </form>
         <Link href="/signin">Sign In</Link>

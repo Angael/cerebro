@@ -33,5 +33,9 @@
       color: var(--c-disabled-bg-text);
       border-color: var(--c-disabled-bg);
     }
+
+    &.error {
+      border-color: var(--c-error);
+    }
   }
 }
