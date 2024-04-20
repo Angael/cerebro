@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Btn } from '@/styled/btn/Btn';
 import { useRouter } from 'next/navigation';
 import Icon from '@mdi/react';
-import { mdiArrowLeft } from '@mdi/js';
+import { mdiArrowLeft, mdiDeleteOutline, mdiShare } from '@mdi/js';
 import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { FrontItem, QueryItems } from '@cerebro/shared';
+import { Button } from '@mantine/core';
 
 type Props = {
   itemId: string;
@@ -63,11 +63,24 @@ const ItemBar = ({ itemId, isMine }: Props) => {
         <Icon path={mdiArrowLeft} size={0.8} />
         Back
       </Link>
-      <Btn onClick={onShare}>{copied ? 'Copied!' : 'Share'}</Btn>
+      <Button
+        variant="light"
+        color="blue"
+        onClick={onShare}
+        rightSection={<Icon path={mdiShare} size={1} />}
+      >
+        {copied ? 'Copied!' : 'Share'}
+      </Button>
       {isMine && (
-        <Btn disabled={deleteMut.isPending} onClick={() => deleteMut.mutate()}>
+        <Button
+          variant="light"
+          color="red"
+          disabled={deleteMut.isPending}
+          onClick={() => deleteMut.mutate()}
+          rightSection={<Icon path={mdiDeleteOutline} size={1} />}
+        >
           Delete
-        </Btn>
+        </Button>
       )}
     </div>
   );

@@ -1,9 +1,9 @@
-import React from "react";
-import numeral from "numeral";
-import css from "./FilePreview.module.scss";
-import ProgressOverlay from "./ProgressOverlay";
-import { ExtendedFile, UPLOAD_STATUS } from "@/app/upload/files/uploadTypes";
-import { Btn, BtnA } from "@/styled/btn/Btn";
+import React from 'react';
+import numeral from 'numeral';
+import css from './FilePreview.module.scss';
+import ProgressOverlay from './ProgressOverlay';
+import { ExtendedFile, UPLOAD_STATUS } from '@/app/upload/files/uploadTypes';
+import { Button } from '@mantine/core';
 
 interface IProps {
   file: ExtendedFile;
@@ -11,25 +11,21 @@ interface IProps {
 }
 
 const FilePreview = ({ file, onDelete }: IProps) => {
-  const isImage = file.file.type.indexOf("image") >= 0;
-  const isVideo = file.file.type.indexOf("video") >= 0;
+  const isImage = file.file.type.indexOf('image') >= 0;
+  const isVideo = file.file.type.indexOf('video') >= 0;
   const tooBig = file.file.size > 15_000_000;
 
-  const sizeStr = numeral(file.file.size).format("0 b");
+  const sizeStr = numeral(file.file.size).format('0 b');
 
-  const showLoader = [
-    UPLOAD_STATUS.started,
-    UPLOAD_STATUS.success,
-    UPLOAD_STATUS.failed,
-  ].includes(file.uploadStatus as any);
+  const showLoader = [UPLOAD_STATUS.started, UPLOAD_STATUS.success, UPLOAD_STATUS.failed].includes(
+    file.uploadStatus as any,
+  );
 
   const { uploadStatus, uploadProgress } = file;
 
   return (
     <article className={css.filePreview}>
-      {showLoader && (
-        <ProgressOverlay status={uploadStatus} progress={uploadProgress} />
-      )}
+      {showLoader && <ProgressOverlay status={uploadStatus} progress={uploadProgress} />}
 
       {isImage && !tooBig && (
         <img alt={file.file.name} className={css.BgImg} src={file.previewSrc} />
@@ -48,12 +44,12 @@ const FilePreview = ({ file, onDelete }: IProps) => {
         </header>
 
         <div className={css.uploadFileActions}>
-          <BtnA href={file.previewSrc} target="_blank">
+          <Button component="a" href={file.previewSrc} target="_blank">
             Open
-          </BtnA>
-          <Btn color="error" onClick={() => onDelete(file.id)}>
+          </Button>
+          <Button color="red" onClick={() => onDelete(file.id)}>
             Delete
-          </Btn>
+          </Button>
         </div>
       </div>
     </article>

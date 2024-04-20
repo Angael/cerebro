@@ -3,12 +3,12 @@
 import React, { useState } from 'react';
 import Card from '@/styled/card/Card';
 import Textfield from '@/styled/textfield/Textfield';
-import { Btn } from '@/styled/btn/Btn';
 import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
+import { Button } from '@mantine/core';
 
 const Page = () => {
   const router = useRouter();
@@ -55,9 +55,9 @@ const Page = () => {
               onChange: (e) => setPassword(e.target.value),
             }}
           />
-          <Btn type="submit" style={{ marginLeft: 'auto' }}>
+          <Button type="submit" style={{ marginLeft: 'auto' }}>
             Sign In
-          </Btn>
+          </Button>
         </form>
         <Link href="/signup" style={{ marginLeft: 'auto' }}>
           Sign Up

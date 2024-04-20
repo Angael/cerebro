@@ -3,13 +3,13 @@
 import React, { useState } from 'react';
 import Card from '@/styled/card/Card';
 import Textfield from '@/styled/textfield/Textfield';
-import { Btn } from '@/styled/btn/Btn';
 import Link from 'next/link';
 import { API } from '@/utils/API';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
 import { parseErrorResponse, parseZodError } from '@/utils/parseErrorResponse';
+import { Button } from '@mantine/core';
 
 const Page = () => {
   const router = useRouter();
@@ -63,7 +63,7 @@ const Page = () => {
             error={passwordError}
           />
           {errorMsg && <p className="body2 error">{errorMsg}</p>}
-          <Btn type="submit">Sign Up</Btn>
+          <Button type="submit">Sign Up</Button>
         </form>
         <Link href="/signin">Sign In</Link>
       </Card>

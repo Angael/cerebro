@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import Textfield from '@/styled/textfield/Textfield';
-import { Btn } from '@/styled/btn/Btn';
 import css from './ImportFromLink.module.scss';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import StatsFromLink from './StatsFromLink';
@@ -9,6 +8,7 @@ import { isUrl } from '@/utils/isUrl';
 import UsedSpace from '@/app/upload/used-space/UsedSpace';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
+import { Button } from '@mantine/core';
 
 const Page = () => {
   const queryClient = useQueryClient();
@@ -59,9 +59,9 @@ const Page = () => {
       />
 
       <StatsFromLink stats={videoStats} isFetching={isFetching} isError={isValidUrl && isError} />
-      <Btn disabled={disabled} type="submit" style={{ alignSelf: 'flex-start' }}>
+      <Button disabled={disabled} type="submit" style={{ alignSelf: 'flex-start' }}>
         Download from link
-      </Btn>
+      </Button>
 
       {!mutation.isPending && mutation.isError && <p className="error">Error!</p>}
       {!mutation.isPending && mutation.isSuccess && <p className="success">Success!</p>}

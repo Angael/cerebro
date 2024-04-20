@@ -7,11 +7,12 @@ import { ExtendedFile, UPLOAD_STATUS } from '@/app/upload/files/uploadTypes';
 import FilesStats from '@/lib/files-preview/FilesStats';
 
 import FilesPreview from '@/lib/files-preview/FilesPreview';
-import { Btn, BtnLink } from '@/styled/btn/Btn';
 import { uploadFileToBackend } from '@/app/upload/files/uploadFileToBackend';
 import { preventLeave } from '@/client/preventLeave';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
+import { Button } from '@mantine/core';
 
 const UploadFilesPage = () => {
   const [files, setFiles] = useState<ExtendedFile[]>([]);
@@ -73,11 +74,13 @@ const UploadFilesPage = () => {
   return (
     <>
       <div className="flex gap-1">
-        <Btn disabled={files.length <= 0} onClick={upload}>
+        <Button disabled={files.length <= 0} onClick={upload}>
           Upload
-        </Btn>
+        </Button>
 
-        <BtnLink href={'/upload-from-link'}>Import from link</BtnLink>
+        <Button component={Link} href={'/upload-from-link'} variant="transparent">
+          Import from link
+        </Button>
       </div>
       <Suspense fallback={null}>
         <FilesPreview files={files} onDelete={removeFile} onAddFiles={addFiles} />
