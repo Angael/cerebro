@@ -45,7 +45,7 @@ itemRoutes.get('/items', async (req, res) => {
   }
 });
 
-itemRoutes.get('/items/item/:id', useCache(), async (req: Request, res) => {
+itemRoutes.get('/items/item/:id', async (req: Request, res) => {
   const { user } = await optionalSession(req);
   try {
     const id = Number(req.params.id);
