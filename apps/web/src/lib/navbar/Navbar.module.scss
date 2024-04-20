@@ -21,3 +21,16 @@
     }
   }
 }
+
+.cerebroLogo {
+  all: unset;
+  cursor: pointer;
+  color: #fff;
+  transition-timing-function: ease-out;
+  transition: opacity 0.1s;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

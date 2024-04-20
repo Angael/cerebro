@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
+import { Text } from '@mantine/core';
 
 const Navbar = () => {
   const user = useCurrentUser();
@@ -23,9 +24,11 @@ const Navbar = () => {
     <header className={css.navbar}>
       <div className={css.navbarBg}>
         <div className={css.navbarFlex}>
-          <Link style={{ marginRight: 'auto' }} href="/">
-            <h1 className="h4">Cerebro</h1>
-          </Link>
+          <Text size="1.5rem" fw={700} component="h1" style={{ marginRight: 'auto' }}>
+            <Link href="/" className={css.cerebroLogo}>
+              Cerebro
+            </Link>
+          </Text>
 
           {user.data && (
             <IconBtn as={Link} href="/upload" title="Upload">
