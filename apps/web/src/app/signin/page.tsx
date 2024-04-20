@@ -2,13 +2,12 @@
 
 import React, { useState } from 'react';
 import Card from '@/styled/card/Card';
-import Textfield from '@/styled/textfield/Textfield';
 import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
-import { Button } from '@mantine/core';
+import { Button, TextInput } from '@mantine/core';
 
 const Page = () => {
   const router = useRouter();
@@ -37,23 +36,19 @@ const Page = () => {
         <h1 className="h1 ">Sign In</h1>
 
         <form className="flex col gap-2" onSubmit={onSubmit}>
-          <Textfield
+          <TextInput
             label={'Email'}
-            input={{
-              name: 'email',
-              type: 'email',
-              value: email,
-              onChange: (e) => setEmail(e.target.value),
-            }}
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <Textfield
+          <TextInput
             label={'Password'}
-            input={{
-              name: 'password',
-              type: 'password',
-              value: password,
-              onChange: (e) => setPassword(e.target.value),
-            }}
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <Button type="submit" style={{ marginLeft: 'auto' }}>
             Sign In

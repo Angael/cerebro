@@ -78,7 +78,7 @@ const UploadFilesPage = () => {
           Upload
         </Button>
 
-        <Button component={Link} href={'/upload-from-link'} variant="transparent">
+        <Button component={Link} c="blue" href={'/upload-from-link'} variant="transparent">
           Import from link
         </Button>
       </div>

@@ -8,7 +8,7 @@ import { isUrl } from '@/utils/isUrl';
 import UsedSpace from '@/app/upload/used-space/UsedSpace';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
-import { Button } from '@mantine/core';
+import { Button, TextInput } from '@mantine/core';
 
 const Page = () => {
   const queryClient = useQueryClient();
@@ -47,15 +47,13 @@ const Page = () => {
   return (
     <form onSubmit={onSubmit} className={css.stack}>
       <UsedSpace />
-      <Textfield
+      <TextInput
         label="Import from link"
-        input={{
-          value: link,
-          onChange: (e) => setLink(e.currentTarget.value),
-          placeholder: 'https://example.com/watcg?v=123',
-          type: 'url',
-          name: 'video-link',
-        }}
+        name="video-link"
+        type="url"
+        placeholder="https://example.com/watcg?v=123"
+        value={link}
+        onChange={(e) => setLink(e.currentTarget.value)}
       />
 
       <StatsFromLink stats={videoStats} isFetching={isFetching} isError={isValidUrl && isError} />

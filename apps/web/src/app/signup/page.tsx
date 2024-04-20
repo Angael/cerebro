@@ -2,14 +2,13 @@
 
 import React, { useState } from 'react';
 import Card from '@/styled/card/Card';
-import Textfield from '@/styled/textfield/Textfield';
 import Link from 'next/link';
 import { API } from '@/utils/API';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
 import { parseErrorResponse, parseZodError } from '@/utils/parseErrorResponse';
-import { Button } from '@mantine/core';
+import { Button, Text, TextInput } from '@mantine/core';
 
 const Page = () => {
   const router = useRouter();
@@ -42,27 +41,27 @@ const Page = () => {
         <h1 className="h1 ">Sign Up</h1>
 
         <form className="flex col gap-2" onSubmit={onSubmit}>
-          <Textfield
-            label={'Email'}
-            input={{
-              name: 'email',
-              type: 'email',
-              value: email,
-              onChange: (e) => setEmail(e.target.value),
-            }}
+          <TextInput
+            label="Email"
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             error={emailError}
           />
-          <Textfield
-            label={'Password'}
-            input={{
-              name: 'password',
-              type: 'password',
-              value: password,
-              onChange: (e) => setPassword(e.target.value),
-            }}
+          <TextInput
+            label="Password"
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             error={passwordError}
           />
-          {errorMsg && <p className="body2 error">{errorMsg}</p>}
+          {errorMsg && (
+            <Text size="sm" c="red.8">
+              {errorMsg}
+            </Text>
+          )}
           <Button type="submit">Sign Up</Button>
         </form>
         <Link href="/signin">Sign In</Link>
