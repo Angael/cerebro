@@ -3,13 +3,13 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Icon from '@mdi/react';
-import { mdiArrowLeft, mdiDeleteOutline, mdiShare } from '@mdi/js';
+import { mdiArrowLeft, mdiDeleteOutline, mdiLink } from '@mdi/js';
 import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { FrontItem, QueryItems } from '@cerebro/shared';
-import { Button } from '@mantine/core';
+import { ActionIcon, Button, Flex } from '@mantine/core';
 
 type Props = {
   itemId: string;
@@ -53,21 +53,21 @@ const ItemBar = ({ itemId, isMine }: Props) => {
   };
 
   return (
-    <div className="flex gap-1 wrap">
-      <Link
+    <Flex gap="sm" align="center" wrap="wrap">
+      <ActionIcon
+        component={Link}
         href="/browse"
+        variant="default"
         onClick={router.back}
-        className="flex center"
         style={{ marginRight: 'auto' }}
       >
         <Icon path={mdiArrowLeft} size={0.8} />
-        Back
-      </Link>
+      </ActionIcon>
       <Button
         variant="light"
         color="blue"
         onClick={onShare}
-        rightSection={<Icon path={mdiShare} size={1} />}
+        rightSection={<Icon path={mdiLink} size={1} />}
       >
         {copied ? 'Copied!' : 'Share'}
       </Button>
@@ -82,7 +82,7 @@ const ItemBar = ({ itemId, isMine }: Props) => {
           Delete
         </Button>
       )}
-    </div>
+    </Flex>
   );
 };
 

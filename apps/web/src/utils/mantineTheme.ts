@@ -4,5 +4,5 @@ export const theme = createTheme({
   /** Put your mantine theme override here */
   fontFamily: 'Open Sans, sans-serif',
   defaultRadius: 'md',
-  primaryColor: 'green',
+  primaryColor: 'teal',
 });
