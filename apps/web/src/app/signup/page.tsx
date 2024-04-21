@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
 import { parseErrorResponse, parseZodError } from '@/utils/parseErrorResponse';
-import { Button, Text, TextInput } from '@mantine/core';
+import { Anchor, Button, Text, TextInput } from '@mantine/core';
 
 const Page = () => {
   const router = useRouter();
@@ -64,7 +64,12 @@ const Page = () => {
           )}
           <Button type="submit">Sign Up</Button>
         </form>
-        <Link href="/signin">Sign In</Link>
+        <Text size="sm">
+          Already have an account?{' '}
+          <Anchor component={Link} href="/signin">
+            Log in
+          </Anchor>
+        </Text>
       </Card>
     </main>
   );
