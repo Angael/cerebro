@@ -1,48 +1,16 @@
-@use "src/style/breakpoints";
-@use "src/style/typography";
+@use 'src/style/breakpoints';
+@use 'src/style/typography';
 
 .StatsFromLink {
-  display: flex;
-  gap: 16px;
-  flex-direction: column;
-
+  align-self: center;
   transition: opacity 0.2s ease-in-out;
 
-  @include breakpoints.desktop() {
-    flex-direction: row;
-  }
-
-  border: solid 1px var(--c-border);
-
   &.error {
-    color: var(--c-error);
-    border: solid 1px var(--c-error);
+    color: var(--mantine-color-red-8);
+    border: solid 1px var(--mantine-color-red-8);
   }
 
-  .thumbnail {
-    object-fit: contain;
-    aspect-ratio: 16/9;
-
-    @include breakpoints.desktop() {
-      height: 200px;
-    }
-  }
-
-  .content {
-    flex: 1;
-    min-width: 40%;
-
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    justify-content: space-between;
-
-    .title {
-      flex: 1;
-    }
-
-    .stats p {
-      @extend .body2;
-    }
+  &.isFetching {
+    opacity: 0.5;
   }
 }
