@@ -30,7 +30,6 @@ img,
 video {
   display: block;
   max-width: 100%;
-  height: auto;
   vertical-align: middle;
   font-style: italic;
   background-repeat: no-repeat;
@@ -57,10 +56,6 @@ details {
   }
 }
 
-.flex-1 {
-  flex: 1;
-}
-
 .flex {
   display: flex;
 
@@ -68,17 +63,8 @@ details {
     flex-direction: column;
   }
 
-  &.gap-1 {
-    gap: 8px;
-  }
-
   &.gap-2 {
     gap: 16px;
-  }
-
-  &.center {
-    justify-content: center;
-    align-items: center;
   }
 
   &.wrap {
