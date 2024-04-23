@@ -8,7 +8,7 @@ import { isUrl } from '@/utils/isUrl';
 import UsedSpace from '@/app/upload/used-space/UsedSpace';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
-import { Button, TextInput } from '@mantine/core';
+import { Button, Text, TextInput } from '@mantine/core';
 
 const Page = () => {
   const queryClient = useQueryClient();
@@ -61,8 +61,8 @@ const Page = () => {
         Download from link
       </Button>
 
-      {!mutation.isPending && mutation.isError && <p className="error">Error!</p>}
-      {!mutation.isPending && mutation.isSuccess && <p className="success">Success!</p>}
+      {!mutation.isPending && mutation.isError && <Text c="red.8">Error!</Text>}
+      {!mutation.isPending && mutation.isSuccess && <Text c="green.8">Success!</Text>}
     </form>
   );
 };

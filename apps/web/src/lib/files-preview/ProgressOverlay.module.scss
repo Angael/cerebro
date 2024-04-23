@@ -1,5 +1,5 @@
-@use "src/style/util";
-@use "src/style/animation";
+@use 'src/style/util';
+@use 'src/style/animation';
 
 @keyframes breathe {
   from {
@@ -35,9 +35,9 @@
     animation: animation.$ease-in-out-quad breathe 0.8s infinite alternate;
   }
   &.success {
-    background: var(--c-success);
+    background: var(--mantine-color-green-5);
   }
   &.failed {
-    background-color: red;
+    background-color: var(--mantine-color-red-5);
   }
 }

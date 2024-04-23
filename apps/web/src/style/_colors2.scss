@@ -16,7 +16,7 @@ html {
   --c-disabled-bg: #6b7280;
   --c-disabled-text: #4b5563;
 
-  --c-bg-paper: #1e293bcc;
+  --c-bg-paper: color-mix(in oklab, var(--mantine-color-gray-9), transparent 20%);
 
   --c-success: #86efac;
   --c-error: #f87171;
