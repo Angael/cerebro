@@ -55,19 +55,3 @@ details {
     cursor: pointer;
   }
 }
-
-.flex {
-  display: flex;
-
-  &.col {
-    flex-direction: column;
-  }
-
-  &.gap-2 {
-    gap: 16px;
-  }
-
-  &.wrap {
-    flex-wrap: wrap;
-  }
-}
