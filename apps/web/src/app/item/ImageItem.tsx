@@ -16,7 +16,14 @@ const ImageItem = ({ item }: Props) => {
 
   return (
     <div className={css.container}>
-      <img width={width} height={height} style={style} src={src} alt="Viewed uploaded media item" />
+      <img
+        className={css.imageItem}
+        width={width}
+        height={height}
+        style={style}
+        src={src}
+        alt="Viewed uploaded media item"
+      />
     </div>
   );
 };

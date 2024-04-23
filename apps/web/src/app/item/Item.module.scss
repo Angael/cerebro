@@ -9,7 +9,12 @@
   margin: 0 auto;
   overflow: hidden;
 
+  .imageItem {
+    height: auto;
+  }
+
   .videoItem {
+    height: auto;
     max-height: calc(100svh - 100px);
   }
 }
