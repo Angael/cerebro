@@ -9,7 +9,7 @@
 
   .navbarBg {
     backdrop-filter: blur(12px);
-    background-color: var(--c-bg-paper);
+    background-color: color-mix(in oklab, var(--mantine-color-gray-9), transparent 20%);
 
     .navbarFlex {
       @include util.container;

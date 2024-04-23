@@ -1,11 +1,12 @@
-@use "src/style/util";
-@use "src/style/breakpoints";
+@use 'src/style/util';
+@use 'src/style/breakpoints';
 
 .uploadFileStats {
   color: var(--c-text);
   background-color: var(--c-bg-paper);
   backdrop-filter: blur(20px);
 
+  align-self: center;
   position: sticky;
   bottom: 8px;
   z-index: util.$layer-2;
