@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import Card from '@/styled/card/Card';
 import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
-import { Anchor, Button, Text, TextInput } from '@mantine/core';
+import { Anchor, Button, Card, Flex, Stack, Text, TextInput } from '@mantine/core';
+import { parseErrorResponse, parseZodError } from '@/utils/parseErrorResponse';
 
 const Page = () => {
   const router = useRouter();
@@ -30,18 +30,21 @@ const Page = () => {
     mutation.mutate();
   };
 
+  const emailError = parseZodError(mutation.error, 'email');
+  const passwordError = parseZodError(mutation.error, 'password');
+  const errorMsg = parseErrorResponse(mutation.error);
+
   return (
     <main style={{ margin: 'auto' }}>
-      <Card className="flex col gap-2">
-        <h1 className="h1 ">Login</h1>
-
-        <form className="flex col gap-2" onSubmit={onSubmit}>
+      <Card component="form" onSubmit={onSubmit} style={{ minWidth: 250 }}>
+        <Stack gap="md">
           <TextInput
             label={'Email'}
             name="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            error={emailError}
           />
           <TextInput
             label={'Password'}
@@ -49,16 +52,22 @@ const Page = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={passwordError}
           />
+          {errorMsg && (
+            <Text size="sm" c="red.8">
+              {errorMsg}
+            </Text>
+          )}
           <Button type="submit">Log in</Button>
-        </form>
-        <Text size="sm">
-          Don't have an account?{' '}
-          <Anchor component={Link} href="/signup">
-            Sign Up
-          </Anchor>
-        </Text>
+        </Stack>
       </Card>
+      <Flex justify="center" gap="sm">
+        <Text size="sm">Don't have an account? </Text>
+        <Anchor size="sm" component={Link} href="/signup">
+          Sign Up
+        </Anchor>
+      </Flex>
     </main>
   );
 };
