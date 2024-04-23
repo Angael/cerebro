@@ -51,6 +51,8 @@ const signinZod = z.object({
   password: z.string().min(3).trim(),
 });
 
+const badEmailOrPassword = { msg: 'Bad email or password' };
+
 authRouter.post('/auth/signin', async (req, res) => {
   try {
     const { email, password } = signinZod.parse(req.body);
@@ -62,12 +64,12 @@ authRouter.post('/auth/signin', async (req, res) => {
       .executeTakeFirst();
 
     if (!user) {
-      return res.status(400).send('User not found');
+      return res.status(400).json(badEmailOrPassword);
     }
 
     const isValidPassword = await new Argon2id().verify(user.hashed_password, password);
     if (!isValidPassword) {
-      return res.status(400).send('Invalid password');
+      return res.status(400).json(badEmailOrPassword);
     }
 
     await db.deleteFrom('user_session').where('user_id', '=', user.id).execute();
