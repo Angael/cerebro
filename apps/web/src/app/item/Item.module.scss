@@ -9,8 +9,13 @@
   margin: 0 auto;
   overflow: hidden;
 
+  .imageItem {
+    height: auto;
+  }
+
   .videoItem {
-    max-height: calc(100svh - 100px);
+    height: auto;
+    max-height: calc(100svh - 200px);
   }
 }
 
@@ -25,7 +30,7 @@
   background-color: var(--c-bg-paper);
   border-radius: 8px;
 
-  @include breakpoints.onlyMobile {
+  @include breakpoints.mobile {
     width: 100%;
   }
 }

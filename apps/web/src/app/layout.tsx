@@ -5,16 +5,19 @@ import Navbar from '@/lib/navbar/Navbar';
 import React from 'react';
 
 import { Providers } from '@/app/providers';
+import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+import { theme } from '@/utils/mantineTheme';
 
 export const metadata: Metadata = {
   title: 'Cerebro',
-  description: 'Meme sharing website',
+  description: 'Stuff sharing website',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <Providers>
-      <html lang="en">
+      <html lang="en" data-mantine-color-scheme="dark">
         <head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={''} />
@@ -30,10 +33,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
           <meta name="msapplication-TileColor" content="#1e293b" />
           <meta name="theme-color" content="#1e293b" />
+          <ColorSchemeScript forceColorScheme="dark" />
         </head>
         <body className={css.body}>
-          <Navbar />
-          <div className={css.Layout}>{children}</div>
+          <MantineProvider theme={theme} defaultColorScheme="dark" forceColorScheme="dark">
+            <Navbar />
+            <div className={css.Layout}>{children}</div>
+          </MantineProvider>
         </body>
       </html>
     </Providers>

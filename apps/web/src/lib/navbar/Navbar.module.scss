@@ -1,5 +1,4 @@
 @use 'src/style/util';
-@use 'src/style/shadow';
 
 .navbar {
   position: sticky;
@@ -9,7 +8,7 @@
 
   .navbarBg {
     backdrop-filter: blur(12px);
-    background-color: var(--c-bg-paper);
+    background-color: color-mix(in oklab, var(--mantine-color-gray-9), transparent 20%);
 
     .navbarFlex {
       @include util.container;
@@ -19,5 +18,18 @@
       height: 100%;
       gap: 12px;
     }
+  }
+}
+
+.cerebroLogo {
+  all: unset;
+  cursor: pointer;
+  color: #fff;
+  transition-timing-function: ease-out;
+  transition: opacity 0.1s;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.8;
   }
 }

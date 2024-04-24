@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import Card from '@/styled/card/Card';
-import Textfield from '@/styled/textfield/Textfield';
-import { Btn } from '@/styled/btn/Btn';
 import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
+import { Anchor, Button, Card, Flex, Stack, Text, TextInput } from '@mantine/core';
+import { parseErrorResponse, parseZodError } from '@/utils/parseErrorResponse';
 
 const Page = () => {
   const router = useRouter();
@@ -31,38 +30,44 @@ const Page = () => {
     mutation.mutate();
   };
 
+  const emailError = parseZodError(mutation.error, 'email');
+  const passwordError = parseZodError(mutation.error, 'password');
+  const errorMsg = parseErrorResponse(mutation.error);
+
   return (
     <main style={{ margin: 'auto' }}>
-      <Card className="flex col gap-2">
-        <h1 className="h1 ">Sign In</h1>
-
-        <form className="flex col gap-2" onSubmit={onSubmit}>
-          <Textfield
+      <Card component="form" onSubmit={onSubmit} style={{ minWidth: 250 }}>
+        <Stack gap="md">
+          <TextInput
             label={'Email'}
-            input={{
-              name: 'email',
-              type: 'email',
-              value: email,
-              onChange: (e) => setEmail(e.target.value),
-            }}
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={emailError}
           />
-          <Textfield
+          <TextInput
             label={'Password'}
-            input={{
-              name: 'password',
-              type: 'password',
-              value: password,
-              onChange: (e) => setPassword(e.target.value),
-            }}
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={passwordError}
           />
-          <Btn type="submit" style={{ marginLeft: 'auto' }}>
-            Sign In
-          </Btn>
-        </form>
-        <Link href="/signup" style={{ marginLeft: 'auto' }}>
-          Sign Up
-        </Link>
+          {errorMsg && (
+            <Text size="sm" c="red.8">
+              {errorMsg}
+            </Text>
+          )}
+          <Button type="submit">Log in</Button>
+        </Stack>
       </Card>
+      <Flex justify="center" gap="sm">
+        <Text size="sm">Don't have an account? </Text>
+        <Anchor size="sm" component={Link} href="/signup">
+          Sign Up
+        </Anchor>
+      </Flex>
     </main>
   );
 };

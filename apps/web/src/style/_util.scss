@@ -1,11 +1,6 @@
 $layer-1: 10;
 $layer-2: 20;
-$layer-3: 30;
-$layer-4: 40;
-$layer-5: 50;
-$layer-6: 60;
 $layer-navbar: 1000;
-$layer-modal: 1010; // when radix ui dialog is removed lib, remove this
 
 $containerWidth: 1000px;
 
@@ -14,32 +9,4 @@ $containerWidth: 1000px;
   max-width: $width;
   margin: 0 auto;
   padding: 16px;
-}
-
-@mixin button-states {
-  &:global(.active) {
-    outline: 2px solid var(--c-primary-active);
-    text-decoration: underline;
-  }
-
-  &:hover,
-  &:focus-visible {
-    border-color: var(--c-primary-hover);
-    background-color: var(--c-primary-hover);
-  }
-
-  &:active {
-    border-color: var(--c-primary-active);
-    background-color: var(--c-primary-active);
-  }
-
-  &[aria-disabled='true'],
-  &[disabled],
-  &[data-disabled] {
-    cursor: auto;
-    pointer-events: none;
-    color: var(--c-disabled-text);
-    background-color: var(--c-disabled-bg);
-    border-color: var(--c-disabled-bg);
-  }
 }

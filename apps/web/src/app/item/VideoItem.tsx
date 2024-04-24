@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import type { VideoItem as VideoItemType } from '@cerebro/shared';
 import css from './Item.module.scss';
 import numeral from 'numeral';
+import { Select } from '@mantine/core';
 
 type Props = {
   item: VideoItemType;
@@ -19,15 +20,14 @@ const VideoItem = ({ item }: Props) => {
     backgroundImage: `url(${placeholder})`,
   } as React.CSSProperties;
 
-  const onSelectQuality = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const quality = e.target.value;
-
-    setQuality(quality as any);
+  const onSelectQuality = (quality: any) => {
+    setQuality(quality);
   };
 
   const sizeStr = numeral(bitrateKb * 1000).format('0.00 b');
   const durationStr = numeral(durationMs / 1000).format('00:00:00');
 
+  const qualities = item.videos.map((video) => video.mediaType);
   return (
     <div className={css.container}>
       <video
@@ -50,13 +50,7 @@ const VideoItem = ({ item }: Props) => {
         </p>
         <p>Bitrate: {sizeStr}/s</p>
         <p>Duration: {durationStr}</p>
-        <select onChange={onSelectQuality} value={quality}>
-          {item.videos.map((video) => (
-            <option key={video.mediaType} value={video.mediaType}>
-              {video.mediaType}
-            </option>
-          ))}
-        </select>
+        <Select data={qualities} value={quality} onChange={onSelectQuality} />
       </div>
     </div>
   );

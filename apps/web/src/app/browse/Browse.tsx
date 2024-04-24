@@ -9,15 +9,17 @@ import { QUERY_KEYS } from '@/utils/consts';
 import { useSearchParams } from 'next/navigation';
 import PageLoader from '@/lib/page-loader/PageLoader';
 
+const limit = 30;
+
 const Browse = () => {
   const searchParams = useSearchParams();
   const pageNr = parseInt(searchParams.get('pageNr') || '1', 10);
 
   const { data, isFetched } = useQuery({
-    queryKey: [QUERY_KEYS.items, { limit: 10, page: pageNr - 1 }],
+    queryKey: [QUERY_KEYS.items, { limit, page: pageNr - 1 }],
     queryFn: () =>
       API.get<QueryItems>('/items', {
-        params: { limit: 10, page: pageNr - 1 },
+        params: { limit, page: pageNr - 1 },
       }).then((res) => res.data),
     placeholderData: (previousData, previousQuery) => previousData,
   });
@@ -27,7 +29,7 @@ const Browse = () => {
   }
 
   const { items, count } = data;
-  const pageCount = Math.ceil(count / 10);
+  const pageCount = Math.ceil(count / limit);
 
   return (
     <>

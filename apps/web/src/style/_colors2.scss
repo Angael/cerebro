@@ -3,22 +3,5 @@ html {
 }
 
 :root {
-  --c-primary: #bae6fd;
-  --c-primary-hover: #7dd3fc;
-  --c-primary-active: #38bdf8;
-  --c-primary-contrast: #0f172acc;
-  --c-primary-contrast-weak: #1e293b; // unused
-
-  --c-text: #f8fafc;
-  --c-textSecondary: #94a3b8;
-  --c-border: color-mix(in srgb, var(--c-bg-paper), var(--c-text) 45%);
-
-  --c-disabled-bg: #6b7280;
-  --c-disabled-text: #4b5563;
-
-  --c-bg: #0f172a;
-  --c-bg-paper: #1e293bcc;
-
-  --c-success: #86efac;
-  --c-error: #f87171;
+  --c-bg-paper: color-mix(in oklab, var(--mantine-color-gray-9), transparent 20%);
 }

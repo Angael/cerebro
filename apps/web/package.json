@@ -11,6 +11,9 @@
   "dependencies": {
     "@cerebro/shared": "workspace:*",
     "@cerebro/tsconfig": "workspace:*",
+    "@mantine/charts": "^7.8.0",
+    "@mantine/core": "^7.8.0",
+    "@mantine/hooks": "^7.8.0",
     "@mdi/js": "^7.3.67",
     "@mdi/react": "^1.6.1",
     "@next/eslint-plugin-next": "^14.1.2",
@@ -27,6 +30,7 @@
     "p-queue": "^7.4.1",
     "react": "^18",
     "react-dropzone": "^14.2.3",
+    "recharts": "2",
     "redaxios": "^0.5.1",
     "sass": "^1.69.5"
   },
@@ -38,6 +42,9 @@
     "@types/react-dom": "^18.2.25",
     "eslint": "8.57.0",
     "eslint-config-next": "^14.2.1",
+    "postcss": "^8.4.38",
+    "postcss-preset-mantine": "^1.14.4",
+    "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.0.3"
   }
 }

@@ -6,6 +6,8 @@
     "db:start": "docker-compose start",
     "build": "turbo build",
     "dev": "turbo dev",
+    "dev:server": "turbo dev --filter server",
+    "dev:web": "turbo dev --filter web",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

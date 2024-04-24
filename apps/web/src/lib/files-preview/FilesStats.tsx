@@ -1,10 +1,10 @@
-import React from "react";
-import numeral from "numeral";
-import css from "./FilesStats.module.scss";
-import { Icon } from "@mdi/react";
-import { mdiChartLine, mdiHarddisk, mdiSigma, mdiSizeXl } from "@mdi/js";
-import { ExtendedFile } from "@/app/upload/files/uploadTypes";
-import Card from "@/styled/card/Card";
+import React from 'react';
+import numeral from 'numeral';
+import css from './FilesStats.module.scss';
+import { Icon } from '@mdi/react';
+import { mdiChartLine, mdiHarddisk, mdiSigma, mdiSizeXl } from '@mdi/js';
+import { ExtendedFile } from '@/app/upload/files/uploadTypes';
+import { Paper, Text } from '@mantine/core';
 
 interface IProps {
   files: ExtendedFile[];
@@ -20,11 +20,7 @@ const FilesStats = ({ files }: IProps) => {
     maxSize = 0;
     types = [];
   } else {
-    types = [
-      ...new Set<string>(
-        files.map((file) => file.file.type.replace("image/", "")),
-      ),
-    ];
+    types = [...new Set<string>(files.map((file) => file.file.type.replace('image/', '')))];
     const sizes = files.map((file) => file.file.size);
     summedSize = sizes.reduce((a, b) => a + b, 0);
 
@@ -38,29 +34,37 @@ const FilesStats = ({ files }: IProps) => {
   }
 
   return (
-    <Card className={css.uploadFileStats}>
+    <Paper p="md" className={css.uploadFileStats}>
       <div className={css.fileStat}>
         <Icon path={mdiSigma} size={2} />
-        <p>{files.length}</p>
-        <p className="body2">Files</p>
+        <Text>{files.length}</Text>
+        <Text size="sm" c="gray.6">
+          Files
+        </Text>
       </div>
       <div className={css.fileStat}>
         <Icon path={mdiHarddisk} size={2} />
-        <p>{numeral(summedSize).format("0.00 b")}</p>
-        <p className="body2">Sum</p>
+        <Text>{numeral(summedSize).format('0.00 b')}</Text>
+        <Text size="sm" c="gray.6">
+          Sum
+        </Text>
       </div>
       <div className={css.fileStat}>
         <Icon path={mdiChartLine} size={2} />
-        <p>{numeral(avgSize).format("0.00 b")}</p>
-        <p className="body2">Avg</p>
+        <Text>{numeral(avgSize).format('0.00 b')}</Text>
+        <Text size="sm" c="gray.6">
+          Avg
+        </Text>
       </div>
       <div className={css.fileStat}>
         <Icon path={mdiSizeXl} size={2} />
-        <p>{numeral(maxSize).format("0.00 b")}</p>
-        <p className="body2">Biggest</p>
+        <Text>{numeral(maxSize).format('0.00 b')}</Text>
+        <Text size="sm" c="gray.6">
+          Biggest
+        </Text>
       </div>
       {/*<p>{types.join(',')}</p>*/}
-    </Card>
+    </Paper>
   );
 };
 

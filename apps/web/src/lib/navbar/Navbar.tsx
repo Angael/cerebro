@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import css from './Navbar.module.scss';
-import IconBtn from '../../styled/icon-btn/IconBtn';
 import Link from 'next/link';
 import Icon from '@mdi/react';
 import { mdiAccount, mdiCog, mdiLogout, mdiUpload, mdiViewGrid } from '@mdi/js';
@@ -9,6 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
+import { ActionIcon, Text } from '@mantine/core';
 
 const Navbar = () => {
   const user = useCurrentUser();
@@ -23,38 +23,47 @@ const Navbar = () => {
     <header className={css.navbar}>
       <div className={css.navbarBg}>
         <div className={css.navbarFlex}>
-          <Link style={{ marginRight: 'auto' }} href="/">
-            <h1 className="h4">Cerebro</h1>
-          </Link>
+          <Text size="1.5rem" fw={700} component="h1" style={{ marginRight: 'auto' }}>
+            <Link href="/" className={css.cerebroLogo}>
+              Cerebro
+            </Link>
+          </Text>
 
           {user.data && (
-            <IconBtn as={Link} href="/upload" title="Upload">
+            <ActionIcon variant="transparent" component={Link} href="/upload" title="Upload">
               <Icon path={mdiUpload} />
-            </IconBtn>
+            </ActionIcon>
           )}
 
-          <IconBtn as={Link} href="/browse" title="Browse">
+          <ActionIcon variant="transparent" component={Link} href="/browse" title="Browse">
             <Icon path={mdiViewGrid} />
-          </IconBtn>
+          </ActionIcon>
 
           {user.data && (
-            <IconBtn as={Link} href="/settings" title="Settings" disabled>
+            <ActionIcon
+              variant="transparent"
+              component={Link}
+              href="/settings"
+              title="Settings"
+              disabled
+            >
               <Icon path={mdiCog} />
-            </IconBtn>
+            </ActionIcon>
           )}
 
           {user.data ? (
-            <IconBtn
+            <ActionIcon
+              variant="transparent"
               onClick={() => logout.mutate()}
               title="Signout"
               style={{ opacity: logout.isPending ? 0.5 : 1 }}
             >
               <Icon path={mdiLogout} />
-            </IconBtn>
+            </ActionIcon>
           ) : (
-            <IconBtn as={Link} href="/signin" title="Login">
+            <ActionIcon variant="transparent" component={Link} href="/signin" title="Login">
               <Icon path={mdiAccount} />
-            </IconBtn>
+            </ActionIcon>
           )}
         </div>
       </div>

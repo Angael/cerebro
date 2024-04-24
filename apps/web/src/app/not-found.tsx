@@ -1,16 +1,19 @@
-import React from "react";
+import React from 'react';
+import { Stack, Text, Title } from '@mantine/core';
 
 type Props = {};
 
 const NotFound = () => {
   return (
-    <article className="flex-1 flex col gap-1 center">
-      <div>
-        <h1 className="h1">404</h1>
-        <p className="body1">Page not found</p>
+    <Stack component="article" justify="center" align="center" flex={1}>
+      <div style={{ textAlign: 'center' }}>
+        <Title order={1}>404</Title>
+        <Text>Page not found.</Text>
       </div>
-      <p className="body2">Please check the URL</p>
-    </article>
+      <Text size="sm" c="gray.6">
+        Please check the URL
+      </Text>
+    </Stack>
   );
 };
 

@@ -1,7 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import Textfield from '@/styled/textfield/Textfield';
-import { Btn } from '@/styled/btn/Btn';
 import css from './ImportFromLink.module.scss';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import StatsFromLink from './StatsFromLink';
@@ -9,6 +7,7 @@ import { isUrl } from '@/utils/isUrl';
 import UsedSpace from '@/app/upload/used-space/UsedSpace';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
+import { Button, Text, TextInput } from '@mantine/core';
 
 const Page = () => {
   const queryClient = useQueryClient();
@@ -47,24 +46,22 @@ const Page = () => {
   return (
     <form onSubmit={onSubmit} className={css.stack}>
       <UsedSpace />
-      <Textfield
+      <TextInput
         label="Import from link"
-        input={{
-          value: link,
-          onChange: (e) => setLink(e.currentTarget.value),
-          placeholder: 'https://example.com/watcg?v=123',
-          type: 'url',
-          name: 'video-link',
-        }}
+        name="video-link"
+        type="url"
+        placeholder="https://example.com/watcg?v=123"
+        value={link}
+        onChange={(e) => setLink(e.currentTarget.value)}
       />
 
       <StatsFromLink stats={videoStats} isFetching={isFetching} isError={isValidUrl && isError} />
-      <Btn disabled={disabled} type="submit" style={{ alignSelf: 'flex-start' }}>
+      <Button disabled={disabled} type="submit" style={{ alignSelf: 'flex-start' }}>
         Download from link
-      </Btn>
+      </Button>
 
-      {!mutation.isPending && mutation.isError && <p className="error">Error!</p>}
-      {!mutation.isPending && mutation.isSuccess && <p className="success">Success!</p>}
+      {!mutation.isPending && mutation.isError && <Text c="red.8">Error!</Text>}
+      {!mutation.isPending && mutation.isSuccess && <Text c="green.8">Success!</Text>}
     </form>
   );
 };

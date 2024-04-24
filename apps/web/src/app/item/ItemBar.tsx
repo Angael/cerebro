@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Btn } from '@/styled/btn/Btn';
 import { useRouter } from 'next/navigation';
 import Icon from '@mdi/react';
-import { mdiArrowLeft } from '@mdi/js';
+import { mdiArrowLeft, mdiDeleteOutline, mdiLink } from '@mdi/js';
 import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { FrontItem, QueryItems } from '@cerebro/shared';
+import { ActionIcon, Button, Flex } from '@mantine/core';
 
 type Props = {
   itemId: string;
@@ -53,23 +53,36 @@ const ItemBar = ({ itemId, isMine }: Props) => {
   };
 
   return (
-    <div className="flex gap-1 wrap">
-      <Link
+    <Flex gap="sm" align="center" wrap="wrap">
+      <ActionIcon
+        component={Link}
         href="/browse"
+        variant="default"
         onClick={router.back}
-        className="flex center"
         style={{ marginRight: 'auto' }}
       >
         <Icon path={mdiArrowLeft} size={0.8} />
-        Back
-      </Link>
-      <Btn onClick={onShare}>{copied ? 'Copied!' : 'Share'}</Btn>
+      </ActionIcon>
+      <Button
+        variant="light"
+        color="blue"
+        onClick={onShare}
+        rightSection={<Icon path={mdiLink} size={1} />}
+      >
+        {copied ? 'Copied!' : 'Share'}
+      </Button>
       {isMine && (
-        <Btn disabled={deleteMut.isPending} onClick={() => deleteMut.mutate()}>
+        <Button
+          variant="light"
+          color="red"
+          disabled={deleteMut.isPending}
+          onClick={() => deleteMut.mutate()}
+          rightSection={<Icon path={mdiDeleteOutline} size={1} />}
+        >
           Delete
-        </Btn>
+        </Button>
       )}
-    </div>
+    </Flex>
   );
 };
 

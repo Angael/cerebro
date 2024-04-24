@@ -9,6 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/apps/server/dist" />
       <excludeFolder url="file://$MODULE_DIR$/packages/db/dist" />
       <excludeFolder url="file://$MODULE_DIR$/packages/shared-types/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/apps/web/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
