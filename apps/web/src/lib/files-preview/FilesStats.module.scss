@@ -22,7 +22,7 @@
     align-items: center;
   }
 
-  @include breakpoints.onlyMobile {
+  @include breakpoints.mobile {
     border-radius: 0;
     justify-content: space-around;
     margin-left: -16px;

@@ -30,7 +30,7 @@
   background-color: var(--c-bg-paper);
   border-radius: 8px;
 
-  @include breakpoints.onlyMobile {
+  @include breakpoints.mobile {
     width: 100%;
   }
 }
