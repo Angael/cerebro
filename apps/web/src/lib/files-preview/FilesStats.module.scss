@@ -2,7 +2,7 @@
 @use 'src/style/breakpoints';
 
 .uploadFileStats {
-  color: var(--c-text);
+  color: var(--mantine-color-gray-1);
   background-color: var(--c-bg-paper);
   backdrop-filter: blur(20px);
 

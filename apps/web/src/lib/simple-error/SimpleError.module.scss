@@ -2,7 +2,7 @@
   width: 100%;
 
   > summary {
-    color: var(--c-textSecondary);
+    color: var(--mantine-color-gray-6);
     text-align: center;
     cursor: pointer;
   }
@@ -12,7 +12,6 @@
     padding: 16px;
     border-radius: 8px;
     background: var(--c-bg-paper);
-    border: 1px solid var(--c-border);
     white-space: pre-wrap;
 
     overflow: auto;
