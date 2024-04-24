@@ -1,5 +1,3 @@
-@use "src/style/shadow";
-
 .itemBtn {
   all: unset;
 
@@ -13,8 +11,6 @@
   overflow: hidden;
   border-radius: 8px;
   cursor: pointer;
-
-  @include shadow.small;
 
   &:global(.wide) {
     grid-column: auto/span 2;

@@ -1,6 +1,4 @@
-// todo change into css variables?
-@use "src/style/shadow";
-@use "src/style/util";
+@use 'src/style/util';
 
 .filePreview {
   position: relative;
@@ -8,7 +6,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  @include shadow.small;
+  box-shadow: var(--mantine-shadow-sm);
 }
 
 .BgImg {
@@ -48,7 +46,7 @@
   padding: 8px;
   font-weight: 500;
   border-radius: 10px;
-  @include shadow.small;
+  box-shadow: var(--mantine-shadow-sm);
 
   background-color: var(--c-bg-paper);
 
