@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import numeral from 'numeral';
-import ProgressBar from '@/styled/progress-bar/ProgressBar';
 import { useQuery } from '@tanstack/react-query';
 import { GetUploadLimits } from '@cerebro/shared';
 import { API } from '@/utils/API';
@@ -29,13 +28,6 @@ const UsedSpace = (props: Props) => {
       <Text>Used space: {usageString}</Text>
       <Progress value={value} size="xl" />
     </Stack>
-    // <ProgressBar
-    //   id="used-space"
-    //   label={'Used space: ' + usageString}
-    //   value={data ? (100 * data.bytes.used) / data.bytes.max : 0}
-    //   max={100}
-    //   isLoading={!data}
-    // />
   );
 };
 
