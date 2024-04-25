@@ -6,4 +6,5 @@ export const QUERY_KEYS = {
   uploadLimits: 'uploadLimits',
   user: 'user',
   adminAllUsers: 'adminAllUsers',
+  adminUserPreview: 'adminUserPreview',
 };

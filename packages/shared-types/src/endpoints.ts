@@ -22,3 +22,9 @@ export type AdminAllUsers = Array<{
   email: string;
   type: string;
 }>;
+
+export type AdminUserPreview_Endpoint = {
+  usedSpace: number;
+  maxSpace: number;
+  itemCount: number;
+};

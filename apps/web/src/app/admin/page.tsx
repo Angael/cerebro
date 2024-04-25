@@ -6,12 +6,13 @@ import { API } from '@/utils/API';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-import { List, Paper, Stack, Title } from '@mantine/core';
+import { Paper, Stack, Title } from '@mantine/core';
+import AdminUserPreview from '@/app/admin/AdminUserPreview';
 
 const AdminPage = () => {
   const user = useCurrentUser();
   const searchParams = useSearchParams();
-  const itemId = searchParams.get('itemId')!;
+  const userId = searchParams.get('userId')!;
 
   const { data } = useQuery({
     enabled: user.data?.type === 'ADMIN',
@@ -21,14 +22,26 @@ const AdminPage = () => {
 
   if (user.isFetched && user.data?.type !== 'ADMIN') {
     return <Title order={1}>Access denied</Title>;
+  } else if (!user.isFetched) {
+    return <Title order={1}>Loading...</Title>;
   }
 
   return (
-    <Stack>
+    <Stack gap="md">
       <Paper p="md">
         <Title order={1}>All users</Title>
-        <List>{data?.map((user) => <List.Item key={user.id}>{user.email}</List.Item>)}</List>
+        <Stack>
+          {data?.map((user) => (
+            <AdminUserPreview key={user.id} userId={user.id} email={user.email} type={user.type} />
+          ))}
+        </Stack>
       </Paper>
+      {userId && (
+        <Paper p="md">
+          <Title order={1}>UserId: {userId}</Title>
+          userId: {userId}
+        </Paper>
+      )}
     </Stack>
   );
 };
