@@ -5,4 +5,5 @@ export const QUERY_KEYS = {
   items: 'items',
   uploadLimits: 'uploadLimits',
   user: 'user',
+  adminAllUsers: 'adminAllUsers',
 };

@@ -8,18 +8,6 @@ import { HttpError } from '@/utils/errors/HttpError.js';
 import { GetUploadLimits } from '@cerebro/shared';
 import logger from '@/utils/log.js';
 
-/* TODO
-This would be good as single query to get sum of all sizes
-SELECT SUM(size) AS total_size
-  FROM (
-    SELECT size FROM Image WHERE Image.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
-    UNION ALL
-    SELECT size FROM Video WHERE Video.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
-    UNION ALL
-    SELECT size FROM Thumbnail WHERE Thumbnail.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
-  ) AS combined_sizes;
- */
-
 export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   let used: number;
   if (usedSpaceCache.has(user_id)) {

@@ -16,3 +16,9 @@ export type UserMe = {
   type: string;
   sessionExpiresAt: Date;
 } | null;
+
+export type AdminAllUsers = Array<{
+  id: string;
+  email: string;
+  type: string;
+}>;

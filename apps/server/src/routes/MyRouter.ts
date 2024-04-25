@@ -9,10 +9,15 @@ import { env } from '../utils/env.js';
 import logger from '@/utils/log.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import authRouter from '@/routes/auth/auth.routes.js';
+import adminRoutes from '@/routes/admin/admin.routes.js';
 
-const routes3: Router[] = [itemRouter, authRouter, userRouter, !env.isProd && localFsRouter].filter(
-  (router): router is Router => !!router,
-);
+const routes3: Router[] = [
+  itemRouter,
+  authRouter,
+  userRouter,
+  adminRoutes,
+  !env.isProd && localFsRouter,
+].filter((router): router is Router => !!router);
 
 const startRouter = () => {
   const router = express();
