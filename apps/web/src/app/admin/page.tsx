@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { AdminAllUsers } from '@cerebro/shared';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { API } from '@/utils/API';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
@@ -12,6 +12,7 @@ import AdminUserPreview from '@/app/admin/AdminUserPreview';
 const AdminPage = () => {
   const user = useCurrentUser();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const userId = searchParams.get('userId')!;
 
   const { data } = useQuery({
@@ -26,13 +27,25 @@ const AdminPage = () => {
     return <Title order={1}>Loading...</Title>;
   }
 
+  const onClickUser = (userId: string) => {
+    router.replace(`?userId=${userId}`, { scroll: false });
+  };
+
   return (
     <Stack gap="md">
-      <Paper p="md">
-        <Title order={1}>All users</Title>
+      <Paper p="md" bg="transparent" withBorder>
+        <Title order={1} mb="md">
+          All users
+        </Title>
         <Stack>
           {data?.map((user) => (
-            <AdminUserPreview key={user.id} userId={user.id} email={user.email} type={user.type} />
+            <AdminUserPreview
+              key={user.id}
+              userId={user.id}
+              email={user.email}
+              type={user.type}
+              onClick={onClickUser}
+            />
           ))}
         </Stack>
       </Paper>

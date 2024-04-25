@@ -4,14 +4,22 @@ import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { AdminAllUsers, AdminUserPreview_Endpoint } from '@cerebro/shared';
 import numeral from 'numeral';
+import { Badge, Group, Paper, Progress, Text, Title } from '@mantine/core';
 
 type Props = {
   userId: string;
   email: string;
   type: string;
+  onClick: (userId: string) => void;
 };
 
-const AdminUserPreview = ({ userId, email, type }: Props) => {
+const badgeColors = {
+  ADMIN: 'red',
+  PREMIUM: 'blue',
+  FREE: 'dark',
+} as any;
+
+const AdminUserPreview = ({ userId, email, type, onClick }: Props) => {
   const { data } = useQuery({
     retry: false,
     queryKey: [QUERY_KEYS.adminUserPreview, { userId }],
@@ -22,14 +30,22 @@ const AdminUserPreview = ({ userId, email, type }: Props) => {
   });
 
   return (
-    <div>
-      <div>userId: {userId}</div>
-      <div>email: {email}</div>
-      <div>type: {type}</div>
-      <div>usedSpace: {numeral(data?.usedSpace).format('0.00 b')}</div>
-      <div>maxSpace: {numeral(data?.maxSpace).format('0.00 b')}</div>
-      <div>itemCount: {data?.itemCount}</div>
-    </div>
+    <Paper p="md" bg="gray.8" onClick={() => onClick(userId)}>
+      <Text size="xs" c="gray.4">
+        {userId}
+      </Text>
+      <Group>
+        <Title order={3}>{email}</Title>
+        <Badge bg={badgeColors[type]}>{type}</Badge>
+      </Group>
+      <Group>
+        <Text>{data?.itemCount} Files</Text>
+        <Text>
+          {numeral(data?.usedSpace).format('0.00 b')} / {numeral(data?.maxSpace).format('0.00 b')}
+        </Text>
+      </Group>
+      <Progress value={((data?.usedSpace || 0) / (data?.maxSpace || 1)) * 100} size="xl" />
+    </Paper>
   );
 };
 
