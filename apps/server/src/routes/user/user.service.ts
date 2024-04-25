@@ -25,7 +25,7 @@ export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   if (usedSpaceCache.has(user_id)) {
     used = usedSpaceCache.get(user_id) as number;
   } else {
-    const { rows } = await sql<{ total: number }>`SELECT SUM(size) AS total
+    const { rows } = await sql<{ total: string }>`SELECT SUM(size) AS total
   FROM (
     SELECT size FROM image WHERE image.item_id IN (SELECT id FROM item WHERE item.user_id = ${user_id})
     UNION ALL
@@ -34,7 +34,7 @@ export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
     SELECT size FROM thumbnail WHERE thumbnail.item_id IN (SELECT id FROM item WHERE item.user_id = ${user_id})
   ) AS combined_sizes;`.execute(db);
 
-    used = rows[0]?.total || 0;
+    used = Math.round(Number(rows[0]?.total || 0));
 
     usedSpaceCache.set(user_id, used);
   }
