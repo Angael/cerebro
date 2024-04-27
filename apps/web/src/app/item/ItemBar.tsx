@@ -3,13 +3,20 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Icon from '@mdi/react';
-import { mdiArrowLeft, mdiDeleteOutline, mdiLink } from '@mdi/js';
+import {
+  mdiArrowLeft,
+  mdiCrownOutline,
+  mdiDeleteOutline,
+  mdiLink,
+  mdiShieldCrownOutline,
+} from '@mdi/js';
 import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { FrontItem, QueryItems } from '@cerebro/shared';
 import { ActionIcon, Button, Flex } from '@mantine/core';
+import { useIsAdmin } from '@/utils/hooks/useIsAdmin';
 
 type Props = {
   itemId: string;
@@ -17,6 +24,7 @@ type Props = {
 };
 
 const ItemBar = ({ itemId, isMine }: Props) => {
+  const isAdmin = useIsAdmin();
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -63,6 +71,7 @@ const ItemBar = ({ itemId, isMine }: Props) => {
       >
         <Icon path={mdiArrowLeft} size={0.8} />
       </ActionIcon>
+
       <Button
         variant="light"
         color="blue"
@@ -71,13 +80,16 @@ const ItemBar = ({ itemId, isMine }: Props) => {
       >
         {copied ? 'Copied!' : 'Share'}
       </Button>
-      {isMine && (
+
+      {(isMine || isAdmin) && (
         <Button
           variant="light"
           color="red"
           disabled={deleteMut.isPending}
           onClick={() => deleteMut.mutate()}
-          rightSection={<Icon path={mdiDeleteOutline} size={1} />}
+          rightSection={
+            <Icon path={!isMine && isAdmin ? mdiCrownOutline : mdiDeleteOutline} size={1} />
+          }
         >
           Delete
         </Button>
