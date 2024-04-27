@@ -7,7 +7,7 @@ import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
 import { Anchor, Button, Card, Flex, Stack, Text, TextInput } from '@mantine/core';
-import { parseErrorResponse, parseZodError } from '@/utils/parseErrorResponse';
+import { parseErrorResponse } from '@/utils/parseErrorResponse';
 
 const Page = () => {
   const router = useRouter();
@@ -16,6 +16,7 @@ const Page = () => {
   const [password, setPassword] = useState('');
 
   const mutation = useMutation({
+    retry: false,
     mutationFn: () => API.post('/auth/signin', { email, password }),
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] });
@@ -30,9 +31,7 @@ const Page = () => {
     mutation.mutate();
   };
 
-  const emailError = parseZodError(mutation.error, 'email');
-  const passwordError = parseZodError(mutation.error, 'password');
-  const errorMsg = parseErrorResponse(mutation.error);
+  const parsedErr = parseErrorResponse(mutation.error);
 
   return (
     <main style={{ margin: 'auto' }}>
@@ -44,7 +43,7 @@ const Page = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            error={emailError}
+            error={parsedErr?.fields.email}
           />
           <TextInput
             label={'Password'}
@@ -52,14 +51,16 @@ const Page = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            error={passwordError}
+            error={parsedErr?.fields.password}
           />
-          {errorMsg && (
+          {parsedErr && (
             <Text size="sm" c="red.8">
-              {errorMsg}
+              {parsedErr.general}
             </Text>
           )}
-          <Button type="submit">Log in</Button>
+          <Button type="submit" loading={mutation.isPending}>
+            Log in
+          </Button>
         </Stack>
       </Card>
       <Flex justify="center" gap="sm">
