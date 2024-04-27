@@ -10,6 +10,7 @@ type Props = {
   userId: string;
   email: string;
   type: string;
+  usage: number;
   onClick: (userId: string) => void;
 };
 
@@ -19,7 +20,7 @@ const badgeColors = {
   FREE: 'dark',
 } as any;
 
-const AdminUserPreview = ({ userId, email, type, onClick }: Props) => {
+const AdminUserPreview = ({ userId, email, type, usage, onClick }: Props) => {
   const { data } = useQuery({
     retry: false,
     queryKey: [QUERY_KEYS.adminUserPreview, { userId }],
@@ -41,10 +42,10 @@ const AdminUserPreview = ({ userId, email, type, onClick }: Props) => {
       <Group>
         <Text>{data?.itemCount} Files</Text>
         <Text>
-          {numeral(data?.usedSpace).format('0.00 b')} / {numeral(data?.maxSpace).format('0.00 b')}
+          {numeral(usage).format('0.00 b')} / {numeral(data?.maxSpace).format('0.00 b')}
         </Text>
       </Group>
-      <Progress value={((data?.usedSpace || 0) / (data?.maxSpace || 1)) * 100} size="xl" />
+      <Progress value={(usage / (data?.maxSpace || 1)) * 100} size="xl" />
     </Paper>
   );
 };

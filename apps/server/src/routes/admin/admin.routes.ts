@@ -7,8 +7,10 @@ import {
   getAllUsers,
   getAllUsersSpaceUsage,
   getUserPreview,
+  getUsersItemCounts,
 } from '@/routes/admin/admin.service.js';
 import z from 'zod';
+import { limitsConfig } from '@/utils/limits.js';
 
 const adminRoutes = express.Router({ mergeParams: true });
 
@@ -28,12 +30,17 @@ adminRoutes.use(async (req, res, next) => {
 
 adminRoutes.get('/admin/all-users', async (req, res) => {
   try {
-    const users = await getAllUsers();
-    const usersUsage = await getAllUsersSpaceUsage();
+    const [users, usersUsage, itemCounts] = await Promise.all([
+      getAllUsers(),
+      getAllUsersSpaceUsage(),
+      getUsersItemCounts(),
+    ]);
 
     const usersWithUsage = users.map((user) => {
-      const usage = usersUsage.find((u) => u.user_id === user.id)?.total ?? 0;
-      return { ...user, usage };
+      const usedSpace = usersUsage.find((u) => u.user_id === user.id)?.total ?? 0;
+      const maxSpace = limitsConfig[user.type];
+      const itemCount = itemCounts.find((u) => u.user_id === user.id)?.itemCount ?? 0;
+      return { ...user, usedSpace, maxSpace, itemCount };
     });
 
     res.json(usersWithUsage satisfies AdminUsers_Endpoint);

@@ -25,40 +25,39 @@ export const getUserPreview = async (userId: string): Promise<AdminUserPreview_E
   };
 };
 
-// SELECT user_id, SUM(size) AS total
-// FROM (SELECT id, user_id
-//       FROM item) AS user_items
-//          LEFT JOIN (SELECT item_id, size
-//                     FROM image
-//                     UNION ALL
-//                     SELECT item_id, size
-//                     FROM video
-//                     UNION ALL
-//                     SELECT item_id, size
-//                     FROM thumbnail) AS combined_sizes ON user_items.id = combined_sizes.item_id
-// GROUP BY user_items.user_id;
-
 export const getAllUsersSpaceUsage = async (): Promise<
   Array<{ user_id: string; total: number }>
 > => {
-  // TODO: FINISH typing this and use it in front
   const queryResult = await sql<{
     user_id: string;
-    total: number;
+    total: string;
   }>`SELECT user_id, SUM(size) AS total
-             FROM (SELECT id, user_id
-                   FROM item) AS user_items
-                      LEFT JOIN (SELECT item_id, size
-                                 FROM image
-                                 UNION ALL
-                                 SELECT item_id, size
-                                 FROM video
-                                 UNION ALL
-                                 SELECT item_id, size
-                                 FROM thumbnail) AS combined_sizes ON user_items.id = combined_sizes.item_id
-             GROUP BY user_items.user_id;`.execute(db);
+       FROM (SELECT id, user_id
+         FROM item) AS user_items
+            LEFT JOIN (SELECT item_id, size
+               FROM image
+               UNION ALL
+               SELECT item_id, size
+               FROM video
+               UNION ALL
+               SELECT item_id, size
+               FROM thumbnail) AS combined_sizes ON user_items.id = combined_sizes.item_id
+       GROUP BY user_items.user_id;`.execute(db);
 
-  console.log(queryResult);
+  return queryResult.rows.map((row) => ({
+    user_id: row.user_id,
+    total: Number(row.total),
+  }));
+};
 
-  return queryResult.rows;
+export const getUsersItemCounts = async () => {
+  const queryResult = await sql<{ user_id: string; itemCount: string }>`
+    SELECT user_id, COUNT(id) AS itemCount
+    FROM item
+    GROUP BY user_id;`.execute(db);
+
+  return queryResult.rows.map((row) => ({
+    user_id: row.user_id,
+    itemCount: Number(row.itemCount),
+  }));
 };

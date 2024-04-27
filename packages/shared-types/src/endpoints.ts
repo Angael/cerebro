@@ -21,7 +21,9 @@ export type AdminUsers_Endpoint = Array<{
   id: string;
   email: string;
   type: string;
-  usage: number;
+  usedSpace: number;
+  maxSpace: number;
+  itemCount: number;
 }>;
 
 export type AdminUserPreview_Endpoint = {

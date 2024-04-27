@@ -44,6 +44,7 @@ const AdminPage = () => {
               userId={user.id}
               email={user.email}
               type={user.type}
+              usage={user.usage}
               onClick={onClickUser}
             />
           ))}
