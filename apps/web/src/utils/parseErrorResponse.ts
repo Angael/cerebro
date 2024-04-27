@@ -17,7 +17,9 @@ export const parseErrorResponse = (error: any): ErrorFromApi | null => {
 
   if (Array.isArray(error?.data)) {
     for (const field of error.data) {
-      fields[field.path] += fields[field.path] ? `, ${field.message}` : field.message;
+      fields[field.path] = fields[field.path]
+        ? `${fields[field.path]}, ${field.message}`
+        : field.message;
     }
   }
 
