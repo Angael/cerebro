@@ -67,7 +67,7 @@ const ItemBar = ({ itemId, isMine }: Props) => {
         href="/browse"
         variant="default"
         onClick={router.back}
-        style={{ marginRight: 'auto' }}
+        style={{ marginRight: 'auto', width: '80px' }}
       >
         <Icon path={mdiArrowLeft} size={0.8} />
       </ActionIcon>
