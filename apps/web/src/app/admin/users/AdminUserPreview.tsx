@@ -1,8 +1,5 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEYS } from '@/utils/consts';
-import { API } from '@/utils/API';
-import { AdminUsers_Endpoint, AdminUserPreview_Endpoint } from '@cerebro/shared';
+import { AdminUsers_Endpoint } from '@cerebro/shared';
 import numeral from 'numeral';
 import { Badge, Group, Paper, Progress, Text, Title } from '@mantine/core';
 
@@ -21,7 +18,7 @@ const AdminUserPreview = ({ user, onClick }: Props) => {
   const { id, type, email, maxSpace, usedSpace, itemCount } = user;
 
   return (
-    <Paper p="md" bg="gray.8" onClick={() => onClick(id)}>
+    <Paper p="md" onClick={() => onClick(id)}>
       <Text size="xs" c="gray.4">
         {id}
       </Text>

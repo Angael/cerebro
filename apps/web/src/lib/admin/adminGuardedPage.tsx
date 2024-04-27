@@ -1,7 +1,8 @@
 'use client';
 import React from 'react';
-import { Loader, Title } from '@mantine/core';
+import { Title } from '@mantine/core';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
+import PageLoader from '@/lib/page-loader/PageLoader';
 
 type Props = { children: React.ReactNode };
 const AdminGuard = ({ children }: Props) => {
@@ -10,7 +11,7 @@ const AdminGuard = ({ children }: Props) => {
   if (user.isFetched && user.data?.type !== 'ADMIN') {
     return <Title order={1}>Access denied</Title>;
   } else if (!user.isFetched) {
-    return <Loader />;
+    return <PageLoader />;
   }
 
   return children;

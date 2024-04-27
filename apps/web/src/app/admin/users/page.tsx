@@ -6,7 +6,7 @@ import { API } from '@/utils/API';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { Paper, Stack, Title } from '@mantine/core';
-import AdminUserPreview from '@/app/admin/AdminUserPreview';
+import AdminUserPreview from '@/app/admin/users/AdminUserPreview';
 import adminGuardedPage from '@/lib/admin/adminGuardedPage';
 
 const AdminUsersPage = () => {
@@ -25,16 +25,13 @@ const AdminUsersPage = () => {
 
   return (
     <Stack gap="md">
-      <Paper p="md" bg="transparent" withBorder>
-        <Title order={1} mb="md">
-          All users
-        </Title>
-        <Stack>
-          {data?.map((user) => (
-            <AdminUserPreview key={user.id} user={user} onClick={onClickUser} />
-          ))}
-        </Stack>
-      </Paper>
+      <Title order={1} mb="md">
+        All users
+      </Title>
+      <Stack>
+        {data?.map((user) => <AdminUserPreview key={user.id} user={user} onClick={onClickUser} />)}
+      </Stack>
+
       {userId && (
         <Paper p="md">
           <Title order={1}>UserId: {userId}</Title>
