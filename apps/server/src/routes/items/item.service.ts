@@ -58,7 +58,7 @@ export async function deleteItem(itemId: number, user: User) {
   const row = await db
     .selectFrom('item')
     .select(['user_id'])
-    .where((eb) => eb.and([eb('id', '=', itemId), eb('user_id', '=', user.id)]))
+    .where('id', '=', itemId)
     .executeTakeFirst();
 
   if (row) {
