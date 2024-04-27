@@ -6,51 +6,25 @@ import { API } from '@/utils/API';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-import { Paper, Stack, Title } from '@mantine/core';
+import { Anchor, Group, Paper, Stack, Title } from '@mantine/core';
 import AdminUserPreview from '@/app/admin/AdminUserPreview';
+import Link from 'next/link';
+import AdminGuardedPage from '@/lib/admin/adminGuardedPage';
+import adminGuardedPage from '@/lib/admin/adminGuardedPage';
 
 const AdminPage = () => {
-  const user = useCurrentUser();
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const userId = searchParams.get('userId')!;
-
-  const { data } = useQuery({
-    enabled: user.data?.type === 'ADMIN',
-    queryKey: [QUERY_KEYS.adminAllUsers],
-    queryFn: () => API.get<AdminUsers_Endpoint>(`/admin/all-users`).then((res) => res.data),
-  });
-
-  if (user.isFetched && user.data?.type !== 'ADMIN') {
-    return <Title order={1}>Access denied</Title>;
-  } else if (!user.isFetched) {
-    return <Title order={1}>Loading...</Title>;
-  }
-
-  const onClickUser = (userId: string) => {
-    router.replace(`?userId=${userId}`, { scroll: false });
-  };
-
   return (
     <Stack gap="md">
-      <Paper p="md" bg="transparent" withBorder>
-        <Title order={1} mb="md">
-          All users
-        </Title>
-        <Stack>
-          {data?.map((user) => (
-            <AdminUserPreview key={user.id} user={user} onClick={onClickUser} />
-          ))}
-        </Stack>
-      </Paper>
-      {userId && (
-        <Paper p="md">
-          <Title order={1}>UserId: {userId}</Title>
-          userId: {userId}
-        </Paper>
-      )}
+      <Group>
+        <Anchor component={Link} href="/admin/users">
+          Users
+        </Anchor>
+        <Anchor component={Link} href="/admin/all-data">
+          All data
+        </Anchor>
+      </Group>
     </Stack>
   );
 };
 
-export default AdminPage;
+export default adminGuardedPage(AdminPage);
