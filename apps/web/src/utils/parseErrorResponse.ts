@@ -7,8 +7,12 @@ export const parseErrorResponse = (error: any): ErrorFromApi | null => {
   let general: string | undefined = error?.data?.msg ?? error?.data?.message;
   let fields: Record<string, string> = {};
 
-  if (!general) {
-    general = error?.message;
+  if (!general && error) {
+    if (error.message) {
+      general = error.message;
+    } else if (typeof error.data === 'string') {
+      general = error.data;
+    }
   }
 
   if (Array.isArray(error?.data)) {

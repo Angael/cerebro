@@ -17,6 +17,8 @@ import { API } from '@/utils/API';
 import { FrontItem, QueryItems } from '@cerebro/shared';
 import { ActionIcon, Button, Flex } from '@mantine/core';
 import { useIsAdmin } from '@/utils/hooks/useIsAdmin';
+import { notifications } from '@mantine/notifications';
+import { parseErrorResponse } from '@/utils/parseErrorResponse';
 
 type Props = {
   itemId: string;
@@ -46,6 +48,13 @@ const ItemBar = ({ itemId, isMine }: Props) => {
         queryKey: [QUERY_KEYS.items],
       });
       router.push('/browse');
+    },
+    onError: (e) => {
+      notifications.show({
+        color: 'red',
+        title: 'Failed to delete',
+        message: parseErrorResponse(e)?.general,
+      });
     },
   });
 
