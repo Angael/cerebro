@@ -17,10 +17,11 @@ export type UserMe = {
   sessionExpiresAt: Date;
 } | null;
 
-export type AdminAllUsers = Array<{
+export type AdminUsers_Endpoint = Array<{
   id: string;
   email: string;
   type: string;
+  usage: number;
 }>;
 
 export type AdminUserPreview_Endpoint = {

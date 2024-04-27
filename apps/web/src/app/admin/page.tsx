@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { AdminAllUsers } from '@cerebro/shared';
+import { AdminUsers_Endpoint } from '@cerebro/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { API } from '@/utils/API';
 import { useQuery } from '@tanstack/react-query';
@@ -18,7 +18,7 @@ const AdminPage = () => {
   const { data } = useQuery({
     enabled: user.data?.type === 'ADMIN',
     queryKey: [QUERY_KEYS.adminAllUsers],
-    queryFn: () => API.get<AdminAllUsers>(`/admin/all-users`).then((res) => res.data),
+    queryFn: () => API.get<AdminUsers_Endpoint>(`/admin/all-users`).then((res) => res.data),
   });
 
   if (user.isFetched && user.data?.type !== 'ADMIN') {

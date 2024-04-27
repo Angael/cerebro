@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
-import { AdminAllUsers, AdminUserPreview_Endpoint } from '@cerebro/shared';
+import { AdminUsers_Endpoint, AdminUserPreview_Endpoint } from '@cerebro/shared';
 import numeral from 'numeral';
 import { Badge, Group, Paper, Progress, Text, Title } from '@mantine/core';
 

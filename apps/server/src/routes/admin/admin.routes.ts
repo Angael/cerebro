@@ -2,8 +2,12 @@ import express from 'express';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
-import { AdminAllUsers, AdminUserPreview_Endpoint, UserMe } from '@cerebro/shared';
-import { getAllUsers, getUserPreview } from '@/routes/admin/admin.service.js';
+import { AdminUsers_Endpoint, AdminUserPreview_Endpoint, UserMe } from '@cerebro/shared';
+import {
+  getAllUsers,
+  getAllUsersSpaceUsage,
+  getUserPreview,
+} from '@/routes/admin/admin.service.js';
 import z from 'zod';
 
 const adminRoutes = express.Router({ mergeParams: true });
@@ -25,7 +29,14 @@ adminRoutes.use(async (req, res, next) => {
 adminRoutes.get('/admin/all-users', async (req, res) => {
   try {
     const users = await getAllUsers();
-    res.json(users satisfies AdminAllUsers);
+    const usersUsage = await getAllUsersSpaceUsage();
+
+    const usersWithUsage = users.map((user) => {
+      const usage = usersUsage.find((u) => u.user_id === user.id)?.total ?? 0;
+      return { ...user, usage };
+    });
+
+    res.json(usersWithUsage satisfies AdminUsers_Endpoint);
   } catch (e) {
     errorResponse(res, e);
   }
