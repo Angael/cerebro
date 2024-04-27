@@ -28,7 +28,7 @@ const AdminUsersPage = () => {
   return (
     <Stack gap="md">
       <Title order={1} mb="md">
-        All users
+        Users:
       </Title>
       <Stack>
         {sortedUsers.map((user) => (
