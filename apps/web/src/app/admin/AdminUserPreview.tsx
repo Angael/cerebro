@@ -7,10 +7,7 @@ import numeral from 'numeral';
 import { Badge, Group, Paper, Progress, Text, Title } from '@mantine/core';
 
 type Props = {
-  userId: string;
-  email: string;
-  type: string;
-  usage: number;
+  user: AdminUsers_Endpoint[number];
   onClick: (userId: string) => void;
 };
 
@@ -20,32 +17,33 @@ const badgeColors = {
   FREE: 'dark',
 } as any;
 
-const AdminUserPreview = ({ userId, email, type, usage, onClick }: Props) => {
-  const { data } = useQuery({
-    retry: false,
-    queryKey: [QUERY_KEYS.adminUserPreview, { userId }],
-    queryFn: () =>
-      API.get<AdminUserPreview_Endpoint>(`/admin/user-preview`, { params: { userId } }).then(
-        (res) => res.data,
-      ),
-  });
+const AdminUserPreview = ({ user, onClick }: Props) => {
+  const { id, type, email, maxSpace, usedSpace, itemCount } = user;
+  // const { data } = useQuery({
+  //   retry: false,
+  //   queryKey: [QUERY_KEYS.adminUserPreview, { userId }],
+  //   queryFn: () =>
+  //     API.get<AdminUserPreview_Endpoint>(`/admin/user-preview`, { params: { userId } }).then(
+  //       (res) => res.data,
+  //     ),
+  // });
 
   return (
-    <Paper p="md" bg="gray.8" onClick={() => onClick(userId)}>
+    <Paper p="md" bg="gray.8" onClick={() => onClick(id)}>
       <Text size="xs" c="gray.4">
-        {userId}
+        {id}
       </Text>
       <Group>
         <Title order={3}>{email}</Title>
         <Badge bg={badgeColors[type]}>{type}</Badge>
       </Group>
       <Group>
-        <Text>{data?.itemCount} Files</Text>
+        <Text>{itemCount} Files</Text>
         <Text>
-          {numeral(usage).format('0.00 b')} / {numeral(data?.maxSpace).format('0.00 b')}
+          {numeral(usedSpace).format('0.00 b')} / {numeral(maxSpace).format('0.00 b')}
         </Text>
       </Group>
-      <Progress value={(usage / (data?.maxSpace || 1)) * 100} size="xl" />
+      <Progress value={(usedSpace / (maxSpace || 1)) * 100} size="xl" />
     </Paper>
   );
 };

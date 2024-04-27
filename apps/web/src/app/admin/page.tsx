@@ -39,14 +39,7 @@ const AdminPage = () => {
         </Title>
         <Stack>
           {data?.map((user) => (
-            <AdminUserPreview
-              key={user.id}
-              userId={user.id}
-              email={user.email}
-              type={user.type}
-              usage={user.usage}
-              onClick={onClickUser}
-            />
+            <AdminUserPreview key={user.id} user={user} onClick={onClickUser} />
           ))}
         </Stack>
       </Paper>
