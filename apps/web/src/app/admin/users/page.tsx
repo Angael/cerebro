@@ -23,13 +23,17 @@ const AdminUsersPage = () => {
     router.replace(`?userId=${userId}`, { scroll: false });
   };
 
+  const sortedUsers = data ? [...data].sort((a, b) => b.usedSpace - a.usedSpace) : [];
+
   return (
     <Stack gap="md">
       <Title order={1} mb="md">
         All users
       </Title>
       <Stack>
-        {data?.map((user) => <AdminUserPreview key={user.id} user={user} onClick={onClickUser} />)}
+        {sortedUsers.map((user) => (
+          <AdminUserPreview key={user.id} user={user} onClick={onClickUser} />
+        ))}
       </Stack>
 
       {userId && (
