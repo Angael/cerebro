@@ -6,6 +6,8 @@ import { getFrontItem } from '@/utils/getFrontItem.js';
 import { db } from '@cerebro/db';
 import { queryAndMergeItems } from '@/utils/queryAndMergeItems.js';
 import invariant from 'tiny-invariant';
+import { User } from 'lucia';
+import { isUserOrAdmin } from '@/utils/isUserOrAdmin.js';
 
 export async function getAllItems(
   limit: number,
@@ -52,18 +54,17 @@ export async function getItem(id: number, userId?: string): Promise<FrontItem> {
   }
 }
 
-export async function deleteItem(itemId: number, userId: string) {
-  // const row = (await db.select('account_uid').from(DB_TABLE.item).where({ id: itemId }))[0];
+export async function deleteItem(itemId: number, user: User) {
   const row = await db
     .selectFrom('item')
     .select(['user_id'])
-    .where((eb) => eb.and([eb('id', '=', itemId), eb('user_id', '=', userId)]))
+    .where((eb) => eb.and([eb('id', '=', itemId), eb('user_id', '=', user.id)]))
     .executeTakeFirst();
 
   if (row) {
     const { user_id } = row;
 
-    if (user_id === userId) {
+    if (isUserOrAdmin(user, user_id)) {
       const s3PathsToDelete: string[] = [];
       try {
         const thumbnails = await db
