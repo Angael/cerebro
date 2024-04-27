@@ -19,14 +19,6 @@ const badgeColors = {
 
 const AdminUserPreview = ({ user, onClick }: Props) => {
   const { id, type, email, maxSpace, usedSpace, itemCount } = user;
-  // const { data } = useQuery({
-  //   retry: false,
-  //   queryKey: [QUERY_KEYS.adminUserPreview, { userId }],
-  //   queryFn: () =>
-  //     API.get<AdminUserPreview_Endpoint>(`/admin/user-preview`, { params: { userId } }).then(
-  //       (res) => res.data,
-  //     ),
-  // });
 
   return (
     <Paper p="md" bg="gray.8" onClick={() => onClick(id)}>
