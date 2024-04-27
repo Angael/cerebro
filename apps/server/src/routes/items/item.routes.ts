@@ -170,7 +170,7 @@ itemRoutes.delete('/items/item/:id', isPremium, async (req, res) => {
   const { user } = await requireSession(req);
 
   try {
-    await deleteItem(id, user.id);
+    await deleteItem(id, user);
 
     usedSpaceCache.del(user.id);
     res.status(200).send();

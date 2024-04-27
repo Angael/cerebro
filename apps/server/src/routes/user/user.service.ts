@@ -8,24 +8,12 @@ import { HttpError } from '@/utils/errors/HttpError.js';
 import { GetUploadLimits } from '@cerebro/shared';
 import logger from '@/utils/log.js';
 
-/* TODO
-This would be good as single query to get sum of all sizes
-SELECT SUM(size) AS total_size
-  FROM (
-    SELECT size FROM Image WHERE Image.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
-    UNION ALL
-    SELECT size FROM Video WHERE Video.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
-    UNION ALL
-    SELECT size FROM Thumbnail WHERE Thumbnail.item_id IN (SELECT id FROM Item WHERE user_id = ${user_id})
-  ) AS combined_sizes;
- */
-
 export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   let used: number;
   if (usedSpaceCache.has(user_id)) {
     used = usedSpaceCache.get(user_id) as number;
   } else {
-    const { rows } = await sql<{ total: number }>`SELECT SUM(size) AS total
+    const { rows } = await sql<{ total: string }>`SELECT SUM(size) AS total
   FROM (
     SELECT size FROM image WHERE image.item_id IN (SELECT id FROM item WHERE item.user_id = ${user_id})
     UNION ALL
@@ -34,7 +22,7 @@ export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
     SELECT size FROM thumbnail WHERE thumbnail.item_id IN (SELECT id FROM item WHERE item.user_id = ${user_id})
   ) AS combined_sizes;`.execute(db);
 
-    used = rows[0]?.total || 0;
+    used = Math.round(Number(rows[0]?.total || 0));
 
     usedSpaceCache.set(user_id, used);
   }

@@ -39,7 +39,7 @@ declare module 'lucia' {
     };
   }
 
-  // One way
+  // For some reason i need to duplicate this interface
   interface User {
     id: string;
     email: string;

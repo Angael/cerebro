@@ -7,7 +7,9 @@ import React from 'react';
 import { Providers } from '@/app/providers';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import { theme } from '@/utils/mantineTheme';
+import { Notifications } from '@mantine/notifications';
 
 export const metadata: Metadata = {
   title: 'Cerebro',
@@ -39,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <MantineProvider theme={theme} defaultColorScheme="dark" forceColorScheme="dark">
             <Navbar />
             <div className={css.Layout}>{children}</div>
+            <Notifications />
           </MantineProvider>
         </body>
       </html>

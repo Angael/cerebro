@@ -16,3 +16,18 @@ export type UserMe = {
   type: string;
   sessionExpiresAt: Date;
 } | null;
+
+export type AdminUsers_Endpoint = Array<{
+  id: string;
+  email: string;
+  type: string;
+  usedSpace: number;
+  maxSpace: number;
+  itemCount: number;
+}>;
+
+export type AdminUserPreview_Endpoint = {
+  usedSpace: number;
+  maxSpace: number;
+  itemCount: number;
+};
