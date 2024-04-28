@@ -5,7 +5,7 @@ import { ZodError } from 'zod';
 
 export const errorResponse = (res: Response, e: any) => {
   if (e instanceof HttpError) {
-    res.sendStatus(e.status);
+    res.status(e.status).send(e.message);
   } else if (e instanceof ZodError) {
     logger.error('Error: %O', e.issues);
     res.status(400).json(e.issues);
