@@ -1,15 +1,5 @@
 import z from 'zod';
 
-//      NODE_ENV: 'development' | 'production';
-//       PORT?: string;
-//       AWS_USER: string;
-//       AWS_KEY: string;
-//       AWS_SECRET: string;
-//       AWS_BUCKET_NAME: string;
-//       AWS_REGION: string;
-//       DATABASE_URL: string;
-//       MOCK_UPLOADS: 'true' | 'false' | undefined;
-
 export const env = z
   .object({
     isProd: z.boolean(),
@@ -23,6 +13,9 @@ export const env = z
     AWS_BUCKET_NAME: z.string(),
     AWS_REGION: z.string(),
     MOCK_UPLOADS: z.boolean(),
+    STRIPE_SECRET_KEY: z.string(),
+    STRIPE_PUBLIC_KEY: z.string(),
+    STRIPE_WEBHOOK_SECRET: z.string(),
   })
   .parse({
     NODE_ENV: process.env.NODE_ENV,
@@ -36,4 +29,7 @@ export const env = z
     AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
     AWS_REGION: process.env.AWS_REGION,
     MOCK_UPLOADS: process.env.MOCK_UPLOADS === 'true',
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
   });

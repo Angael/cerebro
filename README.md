@@ -14,18 +14,28 @@ And packages to simplify sharing variables and types.
 
 - Node.js
 - Pnpm
-- Docker
+- Docker (dev)
 - FFmpeg
 - FFprobe
 - Turborepo
+- stripe CLI (dev)
 
 ## Development
+
+Download stripe cli to test webhooks locally
+https://docs.stripe.com/stripe-cli
 
 To run the whole stack run the following command:
 ```bash
 pnpm i
 npx turbo dev
 ```
+
+In other terminal
+```bash
+pnpm dev:stripe
+```
+
 
 ## Build
 
