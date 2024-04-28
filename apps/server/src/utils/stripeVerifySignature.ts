@@ -6,8 +6,7 @@ export const stripeVerifySignature = async (req: any) => {
   const signature = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET!;
   try {
-    const event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
-    return event;
+    return stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
   } catch (err) {
     logger.error('Stripe signature verification failed! Someone hacking?');
     throw new HttpError(400, 'Stripe signature verification failed!');

@@ -1,16 +1,21 @@
 import express from 'express';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import { stripeVerifySignature } from '@/utils/stripeVerifySignature.js';
+import logger from '@/utils/log.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
 
 const stripeRoutes = express.Router({ mergeParams: true });
 
-stripeRoutes.get('/webhooks/stripe', async (req, res) => {
+stripeRoutes.post('/webhooks/stripe', async (req, res) => {
   try {
-    await stripeVerifySignature(req);
-    res.sendStatus(200);
-    // Validate webhook secret
-    // Log webhook happened?
-    // Save info in db
+    const event = await stripeVerifySignature(req);
+
+    if (event.type === 'checkout.session.completed') {
+      // Handle checkout session completed
+    }
+
+    logger.info('Webhook not handled: %s', event.type);
+    throw new HttpError(404, 'Webhook not handled');
   } catch (e) {
     errorResponse(res, e);
   }
