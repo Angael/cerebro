@@ -1,5 +1,5 @@
 'use client';
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import Pagination from '@/lib/pagination/Pagination';
 import ItemGrid from '@/lib/item-grid/ItemGrid';
 import { useQuery } from '@tanstack/react-query';
@@ -15,12 +15,13 @@ const Browse = () => {
   const searchParams = useSearchParams();
   const pageNr = parseInt(searchParams.get('pageNr') || '1', 10);
 
+  const [prevData, setPrevData] = useState<QueryItems | null>(null);
   const { data, isFetched } = useQuery({
     queryKey: [QUERY_KEYS.items, { limit, page: pageNr - 1 }],
     queryFn: () =>
-      API.get<QueryItems>('/items', {
-        params: { limit, page: pageNr - 1 },
-      }).then((res) => res.data),
+      API.get<QueryItems>('/items', { params: { limit, page: pageNr - 1 } }).then(
+        (res) => res.data,
+      ),
     placeholderData: (previousData, previousQuery) => previousData,
   });
 
