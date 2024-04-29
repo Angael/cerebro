@@ -11,6 +11,7 @@
     "ngrok": "ngrok http 3000"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.564.0",
     "@cerebro/db": "workspace:*",
     "@cerebro/shared": "workspace:*",
     "@cerebro/tsconfig": "workspace:*",
@@ -22,7 +23,6 @@
     "@types/promise-retry": "^1.1.6",
     "@vanih/dunes-node": "3.2.0",
     "async": "^3.2.4",
-    "aws-sdk": "^2.1282.0",
     "cors": "^2.8.5",
     "easy-yt-dlp": "0.7.0",
     "express": "^4.18.2",
