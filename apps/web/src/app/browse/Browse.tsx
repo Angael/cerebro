@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { memo } from 'react';
 import Pagination from '@/lib/pagination/Pagination';
 import ItemGrid from '@/lib/item-grid/ItemGrid';
 import { useQuery } from '@tanstack/react-query';
@@ -40,4 +40,4 @@ const Browse = () => {
   );
 };
 
-export default Browse;
+export default memo(Browse);
