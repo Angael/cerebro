@@ -14,7 +14,8 @@ export const s3 = new S3Client({
 });
 
 try {
+  // Is this code even useful?
   await S3CreateBucket(env.CF_BUCKET_NAME as string);
-} catch (e) {
-  logger.error('Failed to create bucket', e);
+} catch (e: any) {
+  logger.error('Failed to create bucket %s', e?.message);
 }
