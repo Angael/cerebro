@@ -18,10 +18,10 @@ const Browse = () => {
   const { data, isFetched } = useQuery({
     queryKey: [QUERY_KEYS.items, { limit, page: pageNr - 1 }],
     queryFn: () =>
-      API.get<QueryItems>('/items', {
-        params: { limit, page: pageNr - 1 },
-      }).then((res) => res.data),
-    placeholderData: (previousData, previousQuery) => previousData,
+      API.get<QueryItems>('/items', { params: { limit, page: pageNr - 1 } }).then(
+        (res) => res.data,
+      ),
+    placeholderData: (previousData) => previousData,
   });
 
   if (!data) {
