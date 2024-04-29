@@ -1,20 +1,16 @@
-import AWS from 'aws-sdk';
+import { S3Client } from '@aws-sdk/client-s3';
 import { S3CreateBucket } from './s3-helpers.js';
 import { env } from '@/utils/env.js';
 import logger from '@/utils/log.js';
 
-AWS.config.update({
-  apiVersion: 'latest',
+export const s3 = new S3Client({
   region: env.AWS_REGION,
-  accessKeyId: env.AWS_KEY,
-  secretAccessKey: env.AWS_SECRET,
+
   credentials: {
     accessKeyId: env.AWS_KEY,
     secretAccessKey: env.AWS_SECRET,
   },
 });
-
-export const s3 = new AWS.S3();
 
 try {
   await S3CreateBucket(env.AWS_BUCKET_NAME as string);

@@ -1,5 +1,12 @@
 import logger from '../utils/log.js';
-import AWS from 'aws-sdk';
+import {
+  PutObjectCommandInput,
+  ListBucketsCommand,
+  CreateBucketCommand,
+  PutObjectCommand,
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
+} from '@aws-sdk/client-s3';
 import fs from 'fs-extra';
 import { s3 } from './s3.js';
 import path from 'path';
@@ -10,30 +17,24 @@ import { nanoid } from 'nanoid';
 import { getContentType } from './getContentType.js';
 import { env } from '@/utils/env.js';
 
-export async function S3CreateBucket(bucketName: string) {
-  const bucket = bucketName;
-
-  const { Buckets } = await new Promise<AWS.S3.ListBucketsOutput>((res, rej) =>
-    s3.listBuckets((err, data) => (err ? rej(err) : res(data))),
-  );
+export async function S3CreateBucket(bucket: string) {
+  const { Buckets } = await s3.send(new ListBucketsCommand());
 
   const isAlreadyCreated = Buckets && Buckets.some((b) => b.Name === bucket);
 
   if (!isAlreadyCreated) {
     logger.warn(`Bucket not found! Creating one now...`, { bucket, Buckets });
-    s3.createBucket(
-      {
-        Bucket: env.AWS_BUCKET_NAME,
-        ACL: 'public-read',
-      },
-      (err, data) => {
-        if (err) {
-          logger.error(`Failed to create public bucket`, { bucket });
-        } else {
-          logger.info(`Created public S3 bucket`, { bucket });
-        }
-      },
-    );
+    try {
+      await s3.send(
+        new CreateBucketCommand({
+          Bucket: bucket,
+          ACL: 'public-read',
+        }),
+      );
+      logger.info(`Created public S3 bucket`, { bucket });
+    } catch (e) {
+      logger.error(`Failed to create public bucket`, { bucket });
+    }
   } else {
     logger.verbose(`Bucket found`, { bucket });
   }
@@ -47,7 +48,7 @@ export function S3SimpleUpload({
   key: string;
   filePath: string;
 }): Promise<void> {
-  const params: AWS.S3.PutObjectRequest = {
+  const params: PutObjectCommandInput = {
     Bucket: env.AWS_BUCKET_NAME,
     Key: key,
     Body: fs.createReadStream(filePath),
@@ -55,17 +56,14 @@ export function S3SimpleUpload({
     ContentType: getContentType(filePath),
   };
 
-  return new Promise((res, rej) =>
-    s3.upload(params, (s3Err, data) => {
-      if (s3Err) {
-        logger.error(`Failed to upload to s3 %s`, filePath);
-        rej(s3Err);
-      } else {
-        logger.verbose(`Uploaded to s3 %s`, data.Key);
-        res();
-      }
-    }),
-  );
+  try {
+    return s3.send(new PutObjectCommand(params)).then(() => {
+      logger.verbose(`Uploaded to s3 %s`, key);
+    });
+  } catch (e) {
+    logger.error(`Failed to upload to s3 %s`, filePath);
+    throw e;
+  }
 }
 
 export function S3Delete(Key: string): Promise<void> {
@@ -74,17 +72,14 @@ export function S3Delete(Key: string): Promise<void> {
     Key,
   };
 
-  return new Promise((res, rej) =>
-    s3.deleteObject(params, (s3Err) => {
-      if (s3Err) {
-        logger.error(`Failed to delete object`, { Key });
-        rej(s3Err);
-      } else {
-        logger.verbose(`Deleted from s3`, { Key });
-        res();
-      }
-    }),
-  );
+  try {
+    return s3.send(new DeleteObjectCommand(params)).then(() => {
+      logger.verbose(`Deleted from s3 %s`, Key);
+    });
+  } catch (e) {
+    logger.error(`Failed to delete object %s`, Key);
+    throw e;
+  }
 }
 
 export function S3DeleteMany(keys: string[]): Promise<void> {
@@ -100,17 +95,14 @@ export function S3DeleteMany(keys: string[]): Promise<void> {
     },
   };
 
-  return new Promise((res, rej) =>
-    s3.deleteObjects(params, (s3Err) => {
-      if (s3Err) {
-        logger.error(`Failed to delete some objects %o`, keys);
-        rej(s3Err);
-      } else {
-        logger.verbose(`Deleted from s3 %o`, keys);
-        res();
-      }
-    }),
-  );
+  try {
+    return s3.send(new DeleteObjectsCommand(params)).then(() => {
+      logger.verbose(`Deleted from s3 %o`, keys);
+    });
+  } catch (e) {
+    logger.error(`Failed to delete some objects %o`, keys);
+    throw e;
+  }
 }
 
 export async function S3Download(s3Path: string): Promise<string> {
