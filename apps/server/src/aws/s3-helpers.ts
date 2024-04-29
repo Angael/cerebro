@@ -49,7 +49,7 @@ export function S3SimpleUpload({
   filePath: string;
 }): Promise<void> {
   const params: PutObjectCommandInput = {
-    Bucket: env.AWS_BUCKET_NAME,
+    Bucket: env.CF_BUCKET_NAME,
     Key: key,
     Body: fs.createReadStream(filePath),
     ACL: 'public-read',
@@ -68,7 +68,7 @@ export function S3SimpleUpload({
 
 export function S3Delete(Key: string): Promise<void> {
   const params = {
-    Bucket: env.AWS_BUCKET_NAME,
+    Bucket: env.CF_BUCKET_NAME,
     Key,
   };
 
@@ -88,7 +88,7 @@ export function S3DeleteMany(keys: string[]): Promise<void> {
   }
 
   const params = {
-    Bucket: env.AWS_BUCKET_NAME,
+    Bucket: env.CF_BUCKET_NAME,
     Delete: {
       Objects: keys.map((Key) => ({ Key })),
       Quiet: false,
