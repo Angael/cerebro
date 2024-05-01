@@ -8,7 +8,7 @@ import FilesStats from '@/lib/files-preview/FilesStats';
 
 import FilesPreview from '@/lib/files-preview/FilesPreview';
 import { uploadFileToBackend } from '@/app/upload/files/uploadFileToBackend';
-import { preventLeave } from '@/client/preventLeave';
+import { preventLeave } from '@/utils/preventLeave';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
