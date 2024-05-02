@@ -1,14 +1,16 @@
 import React from 'react';
 import { Paper, Stack, Title } from '@mantine/core';
 import UsedSpace from '@/lib/used-space/UsedSpace';
+import UpgradeAccount from '@/app/account/UpgradeAccount';
 
 const AccountPage = () => {
   return (
     <Stack gap="md">
       <Title order={1}>Account</Title>
-      <Paper>
+      <Paper p="md">
         <UsedSpace />
       </Paper>
+      <UpgradeAccount />
     </Stack>
   );
 };

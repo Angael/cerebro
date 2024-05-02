@@ -7,4 +7,5 @@ export const QUERY_KEYS = {
   user: 'user',
   adminAllUsers: 'adminAllUsers',
   adminUserPreview: 'adminUserPreview',
+  accountPlan: 'accountPlan',
 };
