@@ -4,7 +4,7 @@ import css from './ImportFromLink.module.scss';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import StatsFromLink from './StatsFromLink';
 import { isUrl } from '@/utils/isUrl';
-import UsedSpace from '@/app/upload/used-space/UsedSpace';
+import UsedSpace from '@/lib/used-space/UsedSpace';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { Button, Text, TextInput } from '@mantine/core';
