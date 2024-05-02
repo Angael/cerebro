@@ -1,9 +1,9 @@
 import express from 'express';
-import { getLimitsForUser } from './user.service.js';
+import { getLimitsForUser, getUserPlan } from './user.service.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
-import { UserMe } from '@cerebro/shared';
+import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 
 const userRoutes = express.Router({ mergeParams: true });
 
@@ -35,6 +35,18 @@ userRoutes.get('/user/limits', async (req, res) => {
     }
   } catch (e) {
     res.sendStatus(401);
+  }
+});
+
+userRoutes.get('/user/plan', async (req, res) => {
+  try {
+    const { user } = await requireSession(req);
+
+    const userPlan = await getUserPlan(user.id);
+    res.json(userPlan satisfies UserPlan_Endpoint);
+  } catch (e) {
+    logger.error('Failed to get user plan');
+    errorResponse(res, e);
   }
 });
 

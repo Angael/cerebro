@@ -5,7 +5,7 @@ import { sql } from 'kysely';
 
 import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
-import { GetUploadLimits } from '@cerebro/shared';
+import { GetUploadLimits, UserPlan_Endpoint } from '@cerebro/shared';
 import logger from '@/utils/log.js';
 
 export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
@@ -62,4 +62,22 @@ export async function doesUserHaveSpaceLeftForFile(userId: string, file: MyFile)
   const limits = await getLimitsForUser(userId);
   const spaceLeft = limits.bytes.max - limits.bytes.used;
   return spaceLeft - file.size > 0;
+}
+
+export async function getUserPlan(userId: string): Promise<UserPlan_Endpoint> {
+  const { active_plan, plan_expiration } = await db
+    .selectFrom('stripe_customer')
+    .select(['active_plan', 'plan_expiration'])
+    .where('user_id', '=', userId)
+    .executeTakeFirstOrThrow();
+
+  console.log({
+    active_plan,
+    plan_expiration,
+  });
+
+  return {
+    activePlan: active_plan,
+    expiresAt: plan_expiration,
+  };
 }
