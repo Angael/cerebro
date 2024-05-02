@@ -32,23 +32,16 @@ interface SessionTable {
   expires_at: Date;
 }
 
-//    id                 VARCHAR(64) NOT NULL PRIMARY KEY,
-//     user_id            VARCHAR(64) NOT NULL UNIQUE,
-//     subscription_id    VARCHAR(64) NOT NULL UNIQUE,
-//     stripe_customer_id VARCHAR(64) NOT NULL UNIQUE,
-//     active_plan        ENUM ('VIP', 'BETA_TIER'),
-//     plan_expiration    DATETIME,
 interface StripeCustomerTable {
   id: string;
   user_id: string;
   subscription_id: string;
   stripe_customer_id: string;
   active_plan: 'VIP' | 'BETA_TIER';
-  plan_expiration: Date | null
+  plan_expiration: Date | null;
 }
 
 export type StriperCustomer = Selectable<StripeCustomerTable>;
-
 
 export type ItemType = 'IMAGE' | 'VIDEO';
 

@@ -1,4 +1,5 @@
 import { FrontItem } from './types.js';
+import { StriperCustomer } from '@cerebro/db';
 
 export type QueryItems = {
   count: number;
@@ -16,6 +17,11 @@ export type UserMe = {
   type: string;
   sessionExpiresAt: Date;
 } | null;
+
+export type UserPlan_Endpoint = {
+  activePlan: StriperCustomer['active_plan'];
+  expiresAt: Date | null;
+};
 
 export type AdminUsers_Endpoint = Array<{
   id: string;
