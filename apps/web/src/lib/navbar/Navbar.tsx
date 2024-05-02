@@ -47,8 +47,8 @@ const Navbar = () => {
           </ActionIcon>
 
           {user.data && (
-            <ActionIcon variant="transparent" component={Link} href="/settings" disabled>
-              <Icon path={mdiCog} />
+            <ActionIcon variant="transparent" component={Link} href="/account">
+              <Icon path={mdiAccount} />
             </ActionIcon>
           )}
 
