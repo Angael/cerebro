@@ -67,8 +67,7 @@ userRoutes.post('/user/subscribe', async (req, res) => {
       payment_method_types: ['card'],
       line_items: [
         {
-          price: process.env.STRIPE_PRICE_ID,
-          quantity: 1,
+          price: process.env.STRIPE_ACCESS_PRICE_ID,
         },
       ],
     });
