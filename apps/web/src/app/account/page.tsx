@@ -7,9 +7,8 @@ const AccountPage = () => {
   return (
     <Stack gap="md">
       <Title order={1}>Account</Title>
-      <Paper p="md">
-        <UsedSpace />
-      </Paper>
+
+      <UsedSpace />
       <UpgradeAccount />
     </Stack>
   );
