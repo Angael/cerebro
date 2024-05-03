@@ -5,8 +5,10 @@ import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 import { stripe } from '@/stripe.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
 
 const userRoutes = express.Router({ mergeParams: true });
+userRoutes.use('/user', express.json());
 
 userRoutes.get('/user/me', async (req, res) => {
   try {
@@ -43,8 +45,16 @@ userRoutes.get('/user/plan', async (req, res) => {
   try {
     const { user } = await requireSession(req);
 
-    const userPlan = await getStripeCustomer(user.id);
-    res.json(userPlan satisfies UserPlan_Endpoint);
+    try {
+      const userPlan = await getStripeCustomer(user.id);
+      res.json(userPlan satisfies UserPlan_Endpoint);
+    } catch (e) {
+      if (e instanceof HttpError && e.status === 404) {
+        res.json(null satisfies UserPlan_Endpoint);
+      } else {
+        throw e;
+      }
+    }
   } catch (e) {
     logger.error('Failed to get user plan');
     errorResponse(res, e);
@@ -54,13 +64,15 @@ userRoutes.get('/user/plan', async (req, res) => {
 userRoutes.post('/user/subscribe', async (req, res) => {
   try {
     const { user } = await requireSession(req);
-    const { customerId } = await getStripeCustomer(user.id);
+    const stripeCustomer = await getStripeCustomer(user.id).catch(() => null);
+
     const session = await stripe.checkout.sessions.create({
       metadata: {
         user_id: user.id,
+        plan: 'BETA_TIER',
       },
       mode: 'subscription',
-      customer: customerId,
+      customer: stripeCustomer?.customerId,
       customer_email: user.email,
       success_url: `${req.headers.origin}/account`,
       cancel_url: `${req.headers.origin}/account`,
@@ -68,6 +80,7 @@ userRoutes.post('/user/subscribe', async (req, res) => {
       line_items: [
         {
           price: process.env.STRIPE_ACCESS_PRICE_ID,
+          quantity: 1,
         },
       ],
     });
@@ -80,9 +93,14 @@ userRoutes.post('/user/subscribe', async (req, res) => {
 userRoutes.get('/user/billing', async (req, res) => {
   try {
     const { user } = await requireSession(req);
-    const { customerId } = await getStripeCustomer(user.id);
+    const stripeCustomer = await getStripeCustomer(user.id);
+
+    if (!stripeCustomer) {
+      throw new HttpError(400, 'User has no stripe customer');
+    }
+
     const portalSession = await stripe.billingPortal.sessions.create({
-      customer: customerId,
+      customer: stripeCustomer.customerId,
       return_url: req.headers.origin,
     });
     // TODO: maybe a hardcoded link will do?
