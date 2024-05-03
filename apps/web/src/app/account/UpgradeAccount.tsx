@@ -22,6 +22,8 @@ const UpgradeAccount = (props: Props) => {
 
   const onSubscribe = async () => {
     const response = await API.post('/user/subscribe');
+
+    location.href = response.data.url;
   };
 
   const onGoToBilling = async () => {
@@ -31,21 +33,20 @@ const UpgradeAccount = (props: Props) => {
 
   return (
     <Paper p="md" pos="relative">
-      <LoadingOverlay visible={!subInfo.data || subInfo.isFetching} />
+      <LoadingOverlay visible={!subInfo.isFetched || subInfo.isFetching} />
       {hasPlan ? (
         <>
           <Title order={2}>Current plan</Title>
           <pre>{JSON.stringify(subInfo.data, null, 2)}</pre>
           <Group gap="md">
             <Button onClick={onGoToBilling}>Go to billing portal</Button>
-            {/*<Button>Stop active plan</Button>*/}
           </Group>
         </>
       ) : (
-        <>
+        <Group gap="md">
           <Title order={2}>Subscription</Title>
-          <Button>Get beta access!</Button>
-        </>
+          <Button onClick={onSubscribe}>Get access!</Button>
+        </Group>
       )}
     </Paper>
   );
