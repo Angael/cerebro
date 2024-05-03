@@ -52,7 +52,30 @@ userRoutes.get('/user/plan', async (req, res) => {
 });
 
 userRoutes.post('/user/subscribe', async (req, res) => {
-  res.sendStatus(501);
+  try {
+    const { user } = await requireSession(req);
+    const { customerId } = await getStripeCustomer(user.id);
+    const session = await stripe.checkout.sessions.create({
+      metadata: {
+        user_id: user.id,
+      },
+      mode: 'subscription',
+      customer: customerId,
+      customer_email: user.email,
+      success_url: `${req.headers.origin}/account`,
+      cancel_url: `${req.headers.origin}/account`,
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: process.env.STRIPE_PRICE_ID,
+          quantity: 1,
+        },
+      ],
+    });
+    res.json({ url: session.url });
+  } catch (e) {
+    errorResponse(res, e);
+  }
 });
 
 userRoutes.get('/user/billing', async (req, res) => {
