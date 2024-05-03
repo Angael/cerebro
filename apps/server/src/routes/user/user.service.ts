@@ -64,7 +64,7 @@ export async function doesUserHaveSpaceLeftForFile(userId: string, file: MyFile)
   return spaceLeft - file.size > 0;
 }
 
-export async function getStripeCustomer(userId: string): Promise<UserPlan_Endpoint> {
+export async function getStripeCustomer(userId: string) {
   const stripeCustomer = await db
     .selectFrom('stripe_customer')
     .select(['stripe_customer_id', 'active_plan', 'plan_expiration'])
