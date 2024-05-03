@@ -64,20 +64,22 @@ export async function doesUserHaveSpaceLeftForFile(userId: string, file: MyFile)
   return spaceLeft - file.size > 0;
 }
 
-export async function getUserPlan(userId: string): Promise<UserPlan_Endpoint> {
-  const { active_plan, plan_expiration } = await db
+export async function getStripeCustomer(userId: string): Promise<UserPlan_Endpoint> {
+  const stripeCustomer = await db
     .selectFrom('stripe_customer')
-    .select(['active_plan', 'plan_expiration'])
+    .select(['stripe_customer_id', 'active_plan', 'plan_expiration'])
     .where('user_id', '=', userId)
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 
-  console.log({
-    active_plan,
-    plan_expiration,
-  });
+  if (!stripeCustomer) {
+    throw new HttpError(404, 'User is not a stripe customer yet');
+  }
+
+  const { active_plan, plan_expiration } = stripeCustomer;
 
   return {
+    customerId: stripeCustomer.stripe_customer_id,
     activePlan: active_plan,
-    expiresAt: plan_expiration,
+    expiresAt: plan_expiration?.toISOString() ?? null,
   };
 }

@@ -10,7 +10,7 @@ export const errorResponse = (res: Response, e: any) => {
     logger.error('Error: %O', e.issues); // Should we log validation issues?
     res.status(400).json(e.issues);
   } else {
-    logger.error('Error: %O', e);
+    logger.error('Error: %s', e.message);
     res.sendStatus(500);
   }
 };

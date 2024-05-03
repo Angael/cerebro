@@ -1,9 +1,10 @@
 import express from 'express';
-import { getLimitsForUser, getUserPlan } from './user.service.js';
+import { getLimitsForUser, getStripeCustomer } from './user.service.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
+import { stripe } from '@/stripe.js';
 
 const userRoutes = express.Router({ mergeParams: true });
 
@@ -14,7 +15,7 @@ userRoutes.get('/user/me', async (req, res) => {
       id: user.id,
       email: user.email,
       type: user.type,
-      sessionExpiresAt: session.expiresAt,
+      sessionExpiresAt: session.expiresAt.toISOString(),
     } satisfies UserMe);
   } catch (e) {
     logger.verbose('Not logged in');
@@ -42,10 +43,29 @@ userRoutes.get('/user/plan', async (req, res) => {
   try {
     const { user } = await requireSession(req);
 
-    const userPlan = await getUserPlan(user.id);
+    const userPlan = await getStripeCustomer(user.id);
     res.json(userPlan satisfies UserPlan_Endpoint);
   } catch (e) {
     logger.error('Failed to get user plan');
+    errorResponse(res, e);
+  }
+});
+
+userRoutes.post('/user/subscribe', async (req, res) => {
+  res.sendStatus(501);
+});
+
+userRoutes.get('/user/billing', async (req, res) => {
+  try {
+    const { user } = await requireSession(req);
+    const { customerId } = await getStripeCustomer(user.id);
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: req.headers.origin,
+    });
+    // TODO: maybe a hardcoded link will do?
+    res.json({ url: portalSession.url });
+  } catch (e) {
     errorResponse(res, e);
   }
 });

@@ -15,12 +15,13 @@ export type UserMe = {
   id: string;
   email: string;
   type: string;
-  sessionExpiresAt: Date;
+  sessionExpiresAt: string;
 } | null;
 
 export type UserPlan_Endpoint = {
+  customerId: string;
   activePlan: StriperCustomer['active_plan'];
-  expiresAt: Date | null;
+  expiresAt: string | null;
 };
 
 export type AdminUsers_Endpoint = Array<{
