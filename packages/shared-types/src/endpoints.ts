@@ -22,7 +22,7 @@ export type UserPlan_Endpoint = {
   customerId: string;
   activePlan: StriperCustomer['active_plan'];
   expiresAt: string | null;
-};
+} | null;
 
 export type AdminUsers_Endpoint = Array<{
   id: string;
