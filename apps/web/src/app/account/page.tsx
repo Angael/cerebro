@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Stack, Title } from '@mantine/core';
+import { Stack, Title } from '@mantine/core';
 import UsedSpace from '@/lib/used-space/UsedSpace';
 import UpgradeAccount from '@/app/account/UpgradeAccount';
 
