@@ -12,8 +12,8 @@ import {
 import z from 'zod';
 import { limitsConfig } from '@/utils/limits.js';
 
-const adminRoutes = express.Router();
-
+const adminRoutes = express.Router({ mergeParams: true });
+adminRoutes.use('/admin', express.json());
 adminRoutes.use('/admin', async (req, res, next) => {
   try {
     logger.verbose('Accessing admin route %s', req.url);

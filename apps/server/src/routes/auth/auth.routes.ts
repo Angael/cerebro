@@ -8,6 +8,7 @@ import { errorResponse } from '@/utils/errors/errorResponse.js';
 import { requireSession } from '@/middleware/requireSession.js';
 
 const authRouter = express.Router({ mergeParams: true });
+authRouter.use('/auth', express.json());
 
 const signupZod = z.object({
   email: z.string().email('Provide a valid email').min(6, 'Email is too short').trim(), // a@a.aa

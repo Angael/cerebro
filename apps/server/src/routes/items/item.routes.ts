@@ -25,6 +25,7 @@ import invariant from 'tiny-invariant';
 import { requireSession } from '@/middleware/requireSession.js';
 
 const itemRoutes = express.Router({ mergeParams: true });
+itemRoutes.use('/items', express.json());
 
 const limitZod = z.number().min(1).max(30);
 const pageZod = z.number().min(0).max(Number.MAX_SAFE_INTEGER);

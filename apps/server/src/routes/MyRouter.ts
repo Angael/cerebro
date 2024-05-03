@@ -25,8 +25,6 @@ const startRouter = () => {
   const router = express();
   const port = env.PORT;
 
-  router.use(express.json());
-
   router.use(
     cors({
       origin: env.CORS_URL,
