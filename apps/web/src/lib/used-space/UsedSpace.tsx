@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { GetUploadLimits } from '@cerebro/shared';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
-import { Paper, Progress, Stack, Text } from '@mantine/core';
+import { LoadingOverlay, Paper, Progress, Stack, Text } from '@mantine/core';
 
 type Props = {
   initialValue?: GetUploadLimits;
@@ -24,11 +24,12 @@ const UsedSpace = (props: Props) => {
 
   const value = data ? (100 * data.bytes.used) / data.bytes.max : 0;
   return (
-    <Paper p="md">
+    <Paper p="md" pos="relative">
       <Stack>
         <Text>Used space: {usageString}</Text>
         <Progress value={value} size="xl" />
       </Stack>
+      <LoadingOverlay visible={!data} />
     </Paper>
   );
 };
