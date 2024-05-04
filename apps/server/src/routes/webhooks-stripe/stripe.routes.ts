@@ -26,7 +26,12 @@ stripeRoutes.post(
 
       const handler = eventHandlers[event.type];
       if (handler) {
-        await handler(event);
+        try {
+          await handler(event);
+        } catch (e: any) {
+          logger.error('Webhook error: %s', e?.message);
+          throw new HttpError(500, 'Webhook handler error');
+        }
         logger.info('Webhook: %s', event.type);
         res.status(200).send();
         return;
