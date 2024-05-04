@@ -6,11 +6,13 @@ import { HttpError } from '@/utils/errors/HttpError.js';
 import bodyParser from 'body-parser';
 import { checkoutCompleted } from '@/routes/webhooks-stripe/checkoutCompleted.js';
 import Stripe from 'stripe';
+import { subscriptionDeleted } from '@/routes/webhooks-stripe/subscriptionDeleted.js';
 
 const stripeRoutes = express.Router({ mergeParams: true });
 
 const eventHandlers: Partial<Record<Stripe.Event.Type, (event: Stripe.Event) => Promise<void>>> = {
   'checkout.session.completed': checkoutCompleted,
+  'customer.subscription.deleted': subscriptionDeleted,
 };
 
 stripeRoutes.post(
