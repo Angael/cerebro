@@ -37,7 +37,7 @@ interface StripeCustomerTable {
   user_id: string;
   subscription_id: string;
   stripe_customer_id: string;
-  active_plan: 'VIP' | 'BETA_TIER'; // TODO: Change beta to access
+  active_plan: 'VIP' | 'BETA_TIER' | null; // TODO: Change beta to access
   plan_expiration: Date | null;
 }
 
