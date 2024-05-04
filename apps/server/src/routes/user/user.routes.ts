@@ -95,15 +95,11 @@ userRoutes.get('/user/billing', async (req, res) => {
     const { user } = await requireSession(req);
     const stripeCustomer = await getStripeCustomer(user.id);
 
-    if (!stripeCustomer) {
-      throw new HttpError(400, 'User has no stripe customer');
-    }
-
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: stripeCustomer.customerId,
       return_url: req.headers.origin,
     });
-    // TODO: maybe a hardcoded link will do?
+
     res.json({ url: portalSession.url });
   } catch (e) {
     errorResponse(res, e);
