@@ -23,7 +23,6 @@ const Browse = () => {
         (res) => res.data,
       ),
     placeholderData: (previousData) => previousData,
-    retry: false,
   });
 
   if (isPending) {

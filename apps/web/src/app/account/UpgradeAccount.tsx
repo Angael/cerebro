@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { UserPlan_Endpoint } from '@cerebro/shared';
+import SimpleError from '@/lib/simple-error/SimpleError';
 
 type Props = {};
 
@@ -30,6 +31,14 @@ const UpgradeAccount = (props: Props) => {
     const response = await API.get('/user/billing');
     location.href = response.data.url;
   };
+
+  if (subInfo.isError) {
+    return (
+      <Paper p="md" pos="relative">
+        <SimpleError error={subInfo.error} />
+      </Paper>
+    );
+  }
 
   return (
     <Paper p="md" pos="relative">

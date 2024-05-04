@@ -33,7 +33,6 @@ const Page = () => {
       API.get<any>('/items/upload/file-from-link', {
         params: { link },
       }).then((res) => res.data),
-    retry: false,
   });
 
   const disabled = !isValidUrl || mutation.isPending || !isFetched;

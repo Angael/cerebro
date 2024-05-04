@@ -15,7 +15,11 @@ export default function SimpleError({ error }: { error: Error & { digest?: strin
       <Title order={1}>Something went wrong</Title>
       <Text>Try reloading the page.</Text>
 
-      <details className={css.details} open={process.env.NODE_ENV !== 'production'}>
+      <details
+        className={css.details}
+        open={process.env.NODE_ENV !== 'production'}
+        style={!error.message ? { display: 'none' } : {}}
+      >
         <summary>Details</summary>
         <pre className={css.stack}>
           {process.env.NODE_ENV === 'production'
