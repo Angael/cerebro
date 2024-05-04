@@ -2,7 +2,7 @@ CREATE TABLE cerebro2.stripe_customer
 (
     id                 VARCHAR(64) NOT NULL PRIMARY KEY,
     user_id            VARCHAR(64) NOT NULL UNIQUE,
-    subscription_id    VARCHAR(64) NOT NULL UNIQUE,
+    subscription_id    VARCHAR(64) UNIQUE,
     stripe_customer_id VARCHAR(64) NOT NULL UNIQUE,
     active_plan        ENUM ('VIP', 'BETA_TIER'),
     plan_expiration    DATETIME,

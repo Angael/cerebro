@@ -35,7 +35,7 @@ interface SessionTable {
 interface StripeCustomerTable {
   id: string;
   user_id: string;
-  subscription_id: string;
+  subscription_id: string | null;
   stripe_customer_id: string;
   active_plan: 'VIP' | 'BETA_TIER' | null; // TODO: Change beta to access
   plan_expiration: Date | null;
