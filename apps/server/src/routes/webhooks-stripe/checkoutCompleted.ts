@@ -34,19 +34,23 @@ export const checkoutCompleted = async (event: Stripe.Event) => {
       })
       .where('user_id', '=', metadata.user_id)
       .execute();
-
-    return;
+  } else {
+    await db
+      .insertInto('stripe_customer')
+      .values({
+        id: nanoid(),
+        user_id: metadata.user_id,
+        subscription_id: subscription,
+        stripe_customer_id: customer,
+        active_plan: metadata.plan,
+        plan_expiration: null,
+      })
+      .execute();
   }
 
   await db
-    .insertInto('stripe_customer')
-    .values({
-      id: nanoid(),
-      user_id: metadata.user_id,
-      subscription_id: subscription,
-      stripe_customer_id: customer,
-      active_plan: metadata.plan,
-      plan_expiration: null,
-    })
+    .updateTable('user')
+    .set({ type: 'PREMIUM' })
+    .where('id', '=', metadata.user_id)
     .execute();
 };
