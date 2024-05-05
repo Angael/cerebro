@@ -41,7 +41,7 @@ interface StripeCustomerTable {
   plan_expiration: Date | null;
 }
 
-export type StriperCustomer = Selectable<StripeCustomerTable>;
+export type StripeCustomer = Selectable<StripeCustomerTable>;
 
 export type ItemType = 'IMAGE' | 'VIDEO';
 

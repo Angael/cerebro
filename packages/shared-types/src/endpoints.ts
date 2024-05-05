@@ -1,5 +1,5 @@
 import { FrontItem } from './types.js';
-import { StriperCustomer } from '@cerebro/db';
+import { StripeCustomer } from '@cerebro/db';
 
 export type QueryItems = {
   count: number;
@@ -20,7 +20,7 @@ export type UserMe = {
 
 export type UserPlan_Endpoint = {
   customerId: string;
-  activePlan: StriperCustomer['active_plan'];
+  activePlan: StripeCustomer['active_plan'];
   expiresAt: string | null;
 } | null;
 
