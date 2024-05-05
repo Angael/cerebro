@@ -166,7 +166,7 @@ itemRoutes.get(
   },
 );
 
-itemRoutes.delete('/items/item/:id', isPremium, async (req, res) => {
+itemRoutes.delete('/items/item/:id', async (req, res) => {
   const id = Number(req.params.id);
   const { user } = await requireSession(req);
 
