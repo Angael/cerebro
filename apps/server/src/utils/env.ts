@@ -13,6 +13,8 @@ export const env = z
     CF_KEY_SECRET: z.string(),
     CF_BUCKET_NAME: z.string(),
     CF_CDN_URL: z.string(),
+    STRIPE_SECRET_KEY: z.string(),
+    STRIPE_WEBHOOK_SECRET: z.string(),
   })
   .parse({
     NODE_ENV: process.env.NODE_ENV,
@@ -26,4 +28,6 @@ export const env = z
     CF_KEY_SECRET: process.env.CF_KEY_SECRET,
     CF_BUCKET_NAME: process.env.CF_BUCKET_NAME,
     CF_CDN_URL: process.env.CF_CDN_URL,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
   });

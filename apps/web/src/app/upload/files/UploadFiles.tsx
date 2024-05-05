@@ -13,6 +13,7 @@ import { QUERY_KEYS } from '@/utils/consts';
 import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { Button, Flex } from '@mantine/core';
+import { useUserLimits } from '@/utils/hooks/useUserLimits';
 
 const UploadFilesPage = () => {
   const [files, setFiles] = useState<ExtendedFile[]>([]);
@@ -71,6 +72,9 @@ const UploadFilesPage = () => {
     });
   };
 
+  const { data } = useUserLimits();
+  const disableUpload = data ? data?.bytes.used >= data?.bytes.max : true;
+
   return (
     <>
       <Flex gap="sm">
@@ -83,7 +87,12 @@ const UploadFilesPage = () => {
         </Button>
       </Flex>
       <Suspense fallback={null}>
-        <FilesPreview files={files} onDelete={removeFile} onAddFiles={addFiles} />
+        <FilesPreview
+          files={files}
+          onDelete={removeFile}
+          onAddFiles={addFiles}
+          disabled={disableUpload}
+        />
       </Suspense>
 
       <FilesStats files={files} />

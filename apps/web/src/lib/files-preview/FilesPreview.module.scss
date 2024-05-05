@@ -22,6 +22,11 @@ $border: 2px;
   &.onDrag {
     border: $border solid var(--mantine-primary-color-9);
   }
+
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 }
 
 .dragWatermark {
@@ -33,6 +38,7 @@ $border: 2px;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+  text-align: center;
 
   font-size: 2rem;
   font-weight: 500;

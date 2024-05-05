@@ -5,6 +5,7 @@ import { ensureIsFile, getFileListFromFolder, moveFiles } from './localFsFns.js'
 import { betterUnlink } from '@/utils/betterUnlink.js';
 
 const localFsRouter = express.Router({ mergeParams: true });
+localFsRouter.use('/local-fs', express.json());
 
 const pathZod = z.string().min(1).max(200);
 

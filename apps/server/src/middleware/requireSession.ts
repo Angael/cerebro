@@ -8,6 +8,6 @@ export const requireSession = async (req: Request) => {
   if (sessionAndUser.user && sessionAndUser.session) {
     return sessionAndUser;
   } else {
-    throw new HttpError(401);
+    throw new HttpError(401, "Couldn't authenticate");
   }
 };

@@ -16,7 +16,6 @@ const Page = () => {
   const [password, setPassword] = useState('');
 
   const mutation = useMutation({
-    retry: false,
     mutationFn: () => API.post('/auth/signin', { email, password }),
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] });

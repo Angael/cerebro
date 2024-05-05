@@ -7,6 +7,11 @@ import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import { GetUploadLimits } from '@cerebro/shared';
 import logger from '@/utils/log.js';
+import { stripe } from '@/stripe.js';
+import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
+import { User } from 'lucia';
+import { env } from '@/utils/env.js';
+import { STRIPE_ACCESS_PLAN_PRODUCT } from '@/utils/consts.js';
 
 export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   let used: number;
@@ -62,4 +67,58 @@ export async function doesUserHaveSpaceLeftForFile(userId: string, file: MyFile)
   const limits = await getLimitsForUser(userId);
   const spaceLeft = limits.bytes.max - limits.bytes.used;
   return spaceLeft - file.size > 0;
+}
+
+export async function getStripeCustomer(userId: string) {
+  const stripeCustomer = await db
+    .selectFrom('stripe_customer')
+    .select(['stripe_customer_id', 'active_plan', 'plan_expiration'])
+    .where('user_id', '=', userId)
+    .executeTakeFirst();
+
+  if (!stripeCustomer) {
+    throw new HttpError(404, 'User is not a stripe customer yet');
+  }
+
+  const { active_plan, plan_expiration } = stripeCustomer;
+
+  return {
+    customerId: stripeCustomer.stripe_customer_id,
+    activePlan: active_plan,
+    expiresAt: plan_expiration?.toISOString() ?? null,
+  };
+}
+
+export async function createAccessPlanCheckout(user: User): Promise<{ url: string }> {
+  const stripeCustomer = await getStripeCustomer(user.id).catch(() => null);
+
+  const prices = await stripe.prices.list({
+    product: STRIPE_ACCESS_PLAN_PRODUCT.id,
+    active: true,
+    limit: 1,
+  });
+  if (!prices.data[0]) {
+    throw new HttpError(500, 'No active price found for access plan');
+  }
+
+  const session = await stripe.checkout.sessions.create({
+    metadata: checkoutMetadataZod.parse({
+      user_id: user.id,
+      plan: 'ACCESS_PLAN',
+    }) as Record<string, string | number>,
+    mode: 'subscription',
+    customer: stripeCustomer?.customerId,
+    customer_email: user.email,
+    success_url: `${env.CORS_URL}/account`,
+    cancel_url: `${env.CORS_URL}/account`,
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price: prices.data[0].id,
+        quantity: 1,
+      },
+    ],
+  });
+
+  return { url: session.url as string };
 }

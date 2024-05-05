@@ -4,6 +4,7 @@ export interface Database {
   user: UserTable;
   user_session: SessionTable;
 
+  stripe_customer: StripeCustomerTable;
   item: ItemTable;
   thumbnail: ThumbnailTable;
   image: ImageTable;
@@ -22,6 +23,7 @@ interface UserTable {
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }
+
 export type User = Selectable<UserTable>;
 
 interface SessionTable {
@@ -29,6 +31,17 @@ interface SessionTable {
   user_id: string;
   expires_at: Date;
 }
+
+interface StripeCustomerTable {
+  id: string;
+  user_id: string;
+  subscription_id: string | null;
+  stripe_customer_id: string;
+  active_plan: 'VIP' | 'ACCESS_PLAN' | null; // TODO: Change beta to access
+  plan_expiration: Date | null;
+}
+
+export type StripeCustomer = Selectable<StripeCustomerTable>;
 
 export type ItemType = 'IMAGE' | 'VIDEO';
 
@@ -48,6 +61,7 @@ interface ItemTable {
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }
+
 export type Item = Selectable<ItemTable>;
 
 export type ThumbnailType = 'XS' | 'SM' | 'MD';
@@ -64,6 +78,7 @@ interface ThumbnailTable {
 
   created_at: Generated<Date>;
 }
+
 export type Thumbnail = Selectable<ThumbnailTable>;
 
 export type MediaType = 'SOURCE' | 'COMPRESSED'; // Later 720p, 1080p, 4k, etc.
@@ -80,6 +95,7 @@ interface ImageTable {
 
   created_at: Generated<Date>;
 }
+
 export type Image = Selectable<ImageTable>;
 
 interface VideoTable {
@@ -96,6 +112,7 @@ interface VideoTable {
 
   created_at: Generated<Date>;
 }
+
 export type Video = Selectable<VideoTable>;
 
 // export type Person = Selectable<PersonTable>;
