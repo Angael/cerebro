@@ -101,14 +101,17 @@ export async function createAccessPlanCheckout(user: User): Promise<{ url: strin
     throw new HttpError(500, 'No active price found for access plan');
   }
 
+  const cutomerData = stripeCustomer
+    ? { customer: stripeCustomer.customerId }
+    : { customer_email: user.email };
+
   const session = await stripe.checkout.sessions.create({
     metadata: checkoutMetadataZod.parse({
       user_id: user.id,
       plan: 'ACCESS_PLAN',
     }) as Record<string, string | number>,
     mode: 'subscription',
-    customer: stripeCustomer?.customerId,
-    customer_email: user.email,
+    ...cutomerData,
     success_url: `${env.CORS_URL}/account`,
     cancel_url: `${env.CORS_URL}/account`,
     payment_method_types: ['card'],
