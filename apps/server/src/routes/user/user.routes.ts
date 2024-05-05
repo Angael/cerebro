@@ -1,5 +1,4 @@
 import express from 'express';
-import Stripe from 'stripe';
 import {
   createSessionWithAccessPlan,
   getLimitsForUser,
@@ -11,7 +10,6 @@ import { requireSession } from '@/middleware/requireSession.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 import { stripe } from '@/stripe.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
-import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
 
 const userRoutes = express.Router({ mergeParams: true });
 userRoutes.use('/user', express.json());

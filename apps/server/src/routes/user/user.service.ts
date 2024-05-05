@@ -5,7 +5,7 @@ import { sql } from 'kysely';
 
 import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
-import { GetUploadLimits, UserPlan_Endpoint } from '@cerebro/shared';
+import { GetUploadLimits } from '@cerebro/shared';
 import logger from '@/utils/log.js';
 import { stripe } from '@/stripe.js';
 import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
