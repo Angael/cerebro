@@ -6,6 +6,7 @@ import { requireSession } from '@/middleware/requireSession.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 import { stripe } from '@/stripe.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
+import { StripeCustomer } from '@cerebro/db';
 
 const userRoutes = express.Router({ mergeParams: true });
 userRoutes.use('/user', express.json());
@@ -69,7 +70,7 @@ userRoutes.post('/user/subscribe', async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       metadata: {
         user_id: user.id,
-        plan: 'BETA_TIER',
+        plan: 'BETA_TIER' satisfies StripeCustomer['active_plan'],
       },
       mode: 'subscription',
       customer: stripeCustomer?.customerId,
