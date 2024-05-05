@@ -1,6 +1,10 @@
 import express from 'express';
 import Stripe from 'stripe';
-import { getLimitsForUser, getStripeCustomer } from './user.service.js';
+import {
+  createSessionWithAccessPlan,
+  getLimitsForUser,
+  getStripeCustomer,
+} from './user.service.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
@@ -66,27 +70,8 @@ userRoutes.get('/user/plan', async (req, res) => {
 userRoutes.post('/user/subscribe', async (req, res) => {
   try {
     const { user } = await requireSession(req);
-    const stripeCustomer = await getStripeCustomer(user.id).catch(() => null);
 
-    const session = await stripe.checkout.sessions.create({
-      metadata: checkoutMetadataZod.parse({
-        user_id: user.id,
-        plan: 'ACCESS_PLAN',
-      }) as Record<string, string | number>,
-      mode: 'subscription',
-      customer: stripeCustomer?.customerId,
-      customer_email: user.email,
-      success_url: `${req.headers.origin}/account`,
-      cancel_url: `${req.headers.origin}/account`,
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price: process.env.STRIPE_ACCESS_PRICE_ID,
-          quantity: 1,
-        },
-      ],
-    });
-    res.json({ url: session.url });
+    res.json(createSessionWithAccessPlan(user));
   } catch (e) {
     errorResponse(res, e);
   }

@@ -7,6 +7,10 @@ import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import { GetUploadLimits, UserPlan_Endpoint } from '@cerebro/shared';
 import logger from '@/utils/log.js';
+import { stripe } from '@/stripe.js';
+import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
+import { User } from 'lucia';
+import { env } from '@/utils/env.js';
 
 export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   let used: number;
@@ -82,4 +86,29 @@ export async function getStripeCustomer(userId: string) {
     activePlan: active_plan,
     expiresAt: plan_expiration?.toISOString() ?? null,
   };
+}
+
+export async function createSessionWithAccessPlan(user: User): Promise<{ url: string }> {
+  const stripeCustomer = await getStripeCustomer(user.id).catch(() => null);
+
+  const session = await stripe.checkout.sessions.create({
+    metadata: checkoutMetadataZod.parse({
+      user_id: user.id,
+      plan: 'ACCESS_PLAN',
+    }) as Record<string, string | number>,
+    mode: 'subscription',
+    customer: stripeCustomer?.customerId,
+    customer_email: user.email,
+    success_url: `${env.CORS_URL}/account`,
+    cancel_url: `${env.CORS_URL}/account`,
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price: process.env.STRIPE_ACCESS_PRICE_ID,
+        quantity: 1,
+      },
+    ],
+  });
+
+  return { url: session.url as string };
 }
