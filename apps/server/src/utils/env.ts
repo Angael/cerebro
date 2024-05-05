@@ -16,7 +16,6 @@ export const env = z
     STRIPE_SECRET_KEY: z.string(),
     STRIPE_PUBLIC_KEY: z.string(),
     STRIPE_WEBHOOK_SECRET: z.string(),
-    STRIPE_ACCESS_PRICE_ID: z.string(),
   })
   .parse({
     NODE_ENV: process.env.NODE_ENV,
@@ -33,5 +32,4 @@ export const env = z
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-    STRIPE_ACCESS_PRICE_ID: process.env.STRIPE_ACCESS_PRICE_ID,
   });

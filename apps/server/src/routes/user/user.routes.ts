@@ -1,9 +1,5 @@
 import express from 'express';
-import {
-  createSessionWithAccessPlan,
-  getLimitsForUser,
-  getStripeCustomer,
-} from './user.service.js';
+import { createAccessPlanCheckout, getLimitsForUser, getStripeCustomer } from './user.service.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
@@ -69,7 +65,7 @@ userRoutes.post('/user/subscribe', async (req, res) => {
   try {
     const { user } = await requireSession(req);
 
-    res.json(createSessionWithAccessPlan(user));
+    res.json(createAccessPlanCheckout(user));
   } catch (e) {
     errorResponse(res, e);
   }

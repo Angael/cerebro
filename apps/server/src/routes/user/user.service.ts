@@ -11,6 +11,7 @@ import { stripe } from '@/stripe.js';
 import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
 import { User } from 'lucia';
 import { env } from '@/utils/env.js';
+import { STRIPE_ACCESS_PLAN_PRODUCT } from '@/utils/consts.js';
 
 export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   let used: number;
@@ -88,8 +89,17 @@ export async function getStripeCustomer(userId: string) {
   };
 }
 
-export async function createSessionWithAccessPlan(user: User): Promise<{ url: string }> {
+export async function createAccessPlanCheckout(user: User): Promise<{ url: string }> {
   const stripeCustomer = await getStripeCustomer(user.id).catch(() => null);
+
+  const prices = await stripe.prices.list({
+    product: STRIPE_ACCESS_PLAN_PRODUCT.id,
+    active: true,
+    limit: 1,
+  });
+  if (!prices.data[0]) {
+    throw new HttpError(500, 'No active price found for access plan');
+  }
 
   const session = await stripe.checkout.sessions.create({
     metadata: checkoutMetadataZod.parse({
@@ -104,7 +114,7 @@ export async function createSessionWithAccessPlan(user: User): Promise<{ url: st
     payment_method_types: ['card'],
     line_items: [
       {
-        price: process.env.STRIPE_ACCESS_PRICE_ID,
+        price: prices.data[0].id,
         quantity: 1,
       },
     ],
