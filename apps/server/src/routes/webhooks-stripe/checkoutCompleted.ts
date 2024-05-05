@@ -9,7 +9,7 @@ const checkoutSessionZod = z.object({
   customer: z.string(),
   metadata: z.object({
     user_id: z.string(),
-    plan: z.enum(['BETA_TIER', 'VIP']),
+    plan: z.enum(['ACCESS_PLAN', 'VIP']),
   }),
 });
 

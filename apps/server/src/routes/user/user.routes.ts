@@ -70,7 +70,7 @@ userRoutes.post('/user/subscribe', async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       metadata: {
         user_id: user.id,
-        plan: 'BETA_TIER' satisfies StripeCustomer['active_plan'],
+        plan: 'ACCESS_PLAN' satisfies StripeCustomer['active_plan'],
       },
       mode: 'subscription',
       customer: stripeCustomer?.customerId,
