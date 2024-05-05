@@ -65,7 +65,7 @@ userRoutes.post('/user/subscribe', async (req, res) => {
   try {
     const { user } = await requireSession(req);
 
-    res.json(createAccessPlanCheckout(user));
+    res.json(await createAccessPlanCheckout(user));
   } catch (e) {
     errorResponse(res, e);
   }

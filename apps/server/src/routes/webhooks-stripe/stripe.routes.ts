@@ -29,7 +29,7 @@ stripeRoutes.post(
         try {
           await handler(event);
         } catch (e: any) {
-          logger.error('Webhook error: %s', e?.message);
+          logger.error('Webhook error: %s: %s', event.type, e?.message);
           throw new HttpError(500, 'Webhook handler error');
         }
         logger.info('Webhook: %s', event.type);

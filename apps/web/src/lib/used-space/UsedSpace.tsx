@@ -14,7 +14,7 @@ const UsedSpace = () => {
 
   if (data) {
     if (data.bytes.max === 0) value = 100;
-    if (data.bytes.max > data.bytes.used) value = 100;
+    if (data.bytes.max < data.bytes.used) value = 100;
   }
 
   let color = undefined;
