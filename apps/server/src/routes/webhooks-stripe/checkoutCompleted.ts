@@ -3,14 +3,12 @@ import z from 'zod';
 import { db } from '@cerebro/db';
 import { nanoid } from 'nanoid';
 import invariant from 'tiny-invariant';
+import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
 
 const checkoutSessionZod = z.object({
   subscription: z.string(),
   customer: z.string(),
-  metadata: z.object({
-    user_id: z.string(),
-    plan: z.enum(['ACCESS_PLAN', 'VIP']),
-  }),
+  metadata: checkoutMetadataZod,
 });
 
 export const checkoutCompleted = async (event: Stripe.Event) => {

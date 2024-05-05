@@ -1,4 +1,5 @@
 import express from 'express';
+import Stripe from 'stripe';
 import { getLimitsForUser, getStripeCustomer } from './user.service.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
@@ -6,7 +7,7 @@ import { requireSession } from '@/middleware/requireSession.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 import { stripe } from '@/stripe.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
-import { StripeCustomer } from '@cerebro/db';
+import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
 
 const userRoutes = express.Router({ mergeParams: true });
 userRoutes.use('/user', express.json());
@@ -68,10 +69,10 @@ userRoutes.post('/user/subscribe', async (req, res) => {
     const stripeCustomer = await getStripeCustomer(user.id).catch(() => null);
 
     const session = await stripe.checkout.sessions.create({
-      metadata: {
+      metadata: checkoutMetadataZod.parse({
         user_id: user.id,
-        plan: 'ACCESS_PLAN' satisfies StripeCustomer['active_plan'],
-      },
+        plan: 'ACCESS_PLAN',
+      }) as Record<string, string | number>,
       mode: 'subscription',
       customer: stripeCustomer?.customerId,
       customer_email: user.email,
