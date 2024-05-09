@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import z from 'zod';
 
 const DOMAIN = z.string().parse(process.env.DOMAIN);
-const EMAIL = z.string().parse(process.env.TEST_USER);
+const EMAIL = z.string().parse(process.env.TEST_EMAIL);
 const PASSWORD = z.string().parse(process.env.TEST_PASS);
 
 test('Finds first item', async ({ page }) => {
