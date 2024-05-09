@@ -1,24 +1,20 @@
 import { test, expect } from '@playwright/test';
-import z from 'zod';
-
-const DOMAIN = z.string().parse(process.env.DOMAIN);
-const EMAIL = z.string().parse(process.env.TEST_EMAIL);
-const PASSWORD = z.string().parse(process.env.TEST_PASS);
+import { testEnv } from './testEnv';
 
 test('Finds first item', async ({ page }) => {
-  await page.goto(`${DOMAIN}/`);
+  await page.goto(`${testEnv.DOMAIN}/`);
 
   await expect(page).toHaveTitle(/Cerebro/);
   await expect(page.getByRole('link', { name: 'item' }).first()).toBeVisible();
 });
 
 test('Login page works', async ({ page }) => {
-  await page.goto(`${DOMAIN}/signin`);
+  await page.goto(`${testEnv.DOMAIN}/signin`);
 
-  await page.getByRole('textbox', { name: 'email' }).fill(EMAIL);
-  await page.getByRole('textbox', { name: 'password' }).fill(PASSWORD);
+  await page.getByRole('textbox', { name: 'email' }).fill(testEnv.TEST_EMAIL);
+  await page.getByRole('textbox', { name: 'password' }).fill(testEnv.TEST_PASS);
   await page.click('button:has-text("Log in")');
-  await page.waitForURL(`${DOMAIN}`);
+  await page.waitForURL(`${testEnv.DOMAIN}`);
 
   await expect(page).not.toHaveURL('/signin');
 });
