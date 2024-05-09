@@ -22,3 +22,14 @@ test('Login page works', async ({ page }) => {
 
   await expect(page).not.toHaveURL('/signin');
 });
+
+test('This test fails', async ({ page }) => {
+  await page.goto(`${DOMAIN}/aaa`);
+
+  await page.getByRole('textbox', { name: 'email' }).fill(EMAIL);
+  await page.getByRole('textbox', { name: 'password' }).fill(PASSWORD);
+  await page.click('button:has-text("Log in")');
+  await page.waitForURL(`${DOMAIN}`);
+
+  await expect(page).not.toHaveURL('/signin');
+});
