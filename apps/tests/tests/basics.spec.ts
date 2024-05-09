@@ -18,7 +18,7 @@ test('Login page works', async ({ page }) => {
   await page.getByRole('textbox', { name: 'email' }).fill(EMAIL);
   await page.getByRole('textbox', { name: 'password' }).fill(PASSWORD);
   await page.click('button:has-text("Log in")');
-  await page.waitForURL(`${DOMAIN}/`);
+  await page.waitForURL(`${DOMAIN}`);
 
   await expect(page).not.toHaveURL('/signin');
 });
