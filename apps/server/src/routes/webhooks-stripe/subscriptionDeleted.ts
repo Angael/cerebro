@@ -18,7 +18,7 @@ export const subscriptionDeleted = async (event: Stripe.Event) => {
     .where('subscription_id', '=', id)
     .executeTakeFirstOrThrow();
 
-  return Promise.all([
+  await Promise.all([
     db
       .updateTable('stripe_customer')
       .set({ active_plan: null, subscription_id: null })
