@@ -1,13 +1,25 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
+import { ViewMode } from '@/lib/browse-control/BrowseControl';
 
-export const useUrlParam = <T extends string>(param: string, defaultValue?: T) => {
+type UrlParamKeys = 'pageNr' | 'viewMode' | 'itemCount';
+
+type UrlParamValues = {
+  pageNr: number;
+  viewMode: ViewMode;
+  itemCount: '25' | '50';
+};
+
+export const useUrlParam = <T extends UrlParamKeys>(
+  param: T,
+  defaultValue?: UrlParamValues[typeof param],
+) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const value = (searchParams.get(param) as T) || defaultValue;
+  const value = (searchParams.get(param) as UrlParamValues[typeof param]) || defaultValue;
 
-  const setParam = (newValue: T | null, replace = false) => {
+  const setParam = (newValue: UrlParamValues[typeof param] | null, replace = false) => {
     const params = new URLSearchParams(searchParams.toString());
     if (newValue) {
       params.set(param, String(newValue));

@@ -10,7 +10,8 @@ const data: { label: string; value: ViewMode }[] = [
 ];
 
 const BrowseControl = () => {
-  const [viewMode, setParam] = useUrlParam<ViewMode>('viewMode', 'dynamic-grid');
+  const [viewMode, setParam] = useUrlParam('viewMode', 'dynamic-grid');
+  const [count, setCount] = useUrlParam('itemCount', '25');
 
   return (
     <Group>
@@ -18,6 +19,14 @@ const BrowseControl = () => {
         value={viewMode}
         data={data}
         onChange={(val) => setParam(val as ViewMode, true)}
+      />
+      <SegmentedControl
+        value={count}
+        data={[
+          { label: '25', value: '25' },
+          { label: '50', value: '50' },
+        ]}
+        onChange={(val) => setCount(val as any, true)}
       />
     </Group>
   );
