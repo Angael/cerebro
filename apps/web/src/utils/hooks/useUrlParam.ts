@@ -7,7 +7,7 @@ type UrlParamKeys = 'pageNr' | 'viewMode' | 'itemCount';
 type UrlParamValues = {
   pageNr: number;
   viewMode: ViewMode;
-  itemCount: '25' | '50';
+  itemCount: `${number}`;
 };
 
 export const useUrlParam = <T extends UrlParamKeys>(

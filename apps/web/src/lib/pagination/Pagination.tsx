@@ -12,10 +12,6 @@ const Pagination = ({ page, pageCount }: Props) => {
   const isMobile = useMediaQuery(`(max-width: 500px)`);
   const md = useMediaQuery(`(max-width: 365px)`);
 
-  const commonLinkProps = {
-    component: Link,
-    prefetch: true,
-  };
   const getProps = (page: number) => {
     if (page < 1) return {};
     if (page > pageCount) return {};
