@@ -14,7 +14,7 @@ const BrowseControl = () => {
   const [count, setCount] = useUrlParam('itemCount');
 
   return (
-    <Group>
+    <Group justify="space-around">
       <SegmentedControl
         value={viewMode}
         data={data}

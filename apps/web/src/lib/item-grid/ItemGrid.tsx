@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import css from './ItemGrid.module.scss';
 import { FrontItem } from '@cerebro/shared';
@@ -21,4 +21,4 @@ const ItemGrid: React.FunctionComponent<Props> = ({ items, isLoading }) => {
   );
 };
 
-export default ItemGrid;
+export default memo(ItemGrid);

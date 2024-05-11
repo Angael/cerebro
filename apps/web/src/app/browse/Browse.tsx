@@ -10,6 +10,7 @@ import PageLoader from '@/lib/page-loader/PageLoader';
 import SimpleError from '@/lib/simple-error/SimpleError';
 import BrowseControl from '@/lib/browse-control/BrowseControl';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
+import { Group } from '@mantine/core';
 
 const Browse = () => {
   const [pageNrStr, , createPageNrQueryString] = useUrlParam('pageNr');
@@ -38,10 +39,25 @@ const Browse = () => {
 
   return (
     <>
-      <BrowseControl />
-      <Pagination page={pageNr} createQueryString={createPageNrQueryString} pageCount={pageCount} />
+      <Group justify="space-around">
+        <Pagination
+          page={pageNr}
+          createQueryString={createPageNrQueryString}
+          pageCount={pageCount}
+        />
+        <BrowseControl />
+      </Group>
+
       {items?.length > 0 && <ItemGrid items={items} isLoading={!isFetched} />}
-      <Pagination page={pageNr} createQueryString={createPageNrQueryString} pageCount={pageCount} />
+
+      <Group justify="space-around">
+        <Pagination
+          page={pageNr}
+          createQueryString={createPageNrQueryString}
+          pageCount={pageCount}
+        />
+        <BrowseControl />
+      </Group>
     </>
   );
 };
