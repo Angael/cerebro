@@ -18,4 +18,40 @@
   }
 
   transition: opacity 0.1s;
+
+  &.dynamic-grid,
+  &.grid {
+  }
+
+  &.dynamic-grid {
+    :global(.wide) {
+      grid-column: auto/span 2;
+    }
+
+    :global(.tall) {
+      grid-row: auto/span 2;
+    }
+  }
+
+  &.list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    > * {
+      height: auto;
+      min-height: 150px;
+
+      width: 500px;
+      margin: auto;
+    }
+
+    :global(.wide) {
+      grid-column: auto/span 1;
+    }
+
+    :global(.tall) {
+      grid-row: auto/span 1;
+    }
+  }
 }

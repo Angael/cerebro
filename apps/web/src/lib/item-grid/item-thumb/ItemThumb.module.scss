@@ -12,14 +12,6 @@
   border-radius: 8px;
   cursor: pointer;
 
-  &:global(.wide) {
-    grid-column: auto/span 2;
-  }
-
-  &:global(.tall) {
-    grid-row: auto/span 2;
-  }
-
   opacity: 1;
   transition:
     opacity 0.1s,
