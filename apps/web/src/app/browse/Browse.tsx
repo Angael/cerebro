@@ -9,6 +9,7 @@ import { QUERY_KEYS } from '@/utils/consts';
 import { useSearchParams } from 'next/navigation';
 import PageLoader from '@/lib/page-loader/PageLoader';
 import SimpleError from '@/lib/simple-error/SimpleError';
+import BrowseControl from '@/lib/browse-control/BrowseControl';
 
 const limit = 30;
 
@@ -38,6 +39,7 @@ const Browse = () => {
 
   return (
     <>
+      <BrowseControl />
       <Pagination page={pageNr} pageCount={pageCount} />
       {items?.length > 0 && <ItemGrid items={items} isLoading={!isFetched} />}
       <Pagination page={pageNr} pageCount={pageCount} />

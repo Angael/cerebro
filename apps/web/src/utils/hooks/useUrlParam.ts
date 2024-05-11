@@ -1,13 +1,13 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 
-export const useUrlParam = (param: string, defaultValue?: string) => {
+export const useUrlParam = <T extends string>(param: string, defaultValue?: T) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const value = searchParams.get(param) || defaultValue;
+  const value = (searchParams.get(param) as T) || defaultValue;
 
-  const setParam = (newValue: string | number | null, replace = false) => {
+  const setParam = (newValue: T | null, replace = false) => {
     const params = new URLSearchParams(searchParams.toString());
     if (newValue) {
       params.set(param, String(newValue));
