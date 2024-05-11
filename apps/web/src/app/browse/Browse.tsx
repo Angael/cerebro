@@ -11,10 +11,9 @@ import SimpleError from '@/lib/simple-error/SimpleError';
 import BrowseControl from '@/lib/browse-control/BrowseControl';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 
-const limit = 30;
-
 const Browse = () => {
   const pageNr = parseInt(useUrlParam('pageNr')[0], 10);
+  const limit = parseInt(useUrlParam('itemCount')[0], 10);
 
   const { data, isFetched, isPending, isError, error } = useQuery({
     queryKey: [QUERY_KEYS.items, { limit, page: pageNr - 1 }],
