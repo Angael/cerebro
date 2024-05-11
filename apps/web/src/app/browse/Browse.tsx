@@ -12,7 +12,8 @@ import BrowseControl from '@/lib/browse-control/BrowseControl';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 
 const Browse = () => {
-  const pageNr = parseInt(useUrlParam('pageNr')[0], 10);
+  const [pageNrStr, , createPageNrQueryString] = useUrlParam('pageNr');
+  const pageNr = parseInt(pageNrStr, 10);
   const limit = parseInt(useUrlParam('itemCount')[0], 10);
 
   const { data, isFetched, isPending, isError, error } = useQuery({
@@ -38,9 +39,9 @@ const Browse = () => {
   return (
     <>
       <BrowseControl />
-      <Pagination page={pageNr} pageCount={pageCount} />
+      <Pagination page={pageNr} createQueryString={createPageNrQueryString} pageCount={pageCount} />
       {items?.length > 0 && <ItemGrid items={items} isLoading={!isFetched} />}
-      <Pagination page={pageNr} pageCount={pageCount} />
+      <Pagination page={pageNr} createQueryString={createPageNrQueryString} pageCount={pageCount} />
     </>
   );
 };

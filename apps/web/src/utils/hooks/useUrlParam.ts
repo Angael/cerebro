@@ -40,13 +40,13 @@ export const useUrlParam = <T extends UrlParamKeys>(param: T) => {
   };
 
   const createQueryString = useCallback(
-    (name: string, value: string) => {
+    (value: UrlParamValues[typeof param]) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
+      params.set(param, value);
 
       return params.toString();
     },
-    [searchParams],
+    [param, searchParams],
   );
 
   return [value, setParam, createQueryString] as const;
