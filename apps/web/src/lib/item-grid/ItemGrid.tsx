@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import css from './ItemGrid.module.scss';
 import { FrontItem } from '@cerebro/shared';
 import ItemThumb from './item-thumb/ItemThumb';
+import { useUrlParam } from '@/utils/hooks/useUrlParam';
+import clsx from 'clsx';
 
 type Props = {
   items: FrontItem[];
@@ -10,11 +12,13 @@ type Props = {
 };
 
 const ItemGrid: React.FunctionComponent<Props> = ({ items, isLoading }) => {
+  const [viewMode] = useUrlParam('viewMode');
+
   return (
-    <section className={css.ItemGrid} style={{ opacity: isLoading ? 0.5 : 1 }}>
+    <section className={clsx(css.ItemGrid, css[viewMode])} style={{ opacity: isLoading ? 0.5 : 1 }}>
       {items && items.map((item, i) => <ItemThumb key={item.id} item={item} />)}
     </section>
   );
 };
 
-export default ItemGrid;
+export default memo(ItemGrid);

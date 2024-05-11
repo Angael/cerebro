@@ -1,3 +1,4 @@
+'use client';
 import React, { memo } from 'react';
 import { Flex, Pagination as MantinePagination } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
@@ -5,21 +6,18 @@ import Link from 'next/link';
 
 type Props = {
   page: number;
+  createQueryString: (page: `${number}`) => string;
   pageCount: number;
 };
 
-const Pagination = ({ page, pageCount }: Props) => {
+const Pagination = ({ page, createQueryString, pageCount }: Props) => {
   const isMobile = useMediaQuery(`(max-width: 500px)`);
   const md = useMediaQuery(`(max-width: 365px)`);
 
-  const commonLinkProps = {
-    component: Link,
-    prefetch: true,
-  };
   const getProps = (page: number) => {
     if (page < 1) return {};
     if (page > pageCount) return {};
-    return { component: Link, prefetch: true, href: `/browse/?pageNr=${page}` };
+    return { component: Link, prefetch: true, href: `/browse/?` + createQueryString(`${page}`) };
   };
 
   return (

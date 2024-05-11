@@ -1,21 +1,56 @@
 @use 'src/style/breakpoints';
 
 .ItemGrid {
-  display: grid;
-  gap: 16px;
-  grid-auto-flow: dense;
-  -webkit-box-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  align-items: center;
+  transition: opacity 0.1s;
 
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: 150px;
+  &.dynamic-grid,
+  &.grid {
+    display: grid;
+    gap: 16px;
+    grid-auto-flow: dense;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
 
-  @include breakpoints.desktop() {
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 200px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 150px;
+
+    @include breakpoints.desktop() {
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 200px;
+    }
   }
 
-  transition: opacity 0.1s;
+  &.dynamic-grid {
+    :global(.wide) {
+      grid-column: auto/span 2;
+    }
+
+    :global(.tall) {
+      grid-row: auto/span 2;
+    }
+  }
+
+  &.list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    > * {
+      height: auto;
+      min-height: 150px;
+
+      width: 400px;
+      margin: auto;
+    }
+
+    :global(.wide) {
+      grid-column: auto/span 1;
+    }
+
+    :global(.tall) {
+      grid-row: auto/span 1;
+    }
+  }
 }

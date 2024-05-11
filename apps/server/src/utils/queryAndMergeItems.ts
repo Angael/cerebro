@@ -9,6 +9,11 @@ export interface MergedItem {
 
 export const queryAndMergeItems = async (items: Item[]): Promise<MergedItem[]> => {
   const itemIds = items.map((i) => i.id);
+
+  if (itemIds.length === 0) {
+    return [];
+  }
+
   const images = await db.selectFrom('image').where('item_id', 'in', itemIds).selectAll().execute();
   const videos = await db.selectFrom('video').where('item_id', 'in', itemIds).selectAll().execute();
   const thumbnails = await db
