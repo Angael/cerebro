@@ -10,8 +10,8 @@ const data: { label: string; value: ViewMode }[] = [
 ];
 
 const BrowseControl = () => {
-  const [viewMode, setParam] = useUrlParam('viewMode', 'dynamic-grid');
-  const [count, setCount] = useUrlParam('itemCount', '25');
+  const [viewMode, setParam] = useUrlParam('viewMode');
+  const [count, setCount] = useUrlParam('itemCount');
 
   return (
     <Group>

@@ -6,16 +6,15 @@ import { useQuery } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { QueryItems } from '@cerebro/shared';
 import { QUERY_KEYS } from '@/utils/consts';
-import { useSearchParams } from 'next/navigation';
 import PageLoader from '@/lib/page-loader/PageLoader';
 import SimpleError from '@/lib/simple-error/SimpleError';
 import BrowseControl from '@/lib/browse-control/BrowseControl';
+import { useUrlParam } from '@/utils/hooks/useUrlParam';
 
 const limit = 30;
 
 const Browse = () => {
-  const searchParams = useSearchParams();
-  const pageNr = parseInt(searchParams.get('pageNr') || '1', 10);
+  const pageNr = parseInt(useUrlParam('pageNr')[0], 10);
 
   const { data, isFetched, isPending, isError, error } = useQuery({
     queryKey: [QUERY_KEYS.items, { limit, page: pageNr - 1 }],
