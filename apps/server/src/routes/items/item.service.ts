@@ -16,6 +16,8 @@ export async function getAllItems(
 ): Promise<QueryItems> {
   let query = db.selectFrom('item').where('private', '=', false);
 
+  console.log(1);
+
   const _items = await query
     .selectAll()
     .limit(limit)
@@ -23,9 +25,13 @@ export async function getAllItems(
     .orderBy('created_at', 'desc')
     .execute();
 
+  console.log(_items);
+
   const { count } = await query
     .select(({ fn }) => [fn.count<number>('id').as('count')])
     .executeTakeFirstOrThrow();
+
+  console.log(count);
 
   const mergedItems = await queryAndMergeItems(_items);
   const frontendItems = mergedItems
