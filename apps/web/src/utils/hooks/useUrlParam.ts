@@ -1,6 +1,6 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
-import { ViewMode } from '@/lib/browse-control/BrowseControl';
+import { ViewMode } from '@/lib/browse-control/BrowseControlInputs';
 
 type UrlParamKeys = 'pageNr' | 'viewMode' | 'itemCount';
 

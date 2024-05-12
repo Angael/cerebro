@@ -11,8 +11,8 @@ type Props = {
 };
 
 const Pagination = ({ page, createQueryString, pageCount }: Props) => {
-  const isMobile = useMediaQuery(`(max-width: 500px)`);
-  const md = useMediaQuery(`(max-width: 365px)`);
+  const isMobile = useMediaQuery(`(max-width: 600px)`);
+  const isVerySmall = useMediaQuery(`(max-width: 380px)`);
 
   const getProps = (page: number) => {
     if (page < 1) return {};
@@ -23,8 +23,9 @@ const Pagination = ({ page, createQueryString, pageCount }: Props) => {
   return (
     <Flex justify="center">
       <MantinePagination
-        size={md ? 'md' : 'lg'}
-        siblings={isMobile ? 0 : 2}
+        size={isVerySmall ? 'md' : 'lg'}
+        boundaries={isMobile ? 0 : 1}
+        siblings={isMobile ? 0 : 1}
         total={pageCount}
         value={page}
         getItemProps={(page) => getProps(page)}

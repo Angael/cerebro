@@ -39,7 +39,7 @@ const Browse = () => {
 
   return (
     <>
-      <Group justify="space-around">
+      <Group justify="space-between">
         <Pagination
           page={pageNr}
           createQueryString={createPageNrQueryString}
@@ -50,7 +50,7 @@ const Browse = () => {
 
       {items?.length > 0 && <ItemGrid items={items} isLoading={!isFetched} />}
 
-      <Group justify="space-around">
+      <Group justify="space-between">
         <Pagination
           page={pageNr}
           createQueryString={createPageNrQueryString}

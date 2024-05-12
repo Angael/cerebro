@@ -1,34 +1,36 @@
+'use client';
 import React from 'react';
-import { Group, SegmentedControl } from '@mantine/core';
-import { useUrlParam } from '@/utils/hooks/useUrlParam';
-
-export type ViewMode = 'grid' | 'dynamic-grid' | 'list';
-const data: { label: string; value: ViewMode }[] = [
-  { label: 'Dynamic Grid', value: 'dynamic-grid' },
-  { label: 'Grid', value: 'grid' },
-  { label: 'List', value: 'list' },
-];
+import { Button, Group, Menu } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import BrowseControlInputs from '@/lib/browse-control/BrowseControlInputs';
+import Icon from '@mdi/react';
+import { mdiViewList } from '@mdi/js';
 
 const BrowseControl = () => {
-  const [viewMode, setParam] = useUrlParam('viewMode');
-  const [count, setCount] = useUrlParam('itemCount');
+  const isMobile = useMediaQuery('(max-width: 1000px)');
+  const showIcon = useMediaQuery('(min-width: 380px)');
+
+  if (isMobile) {
+    return (
+      <Menu shadow="md">
+        <Menu.Target>
+          <Button
+            variant="default"
+            leftSection={showIcon && <Icon path={mdiViewList} size="16px" />}
+          >
+            View
+          </Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <BrowseControlInputs inMenu />
+        </Menu.Dropdown>
+      </Menu>
+    );
+  }
 
   return (
     <Group justify="space-around">
-      <SegmentedControl
-        value={viewMode}
-        data={data}
-        onChange={(val) => setParam(val as ViewMode, true)}
-      />
-      <SegmentedControl
-        value={count}
-        data={[
-          { label: '25', value: '25' },
-          { label: '50', value: '50' },
-          { label: '100', value: '100' },
-        ]}
-        onChange={(val) => setCount(val as any, true)}
-      />
+      <BrowseControlInputs />
     </Group>
   );
 };
