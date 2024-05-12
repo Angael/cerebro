@@ -15,7 +15,7 @@ const ImageItem = ({ item }: Props) => {
   } as React.CSSProperties;
 
   return (
-    <div className={css.container}>
+    <div className={css.Item}>
       <img
         className={css.imageItem}
         width={width}

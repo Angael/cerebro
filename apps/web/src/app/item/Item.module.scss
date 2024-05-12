@@ -1,21 +1,32 @@
 @use 'src/style/breakpoints';
 
-.container {
-  display: flex;
-  flex-flow: column;
-  place-items: center;
-  place-content: center;
-
-  margin: 0 auto;
+.Item {
   overflow: hidden;
 
   .imageItem {
     height: auto;
   }
 
-  .videoItem {
-    height: auto;
-    max-height: calc(100svh - 200px);
+  .videoWrapper {
+    position: relative;
+    overflow: hidden;
+
+    .videoBg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: blur(40px) saturate(1.5) brightness(0.5);
+    }
+
+    .videoItem {
+      height: auto;
+      max-height: calc(100svh - 200px);
+      width: 100%;
+    }
   }
 }
 

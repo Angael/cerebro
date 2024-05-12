@@ -29,20 +29,24 @@ const VideoItem = ({ item }: Props) => {
 
   const qualities = item.videos.map((video) => video.mediaType);
   return (
-    <div className={css.container}>
-      <video
-        width={width}
-        height={height}
-        key={src}
-        controls
-        poster={item.thumbnail || ''}
-        autoPlay
-        loop
-        style={style}
-        className={css.videoItem}
-      >
-        <source src={src} />
-      </video>
+    <div className={css.Item}>
+      <div className={css.videoWrapper}>
+        {placeholder && <img src={placeholder} alt="" className={css.videoBg} />}
+
+        <video
+          width={width}
+          height={height}
+          key={src}
+          controls
+          poster={item.thumbnail || ''}
+          autoPlay
+          loop
+          style={style}
+          className={css.videoItem}
+        >
+          <source src={src} />
+        </video>
+      </div>
 
       <div className={css.videoStats} style={{ marginLeft: 'auto' }}>
         <p>
