@@ -13,7 +13,7 @@ type UrlParamValues = {
 const defaultValues: Record<UrlParamKeys, UrlParamValues[UrlParamKeys]> = {
   pageNr: '1',
   viewMode: 'dynamic-grid',
-  itemCount: '25',
+  itemCount: '40',
 } as const;
 
 export const useUrlParam = <T extends UrlParamKeys>(param: T) => {
