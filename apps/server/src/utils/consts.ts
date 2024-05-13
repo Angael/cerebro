@@ -1,5 +1,5 @@
-export const MB = 1024 * 1024;
-export const GB = 1024 * 1024 * 1024;
+export const MB = 1000 * 1000;
+export const GB = 1000 * 1000 * 1000;
 
 export const MD_CELL_SIZE = 300;
 export const XS_CELL_SIZE = 32;
@@ -17,6 +17,7 @@ export const STRIPE_ACCESS_PLAN_PRODUCT = {
   name: 'Cerebro Access',
   description: 'Get access to Cerebro platform.',
 } as const;
+
 export const STRIPE_ACCESS_PLAN_PRICE = {
   product: STRIPE_ACCESS_PLAN_PRODUCT.id,
   unit_amount: 1000, // 10PLN
