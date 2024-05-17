@@ -1,5 +1,5 @@
 'use client';
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import Pagination from '@/lib/pagination/Pagination';
 import ItemGrid from '@/lib/item-grid/ItemGrid';
 import { useQuery } from '@tanstack/react-query';
@@ -14,7 +14,7 @@ import { Group } from '@mantine/core';
 import BrowseNav from '@/app/browse/BrowseNav';
 
 const Browse = () => {
-  const [pageNrStr, , createPageNrQueryString] = useUrlParam('pageNr');
+  const [pageNrStr, setPageNrStr, createPageNrQueryString] = useUrlParam('pageNr');
   const pageNr = parseInt(pageNrStr, 10);
   const limit = parseInt(useUrlParam('itemCount')[0], 10);
   const [author] = useUrlParam('author');
@@ -28,6 +28,16 @@ const Browse = () => {
     placeholderData: (previousData) => previousData,
   });
 
+  const pageCount = Math.ceil((data?.count ?? 0) / limit);
+
+  // Reset page number if it's too high
+  useEffect(() => {
+    if (pageNr > pageCount) {
+      const newPageNr = Math.max(1, pageCount) || 1;
+      setPageNrStr(`${newPageNr}`);
+    }
+  }, [pageNr, pageCount]);
+
   if (isPending) {
     return <PageLoader />;
   }
@@ -36,8 +46,7 @@ const Browse = () => {
     return <SimpleError error={error} />;
   }
 
-  const { items, count } = data;
-  const pageCount = Math.ceil(count / limit);
+  const { items } = data;
 
   return (
     <>
