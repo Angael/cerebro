@@ -17,11 +17,12 @@ const Browse = () => {
   const [pageNrStr, , createPageNrQueryString] = useUrlParam('pageNr');
   const pageNr = parseInt(pageNrStr, 10);
   const limit = parseInt(useUrlParam('itemCount')[0], 10);
+  const [author] = useUrlParam('author');
 
   const { data, isFetched, isPending, isError, error } = useQuery({
-    queryKey: [QUERY_KEYS.items, { limit, page: pageNr - 1 }],
+    queryKey: [QUERY_KEYS.items, { limit, page: pageNr - 1, author }],
     queryFn: () =>
-      API.get<QueryItems>('/items', { params: { limit, page: pageNr - 1 } }).then(
+      API.get<QueryItems>('/items', { params: { limit, page: pageNr - 1, author } }).then(
         (res) => res.data,
       ),
     placeholderData: (previousData) => previousData,

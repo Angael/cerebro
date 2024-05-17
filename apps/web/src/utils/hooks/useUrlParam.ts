@@ -1,19 +1,22 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { ViewMode } from '@/lib/browse-control/BrowseControlInputs';
-
-type UrlParamKeys = 'pageNr' | 'viewMode' | 'itemCount';
+import { AuthorQuery } from '@cerebro/shared';
 
 type UrlParamValues = {
   pageNr: `${number}`;
   viewMode: ViewMode;
   itemCount: `${number}`;
+  author: AuthorQuery;
 };
+
+type UrlParamKeys = keyof UrlParamValues;
 
 const defaultValues: Record<UrlParamKeys, UrlParamValues[UrlParamKeys]> = {
   pageNr: '1',
   viewMode: 'dynamic-grid',
   itemCount: '40',
+  author: 'all',
 } as const;
 
 export const useUrlParam = <T extends UrlParamKeys>(param: T) => {

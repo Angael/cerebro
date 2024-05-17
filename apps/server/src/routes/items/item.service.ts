@@ -1,4 +1,4 @@
-import { FrontItem, QueryItems } from '@cerebro/shared';
+import { AuthorQuery, FrontItem, QueryItems } from '@cerebro/shared';
 import { S3DeleteMany } from '@/aws/s3-helpers.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import logger from '@/utils/log.js';
@@ -9,14 +9,23 @@ import invariant from 'tiny-invariant';
 import { User } from 'lucia';
 import { isUserOrAdmin } from '@/utils/isUserOrAdmin.js';
 
-export async function getAllItems(
+export async function getItems(
   limit: number,
   page: number,
-  userId?: string,
+  userId: string | undefined,
+  author: AuthorQuery,
 ): Promise<QueryItems> {
   let query = db.selectFrom('item').where('private', '=', false);
 
-  console.log(1);
+  if (author === 'my') {
+    if (userId === undefined) {
+      query = query.where('user_id', '=', '-'); // should return null?
+    } else {
+      query = query.where('user_id', '=', userId);
+    }
+  } else if (author === 'other' && userId !== undefined) {
+    query = query.where('user_id', '!=', userId);
+  }
 
   const _items = await query
     .selectAll()
@@ -25,13 +34,9 @@ export async function getAllItems(
     .orderBy('created_at', 'desc')
     .execute();
 
-  console.log(_items);
-
   const { count } = await query
     .select(({ fn }) => [fn.count<number>('id').as('count')])
     .executeTakeFirstOrThrow();
-
-  console.log(count);
 
   const mergedItems = await queryAndMergeItems(_items);
   const frontendItems = mergedItems
