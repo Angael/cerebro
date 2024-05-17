@@ -11,6 +11,7 @@ import SimpleError from '@/lib/simple-error/SimpleError';
 import BrowseControl from '@/lib/browse-control/BrowseControl';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import { Group } from '@mantine/core';
+import BrowseNav from '@/app/browse/BrowseNav';
 
 const Browse = () => {
   const [pageNrStr, , createPageNrQueryString] = useUrlParam('pageNr');
@@ -39,6 +40,7 @@ const Browse = () => {
 
   return (
     <>
+      <BrowseNav />
       <Group justify="space-between">
         <Pagination
           page={pageNr}
