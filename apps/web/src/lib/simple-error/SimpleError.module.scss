@@ -8,12 +8,13 @@
   }
 
   .stack {
-    margin-top: 8px;
+    margin: 8px auto 0;
     padding: 16px;
     border-radius: 8px;
     background: var(--c-bg-paper);
     white-space: pre-wrap;
 
     overflow: auto;
+    width: fit-content;
   }
 }
