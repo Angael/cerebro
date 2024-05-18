@@ -10,8 +10,10 @@ import PageLoader from '@/lib/page-loader/PageLoader';
 import SimpleError from '@/lib/simple-error/SimpleError';
 import BrowseControl from '@/lib/browse-control/BrowseControl';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
-import { Group } from '@mantine/core';
+import { Alert, Group } from '@mantine/core';
 import BrowseNav from '@/app/browse/BrowseNav';
+import Icon from '@mdi/react';
+import { mdiAlertCircleOutline } from '@mdi/js';
 
 const Browse = () => {
   const [pageNrStr, setPageNrStr, createPageNrQueryString] = useUrlParam('pageNr');
@@ -61,6 +63,17 @@ const Browse = () => {
       </Group>
 
       {items?.length > 0 && <ItemGrid items={items} isLoading={!isFetched} />}
+
+      {items.length === 0 && (
+        <Alert
+          variant="light"
+          color="orange"
+          title="No items found"
+          icon={<Icon path={mdiAlertCircleOutline} />}
+        >
+          No items found for the selected filters
+        </Alert>
+      )}
 
       <Group justify="space-between">
         <Pagination
