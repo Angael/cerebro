@@ -2,32 +2,33 @@
 
 .Item {
   overflow: hidden;
+  position: relative;
+}
 
-  .imageItem {
-    height: auto;
-  }
+.imageItem {
+  height: auto;
+  margin: auto;
+}
 
-  .videoWrapper {
-    position: relative;
-    overflow: hidden;
+.relativeWrapper {
+  overflow: hidden;
+}
 
-    .videoBg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      filter: blur(40px) saturate(1.5) brightness(0.5);
-    }
+.blurPlaceholderBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  filter: blur(40px) saturate(1.5) brightness(0.5);
+}
 
-    .videoItem {
-      height: auto;
-      max-height: calc(100svh - 200px);
-      width: 100%;
-    }
-  }
+.videoItem {
+  height: auto;
+  max-height: calc(100svh - 200px);
+  width: 100%;
 }
 
 .videoStats {

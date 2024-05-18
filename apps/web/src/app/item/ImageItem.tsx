@@ -16,6 +16,7 @@ const ImageItem = ({ item }: Props) => {
 
   return (
     <div className={css.Item}>
+      {placeholder && <img src={placeholder} alt="" className={css.blurPlaceholderBg} />}
       <img
         className={css.imageItem}
         width={width}
