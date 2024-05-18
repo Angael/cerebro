@@ -5,7 +5,7 @@ import UsedSpace from '@/lib/used-space/UsedSpace';
 import { Stack } from '@mantine/core';
 import { useRequireAccount } from '@/utils/hooks/useRequireAccount';
 
-const page = () => {
+const UploadPage = () => {
   useRequireAccount();
   return (
     <Stack gap="md">
@@ -15,4 +15,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default UploadPage;
