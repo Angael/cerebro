@@ -12,7 +12,7 @@ import { preventLeave } from '@/utils/preventLeave';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
-import { Button, Flex } from '@mantine/core';
+import { Button, Flex, LoadingOverlay, Paper } from '@mantine/core';
 import { useUserLimits } from '@/utils/hooks/useUserLimits';
 
 const UploadFilesPage = () => {
@@ -86,14 +86,17 @@ const UploadFilesPage = () => {
           Import from link
         </Button>
       </Flex>
-      <Suspense fallback={null}>
-        <FilesPreview
-          files={files}
-          onDelete={removeFile}
-          onAddFiles={addFiles}
-          disabled={disableUpload}
-        />
-      </Suspense>
+      <Paper pos="relative">
+        <Suspense fallback={null}>
+          <LoadingOverlay visible={!data} />
+          <FilesPreview
+            files={files}
+            onDelete={removeFile}
+            onAddFiles={addFiles}
+            disabled={disableUpload}
+          />
+        </Suspense>
+      </Paper>
 
       <FilesStats files={files} />
     </>

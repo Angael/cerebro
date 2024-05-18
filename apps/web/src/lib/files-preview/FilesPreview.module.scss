@@ -10,8 +10,7 @@ $border: 2px;
   grid-auto-rows: 200px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 
-  // padding and bg
-  background-color: var(--c-bg-paper);
+  // padding
   min-height: 500px;
   border-radius: 8px;
 
