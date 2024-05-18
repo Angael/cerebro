@@ -30,8 +30,8 @@ const VideoItem = ({ item }: Props) => {
   const qualities = item.videos.map((video) => video.mediaType);
   return (
     <div className={css.Item}>
-      <div className={css.videoWrapper}>
-        {placeholder && <img src={placeholder} alt="" className={css.videoBg} />}
+      <div className={css.relativeWrapper}>
+        {placeholder && <img src={placeholder} alt="" className={css.blurPlaceholderBg} />}
 
         <video
           width={width}

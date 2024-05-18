@@ -3,7 +3,7 @@ import multer from 'multer';
 import z from 'zod';
 import { QueryItems } from '@cerebro/shared';
 
-import { deleteItem, getAllItems, getItem } from './item.service.js';
+import { deleteItem, getItems, getItem } from './item.service.js';
 import { multerOptions } from './multerConfig.js';
 import { MAX_UPLOAD_SIZE } from '@/utils/consts.js';
 import { uploadFileForUser } from './upload/upload.service.js';
@@ -27,19 +27,21 @@ import { requireSession } from '@/middleware/requireSession.js';
 const itemRoutes = express.Router({ mergeParams: true });
 itemRoutes.use('/items', express.json());
 
-const limitZod = z.number().min(1).max(100);
-const pageZod = z.number().min(0).max(Number.MAX_SAFE_INTEGER);
+const parseItemsQueryZod = z.object({
+  limit: z.coerce.number().min(1).max(100),
+  page: z.coerce.number().min(0).max(Number.MAX_SAFE_INTEGER),
+  author: z.enum(['all', 'my', 'other']),
+});
 
 itemRoutes.get('/items', async (req, res) => {
   const { user } = await optionalSession(req);
   try {
-    const limit = limitZod.parse(Number(req.query.limit));
-    const page = pageZod.parse(Number(req.query.page));
+    const { limit, page, author } = parseItemsQueryZod.parse(req.query);
 
-    const responseJson: QueryItems = await getAllItems(limit, page, user?.id ?? undefined);
+    const responseJson = await getItems(limit, page, user?.id ?? undefined, author);
 
     logger.info('Listing items %o', { userId: user?.id, page, limit });
-    res.json(responseJson);
+    res.json(responseJson satisfies QueryItems);
   } catch (e) {
     logger.error('Failed to list items for user: %s', user?.id);
     errorResponse(res, e);

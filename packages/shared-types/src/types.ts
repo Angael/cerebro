@@ -38,3 +38,5 @@ export type VideoItem = {
 } & BaseItem;
 
 export type FrontItem = ImageItem | VideoItem;
+
+export type AuthorQuery = 'my' | 'all' | 'other';

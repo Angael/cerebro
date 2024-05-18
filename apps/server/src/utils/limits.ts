@@ -3,6 +3,6 @@ import { UserType } from '@cerebro/db';
 
 export const limitsConfig = {
   FREE: 0,
-  PREMIUM: 1 * GB,
-  ADMIN: 1 * GB,
+  PREMIUM: 100 * GB,
+  ADMIN: 100 * GB,
 } satisfies Record<UserType, number>;

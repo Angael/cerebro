@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
-import { QUERY_KEYS } from '@/utils/consts';
 import { useRouter } from 'next/navigation';
 import { Anchor, Button, Card, Flex, Stack, Text, TextInput } from '@mantine/core';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
@@ -17,9 +16,7 @@ const Page = () => {
 
   const mutation = useMutation({
     mutationFn: () => API.post('/auth/signin', { email, password }),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] });
-    },
+    onSettled: () => queryClient.invalidateQueries(),
     onSuccess: () => {
       router.push('/');
     },

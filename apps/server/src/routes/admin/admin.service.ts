@@ -8,9 +8,7 @@ export const getAllUsers = async () => {
 };
 
 export const getUserPreview = async (userId: string): Promise<AdminUserPreview_Endpoint> => {
-  const {
-    bytes: { used, max },
-  } = await getLimitsForUser(userId);
+  const { used, max } = await getLimitsForUser(userId);
 
   const itemCountStr = await db
     .selectFrom('item')

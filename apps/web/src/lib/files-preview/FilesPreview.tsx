@@ -34,7 +34,7 @@ const FilesPreview = ({ files, onDelete, onAddFiles, disabled }: IProps) => {
       {files.length === 0 && (
         <div className={css.dragWatermark}>
           <Icon path={mdiFileMultiple} size={3} />
-          {disabled ? <p>Only premium users can upload files</p> : <p>Drag & drop files</p>}
+          {disabled ? <p>No space left</p> : <p>Drag & drop files</p>}
         </div>
       )}
       {files.map((file) => (

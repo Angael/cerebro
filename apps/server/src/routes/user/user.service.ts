@@ -60,12 +60,12 @@ export async function getLimitsForUser(userId: string): Promise<GetUploadLimits>
   const max = limitsConfig[type];
   const used: number = await getSpaceUsedByUser(userId);
 
-  return { type, bytes: { used, max } };
+  return { used, max }; // bytes
 }
 
 export async function doesUserHaveSpaceLeftForFile(userId: string, file: MyFile) {
   const limits = await getLimitsForUser(userId);
-  const spaceLeft = limits.bytes.max - limits.bytes.used;
+  const spaceLeft = limits.max - limits.used;
   return spaceLeft - file.size > 0;
 }
 
