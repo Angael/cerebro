@@ -73,7 +73,7 @@ const UploadFilesPage = () => {
   };
 
   const { data } = useUserLimits();
-  const disableUpload = data ? data?.bytes.used >= data?.bytes.max : true;
+  const disableUpload = data ? data?.used >= data?.max : true;
 
   return (
     <>

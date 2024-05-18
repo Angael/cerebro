@@ -6,10 +6,7 @@ export type QueryItems = {
   items: FrontItem[];
 };
 
-export type GetUploadLimits = {
-  type: string;
-  bytes: { used: number; max: number };
-};
+export type GetUploadLimits = { used: number; max: number };
 
 export type UserMe = {
   id: string;

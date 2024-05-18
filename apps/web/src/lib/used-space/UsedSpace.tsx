@@ -8,13 +8,13 @@ const UsedSpace = () => {
   const { data } = useUserLimits();
 
   const usageString =
-    numeral(data?.bytes.used).format('0 b') + ' out of ' + numeral(data?.bytes.max).format('0 b');
+    numeral(data?.used).format('0 b') + ' out of ' + numeral(data?.max).format('0 b');
 
-  let value = data ? (100 * data.bytes.used) / data.bytes.max : 0;
+  let value = data ? (100 * data.used) / data.max : 0;
 
   if (data) {
-    if (data.bytes.max === 0) value = 100;
-    if (data.bytes.max < data.bytes.used) value = 100;
+    if (data.max === 0) value = 100;
+    if (data.max < data.used) value = 100;
   }
 
   let color = undefined;

@@ -16,7 +16,7 @@ const Page = () => {
   const isValidUrl = isUrl(link);
 
   const { data } = useUserLimits();
-  const disableUpload = data ? data?.bytes.used >= data?.bytes.max : true;
+  const disableUpload = data ? data?.used >= data?.max : true;
 
   const mutation = useMutation({
     mutationFn: () => API.post('/items/upload/file-from-link', { link }),

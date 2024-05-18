@@ -23,7 +23,7 @@ const Navbar = () => {
   const queryClient = useQueryClient();
   const logout = useMutation({
     mutationFn: () => API.delete('/auth/signout').then((res) => res.data),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] }),
+    onSettled: () => queryClient.invalidateQueries(),
   });
 
   return (
