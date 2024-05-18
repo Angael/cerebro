@@ -37,7 +37,7 @@ itemRoutes.get('/items', async (req, res) => {
   const { user } = await optionalSession(req);
   try {
     const { limit, page, author } = parseItemsQueryZod.parse(req.query);
-    console.log({ limit, page, author });
+
     const responseJson = await getItems(limit, page, user?.id ?? undefined, author);
 
     logger.info('Listing items %o', { userId: user?.id, page, limit });

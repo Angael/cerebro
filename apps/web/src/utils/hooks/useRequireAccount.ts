@@ -7,7 +7,6 @@ export const useRequireAccount = () => {
   const user = useCurrentUser();
 
   useEffect(() => {
-    console.log('user', user);
     if (user.isSuccess && !user.data) {
       router.push('/signin');
     }
