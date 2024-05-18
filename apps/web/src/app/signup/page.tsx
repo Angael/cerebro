@@ -17,9 +17,7 @@ const Page = () => {
 
   const mutation = useMutation({
     mutationFn: () => API.post('/auth/signup', { email, password }),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.user] });
-    },
+    onSettled: () => queryClient.invalidateQueries(),
     onSuccess: () => {
       router.push('/');
     },
