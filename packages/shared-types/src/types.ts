@@ -7,6 +7,7 @@ export type VideoData = {
   height: number;
   durationMs: number;
   bitrateKb: number;
+  size: number;
 };
 
 export type ImageData = {
@@ -14,6 +15,7 @@ export type ImageData = {
   src: string;
   width: number;
   height: number;
+  size: number;
 };
 
 export type BaseItem = {
@@ -21,7 +23,6 @@ export type BaseItem = {
   isMine: boolean;
   private: boolean;
   createdAt: string;
-  size: number;
 
   thumbnail: string | null;
   icon: string | null;

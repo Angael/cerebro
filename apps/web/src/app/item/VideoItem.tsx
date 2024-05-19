@@ -24,8 +24,11 @@ const VideoItem = ({ item }: Props) => {
     setQuality(quality);
   };
 
-  const sizeStr = numeral(bitrateKb * 1000).format('0.00 b');
+  const bitrate = numeral(bitrateKb * 1000).format('0.00 b');
   const durationStr = numeral(durationMs / 1000).format('00:00:00');
+  const sizeStr = numeral(item.videos.find((v) => v.mediaType === quality)?.size ?? 0).format(
+    '0.00 b',
+  );
 
   const qualities = item.videos.map((video) => video.mediaType);
   return (
@@ -52,8 +55,9 @@ const VideoItem = ({ item }: Props) => {
         <p>
           Resolution: {width}x{height}
         </p>
-        <p>Bitrate: {sizeStr}/s</p>
+        <p>Bitrate: {bitrate}/s</p>
         <p>Duration: {durationStr}</p>
+        <p>Size: {sizeStr}</p>
         <Select data={qualities} value={quality} onChange={onSelectQuality} />
       </div>
     </>
