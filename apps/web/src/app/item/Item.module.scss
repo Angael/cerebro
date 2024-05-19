@@ -1,6 +1,6 @@
 @use 'src/style/breakpoints';
 
-.Item {
+.relativeWrapper {
   overflow: hidden;
   position: relative;
 }
@@ -8,10 +8,6 @@
 .imageItem {
   height: auto;
   margin: auto;
-}
-
-.relativeWrapper {
-  overflow: hidden;
 }
 
 .blurPlaceholderBg {

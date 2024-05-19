@@ -29,7 +29,7 @@ const VideoItem = ({ item }: Props) => {
 
   const qualities = item.videos.map((video) => video.mediaType);
   return (
-    <div className={css.Item}>
+    <>
       <div className={css.relativeWrapper}>
         {placeholder && <img src={placeholder} alt="" className={css.blurPlaceholderBg} />}
 
@@ -56,7 +56,7 @@ const VideoItem = ({ item }: Props) => {
         <p>Duration: {durationStr}</p>
         <Select data={qualities} value={quality} onChange={onSelectQuality} />
       </div>
-    </div>
+    </>
   );
 };
 

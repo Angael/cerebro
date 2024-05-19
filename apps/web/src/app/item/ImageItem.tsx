@@ -15,7 +15,7 @@ const ImageItem = ({ item }: Props) => {
   } as React.CSSProperties;
 
   return (
-    <div className={css.Item}>
+    <div className={css.relativeWrapper}>
       {placeholder && <img src={placeholder} alt="" className={css.blurPlaceholderBg} />}
       <img
         className={css.imageItem}
