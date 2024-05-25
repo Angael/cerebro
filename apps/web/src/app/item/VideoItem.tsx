@@ -4,6 +4,7 @@ import type { VideoItem as VideoItemType } from '@cerebro/shared';
 import css from './Item.module.scss';
 import numeral from 'numeral';
 import { Select } from '@mantine/core';
+import VideoPlayer from '@/lib/video-player/VideoPlayer';
 
 type Props = {
   item: VideoItemType;
@@ -36,19 +37,20 @@ const VideoItem = ({ item }: Props) => {
       <div className={css.relativeWrapper}>
         {placeholder && <img src={placeholder} alt="" className={css.blurPlaceholderBg} />}
 
-        <video
-          width={width}
-          height={height}
-          key={src}
-          controls
-          poster={item.thumbnail || ''}
-          autoPlay
-          loop
-          style={style}
-          className={css.videoItem}
-        >
-          <source src={src} />
-        </video>
+        <VideoPlayer url={src} className={css.videoItem} />
+        {/*<video*/}
+        {/*  width={width}*/}
+        {/*  height={height}*/}
+        {/*  key={src}*/}
+        {/*  controls*/}
+        {/*  poster={item.thumbnail || ''}*/}
+        {/*  autoPlay*/}
+        {/*  loop*/}
+        {/*  style={style}*/}
+        {/*  className={css.videoItem}*/}
+        {/*>*/}
+        {/*  <source src={src} />*/}
+        {/*</video>*/}
       </div>
 
       <div className={css.videoStats} style={{ marginLeft: 'auto' }}>

@@ -1,0 +1,27 @@
+.ReactPlayerWrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.slider {
+  position: absolute;
+  bottom: var(--mantine-spacing-md);
+  left: var(--mantine-spacing-md);
+  right: var(--mantine-spacing-md);
+  //width: 100%;
+}
+
+.videoStats {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+  padding: 8px;
+  font-size: 0.8rem;
+
+  display: flex;
+  flex-flow: column;
+  gap: 8px;
+}
