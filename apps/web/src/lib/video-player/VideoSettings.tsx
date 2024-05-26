@@ -34,6 +34,7 @@ const VolumeSetting = ({ selectedQuality, setQuality, qualities, stats }: Props)
               </Text>
             }
             disabled
+            style={{ padding: '4px 12px' }}
           >
             {label}
           </Menu.Item>
