@@ -4,6 +4,7 @@ import type { VideoItem as VideoItemType } from '@cerebro/shared';
 import css from './Item.module.scss';
 import numeral from 'numeral';
 import { Select } from '@mantine/core';
+import VideoPlayer from '@/lib/video-player/VideoPlayer';
 
 type Props = {
   item: VideoItemType;
@@ -32,35 +33,25 @@ const VideoItem = ({ item }: Props) => {
 
   const qualities = item.videos.map((video) => video.mediaType);
   return (
-    <>
-      <div className={css.relativeWrapper}>
-        {placeholder && <img src={placeholder} alt="" className={css.blurPlaceholderBg} />}
+    <div className={css.relativeWrapper}>
+      {placeholder && <img src={placeholder} alt="" className={css.blurPlaceholderBg} />}
 
-        <video
-          width={width}
-          height={height}
-          key={src}
-          controls
-          poster={item.thumbnail || ''}
-          autoPlay
-          loop
-          style={style}
-          className={css.videoItem}
-        >
-          <source src={src} />
-        </video>
-      </div>
-
-      <div className={css.videoStats} style={{ marginLeft: 'auto' }}>
-        <p>
-          Resolution: {width}x{height}
-        </p>
-        <p>Bitrate: {bitrate}/s</p>
-        <p>Duration: {durationStr}</p>
-        <p>Size: {sizeStr}</p>
-        <Select data={qualities} value={quality} onChange={onSelectQuality} />
-      </div>
-    </>
+      <VideoPlayer
+        url={src}
+        width={width}
+        height={height}
+        className={css.videoItem}
+        qualities={qualities}
+        selectedQuality={quality}
+        setQuality={onSelectQuality}
+        stats={[
+          { label: 'Resolution', value: `${width}x${height}` },
+          { label: 'Bitrate', value: bitrate },
+          { label: 'Duration', value: durationStr },
+          { label: 'Size', value: sizeStr },
+        ]}
+      />
+    </div>
   );
 };
 

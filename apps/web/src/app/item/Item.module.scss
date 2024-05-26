@@ -26,19 +26,3 @@
   max-height: calc(100svh - 200px);
   width: 100%;
 }
-
-.videoStats {
-  display: flex;
-  flex-flow: column;
-  margin-left: auto;
-
-  justify-content: space-between;
-  padding: 16px;
-  margin-top: 10px;
-  background-color: var(--c-bg-paper);
-  border-radius: 8px;
-
-  @include breakpoints.mobile {
-    width: 100%;
-  }
-}

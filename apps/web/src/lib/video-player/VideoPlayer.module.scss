@@ -1,0 +1,103 @@
+.ReactPlayerWrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+
+  max-height: 75vh;
+
+  .sliderBar {
+    position: absolute;
+    bottom: var(--mantine-spacing-sm);
+    left: var(--mantine-spacing-md);
+    right: var(--mantine-spacing-md);
+
+    z-index: 2;
+  }
+
+  .playIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .videoStats {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin: 0;
+    padding: 8px;
+    font-size: 0.8rem;
+
+    display: flex;
+    flex-flow: column;
+    gap: 8px;
+
+    z-index: 2;
+  }
+
+  .videoOverlayBg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+
+    pointer-events: none;
+
+    @supports (
+      -webkit-mask-image: -webkit-gradient(
+          linear,
+          left bottom,
+          left 80%,
+          from(rgba(0, 0, 0, 0.5)),
+          to(rgba(0, 0, 0, 0))
+        )
+    ) {
+      background: rgb(159, 249, 250);
+      background: linear-gradient(
+        48deg,
+        rgba(159, 249, 250, 1) 0%,
+        rgba(204, 182, 255, 1) 12%,
+        rgba(170, 203, 190, 1) 38%,
+        rgba(216, 170, 217, 1) 65%,
+        rgba(225, 227, 148, 1) 86%,
+        rgba(255, 224, 158, 1) 100%
+      );
+
+      -webkit-mask-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        from(rgba(0, 0, 0, 0.5)),
+        to(rgba(0, 0, 0, 0))
+      );
+    }
+
+    transition: opacity 0.5s ease-in-out;
+
+    z-index: 1;
+  }
+
+  &.hideUi {
+    cursor: none;
+
+    .playIcon,
+    .sliderBar,
+    .videoStats,
+    .videoOverlayBg {
+      animation: fade-out 0.25s ease-in forwards;
+    }
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
