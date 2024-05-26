@@ -3,9 +3,11 @@
   overflow: hidden;
   display: inline-block;
 
-  .slider {
+  max-height: 75vh;
+
+  .sliderBar {
     position: absolute;
-    bottom: var(--mantine-spacing-md);
+    bottom: var(--mantine-spacing-sm);
     left: var(--mantine-spacing-md);
     right: var(--mantine-spacing-md);
 
@@ -20,12 +22,28 @@
     z-index: 2;
   }
 
+  .videoStats {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin: 0;
+    padding: 8px;
+    font-size: 0.8rem;
+
+    display: flex;
+    flex-flow: column;
+    gap: 8px;
+
+    z-index: 2;
+  }
+
   .videoOverlayBg {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100px;
 
     pointer-events: none;
 
@@ -52,39 +70,25 @@
       -webkit-mask-image: -webkit-gradient(
         linear,
         left bottom,
-        left 80%,
+        left top,
         from(rgba(0, 0, 0, 0.5)),
         to(rgba(0, 0, 0, 0))
       );
     }
 
+    transition: opacity 0.5s ease-in-out;
+
     z-index: 1;
-  }
-
-  .videoStats {
-    position: absolute;
-    left: 0;
-    top: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    margin: 0;
-    padding: 8px;
-    font-size: 0.8rem;
-
-    display: flex;
-    flex-flow: column;
-    gap: 8px;
-
-    z-index: 2;
   }
 
   &.hideUi {
     cursor: none;
 
     .playIcon,
-    .slider,
+    .sliderBar,
     .videoStats,
     .videoOverlayBg {
-      animation: fade-out 0.2s ease-in-out forwards;
+      animation: fade-out 0.25s ease-in forwards;
     }
   }
 }

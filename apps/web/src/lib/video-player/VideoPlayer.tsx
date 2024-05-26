@@ -1,19 +1,35 @@
+'use client';
 import React, { startTransition, useEffect, useRef, useState } from 'react';
 import ReactPlayer, { FilePlayerProps } from 'react-player/file';
 import { OnProgressProps } from 'react-player/base';
 import css from './VideoPlayer.module.scss';
-import { ActionIcon, Slider } from '@mantine/core';
+import { ActionIcon, Group, Slider } from '@mantine/core';
 import { env } from '@/utils/env';
 import numeral from 'numeral';
 import Icon from '@mdi/react';
-import { mdiPause, mdiPlay } from '@mdi/js';
+import { mdiCog, mdiFullscreen, mdiPause, mdiPlay, mdiQualityHigh, mdiVolumeHigh } from '@mdi/js';
 import clsx from 'clsx';
+import VideoVolume from '@/lib/video-player/VideoVolume';
+import VideoSettings from '@/lib/video-player/VideoSettings';
 
 type Props = {
   url: string;
+  qualities: string[];
+  selectedQuality: string;
+  setQuality: (quality: string) => void;
+  stats: { label: string; value: string }[];
 } & React.ComponentProps<typeof ReactPlayer>;
 
-const VideoPlayer = ({ url, ...other }: Props) => {
+const VideoPlayer = ({
+  url,
+  width,
+  height,
+  qualities,
+  selectedQuality,
+  setQuality,
+  stats,
+  ...other
+}: Props) => {
   const currentTimeText = useRef<string>('00:00');
   const ref = useRef<ReactPlayer>(null);
   const sliderRef = useRef<any>(null);
@@ -25,7 +41,6 @@ const VideoPlayer = ({ url, ...other }: Props) => {
   const [volume, setVolume] = useState(env.IS_PROD ? 0.8 : 0.2);
 
   const onReady = (reactPlayer: FilePlayerProps) => {
-    console.log({ reactPlayer });
     setLength(reactPlayer.getDuration());
   };
 
@@ -34,7 +49,6 @@ const VideoPlayer = ({ url, ...other }: Props) => {
     setProgress(state.played);
     const bar = sliderRef.current?.querySelector('.mantine-Slider-bar') as HTMLDivElement;
     const thumb = sliderRef.current?.querySelector('.mantine-Slider-thumb') as HTMLDivElement;
-    console.log(bar, thumb);
 
     bar.style.setProperty(
       '--slider-bar-width',
@@ -45,8 +59,6 @@ const VideoPlayer = ({ url, ...other }: Props) => {
   };
 
   const handleSeek = (progressFromSlider: number) => {
-    console.log(progressFromSlider);
-
     ref.current?.seekTo(progressFromSlider);
     startTransition(() => {
       setPlaying(false);
@@ -90,7 +102,7 @@ const VideoPlayer = ({ url, ...other }: Props) => {
 
     timeoutRef.current = window.setTimeout(() => {
       setHideUi(true);
-    }, 700);
+    }, 800);
   };
 
   const onClick = () => {
@@ -99,12 +111,27 @@ const VideoPlayer = ({ url, ...other }: Props) => {
     briefShowUi(newPlaying, true);
   };
 
+  const onFullScreen = () => {
+    const player = ref.current?.getInternalPlayer();
+    if (player?.requestFullscreen) {
+      player.requestFullscreen();
+    } else if (player?.webkitRequestFullscreen) {
+      player.webkitRequestFullscreen();
+    } else if (player?.mozRequestFullScreen) {
+      player.mozRequestFullScreen();
+    } else if (player?.msRequestFullscreen) {
+      player.msRequestFullscreen();
+    }
+  };
+
   return (
     <div
       className={clsx(css.ReactPlayerWrapper, hideUi && css.hideUi)}
       onClick={onClick}
       onMouseMove={() => briefShowUi(playing)}
       onMouseLeave={() => setHideUi(true)}
+      onDoubleClick={onFullScreen}
+      style={{ aspectRatio: `${width}/${height}`, width: '100%' }}
     >
       <ReactPlayer
         ref={ref}
@@ -122,45 +149,58 @@ const VideoPlayer = ({ url, ...other }: Props) => {
         {...other}
       />
 
-      <Slider
-        className={css.slider}
-        ref={sliderRef}
-        // value={progress}
-        max={1}
-        onChange={handleSeek}
-        step={0.001}
-        label={label}
-        onClick={(e) => e.stopPropagation()}
-        onMouseDown={(e) => {
-          e.stopPropagation();
-          seekContinuePlaying.current = playing;
-          setPlaying(false);
-        }}
-      />
-
-      <div className={css.videoOverlayBg} />
-
       <ActionIcon
-        // color="white"
-        // variant="light"
-        size="xl"
-        aria-label="Play"
-        // onClick={() => setPlaying(!playing)}
+        color="white"
+        variant="default"
+        size="70px"
+        aria-label={playing ? 'Pause' : 'Play'}
         className={css.playIcon}
       >
-        <Icon path={playing ? mdiPause : mdiPlay} size={1} />
+        <Icon path={playing ? mdiPause : mdiPlay} size={3} />
       </ActionIcon>
 
-      {!env.IS_PROD && (
-        <pre className={css.videoStats} onClick={(e) => e.stopPropagation()}>
-          <p>Length: {length}</p>
-          <p>Progress: {Math.round(progress * 1000) / 1000}</p>
-          <p>Volume: {volume}</p>
-          <button onClick={() => setPlaying(!playing)}>Toggle play</button>
-          <button onClick={() => setVolumeLimited(volume + 0.1)}>Increase volume</button>
-          <button onClick={() => setVolumeLimited(volume - 0.1)}>Decrease volume</button>
-        </pre>
-      )}
+      <Group className={css.sliderBar}>
+        <Slider
+          ref={sliderRef}
+          color="white"
+          // value={progress}
+          max={1}
+          onChange={handleSeek}
+          step={0.001}
+          label={label}
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            seekContinuePlaying.current = playing;
+            setPlaying(false);
+          }}
+          style={{ flex: 1 }}
+        />
+
+        <VideoVolume volume={volume} setVolume={setVolume} />
+
+        <VideoSettings
+          qualities={qualities}
+          selectedQuality={selectedQuality}
+          setQuality={setQuality}
+          stats={stats}
+        />
+
+        <ActionIcon
+          variant="light"
+          color="white"
+          size="sm"
+          aria-label="Full Screen"
+          onClick={(e) => {
+            e.stopPropagation();
+            onFullScreen();
+          }}
+        >
+          <Icon path={mdiFullscreen} size={1} />
+        </ActionIcon>
+      </Group>
+
+      <div className={css.videoOverlayBg} />
     </div>
   );
 };
