@@ -34,11 +34,11 @@ const Browse = () => {
 
   // Reset page number if it's too high
   useEffect(() => {
-    if (pageNr > pageCount) {
+    if (data && isFetched && pageNr > pageCount) {
       const newPageNr = Math.max(1, pageCount) || 1;
       setPageNrStr(`${newPageNr}`);
     }
-  }, [pageNr, pageCount]);
+  }, [pageNr, data, isFetched]);
 
   if (isPending) {
     return <PageLoader />;
