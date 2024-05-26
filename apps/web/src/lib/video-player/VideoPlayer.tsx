@@ -151,14 +151,16 @@ const VideoPlayer = ({ url, ...other }: Props) => {
         <Icon path={playing ? mdiPause : mdiPlay} size={1} />
       </ActionIcon>
 
-      <pre className={css.videoStats} onClick={(e) => e.stopPropagation()}>
-        <p>Length: {length}</p>
-        <p>Progress: {Math.round(progress * 1000) / 1000}</p>
-        <p>Volume: {volume}</p>
-        <button onClick={() => setPlaying(!playing)}>Toggle play</button>
-        <button onClick={() => setVolumeLimited(volume + 0.1)}>Increase volume</button>
-        <button onClick={() => setVolumeLimited(volume - 0.1)}>Decrease volume</button>
-      </pre>
+      {!env.IS_PROD && (
+        <pre className={css.videoStats} onClick={(e) => e.stopPropagation()}>
+          <p>Length: {length}</p>
+          <p>Progress: {Math.round(progress * 1000) / 1000}</p>
+          <p>Volume: {volume}</p>
+          <button onClick={() => setPlaying(!playing)}>Toggle play</button>
+          <button onClick={() => setVolumeLimited(volume + 0.1)}>Increase volume</button>
+          <button onClick={() => setVolumeLimited(volume - 0.1)}>Decrease volume</button>
+        </pre>
+      )}
     </div>
   );
 };
