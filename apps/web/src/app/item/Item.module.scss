@@ -25,4 +25,7 @@
   height: auto;
   max-height: calc(100svh - 200px);
   width: 100%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
 }

@@ -177,7 +177,7 @@ const VideoPlayer = ({
           style={{ flex: 1 }}
         />
 
-        <VideoVolume volume={volume} setVolume={setVolume} />
+        <VideoVolume volume={volume} setVolume={setVolumeLimited} />
 
         <VideoSettings
           qualities={qualities}
