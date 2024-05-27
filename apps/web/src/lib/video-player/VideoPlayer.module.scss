@@ -1,7 +1,7 @@
 .ReactPlayerWrapper {
   position: relative;
   overflow: hidden;
-  display: inline-block;
+  display: block;
 
   max-height: 75vh;
 
@@ -46,38 +46,8 @@
     height: 100px;
 
     pointer-events: none;
-
-    @supports (
-      -webkit-mask-image: -webkit-gradient(
-          linear,
-          left bottom,
-          left 80%,
-          from(rgba(0, 0, 0, 0.5)),
-          to(rgba(0, 0, 0, 0))
-        )
-    ) {
-      background: rgb(159, 249, 250);
-      background: linear-gradient(
-        48deg,
-        rgba(159, 249, 250, 1) 0%,
-        rgba(204, 182, 255, 1) 12%,
-        rgba(170, 203, 190, 1) 38%,
-        rgba(216, 170, 217, 1) 65%,
-        rgba(225, 227, 148, 1) 86%,
-        rgba(255, 224, 158, 1) 100%
-      );
-
-      -webkit-mask-image: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        from(rgba(0, 0, 0, 0.5)),
-        to(rgba(0, 0, 0, 0))
-      );
-    }
-
+    background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
     transition: opacity 0.5s ease-in-out;
-
     z-index: 1;
   }
 

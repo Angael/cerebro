@@ -3,7 +3,7 @@ import React, { startTransition, SyntheticEvent, useEffect, useRef, useState } f
 import ReactPlayer, { FilePlayerProps } from 'react-player/file';
 import { OnProgressProps } from 'react-player/base';
 import css from './VideoPlayer.module.scss';
-import { ActionIcon, Group, Slider } from '@mantine/core';
+import { ActionIcon, Group, Slider, Text } from '@mantine/core';
 import { env } from '@/utils/env';
 import numeral from 'numeral';
 import Icon from '@mdi/react';
@@ -172,6 +172,10 @@ const VideoPlayer = ({
       </ActionIcon>
 
       <Group className={css.sliderBar}>
+        <Text c="white">
+          {currentTimeText.current} / {numeral(length).format('00:00:00')}
+        </Text>
+
         <Slider
           ref={sliderRef}
           color="white"
