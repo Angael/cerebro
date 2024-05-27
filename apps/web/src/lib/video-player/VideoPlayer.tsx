@@ -60,7 +60,6 @@ const VideoPlayer = ({
   };
 
   const handleSeek = (progressFromSlider: number) => {
-    console.log('handleSeek', progressFromSlider);
     ref.current?.seekTo(progressFromSlider, 'fraction');
     startTransition(() => {
       setPlaying(false);
@@ -194,13 +193,8 @@ const VideoPlayer = ({
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => {
             e.stopPropagation();
-            console.log('onMouseDown');
-
             seekContinuePlaying.current = playing;
             setPlaying(false);
-          }}
-          onMouseUp={(e) => {
-            console.log('onMouseUp');
           }}
           style={{ flex: 1 }}
         />
