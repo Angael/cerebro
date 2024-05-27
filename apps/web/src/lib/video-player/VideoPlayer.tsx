@@ -11,6 +11,7 @@ import { mdiFullscreen, mdiPause, mdiPlay } from '@mdi/js';
 import clsx from 'clsx';
 import VideoVolume from '@/lib/video-player/VideoVolume';
 import VideoSettings from '@/lib/video-player/VideoSettings';
+import { secToMMSS } from '@/lib/video-player/secToMMSS';
 
 type Props = {
   url: string;
@@ -69,7 +70,7 @@ const VideoPlayer = ({
     setVolume(Math.max(Math.min(volume, 1), 0));
   };
 
-  const label = length ? numeral(length * progress).format('00:00:00') : '00:00';
+  const label = secToMMSS(length ? length * progress : 0);
 
   useEffect(() => {
     const onMouseUp = () => {
@@ -172,8 +173,8 @@ const VideoPlayer = ({
       </ActionIcon>
 
       <Group className={css.sliderBar}>
-        <Text c="white">
-          {currentTimeText.current} / {numeral(length).format('00:00:00')}
+        <Text c="white" size="xs">
+          {label} / {secToMMSS(length)}
         </Text>
 
         <Slider
