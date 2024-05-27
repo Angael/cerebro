@@ -1,16 +1,17 @@
 'use client';
-import React, { startTransition, useEffect, useRef, useState } from 'react';
+import React, { startTransition, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import ReactPlayer, { FilePlayerProps } from 'react-player/file';
 import { OnProgressProps } from 'react-player/base';
 import css from './VideoPlayer.module.scss';
-import { ActionIcon, Group, Slider } from '@mantine/core';
+import { ActionIcon, Group, Slider, Text } from '@mantine/core';
 import { env } from '@/utils/env';
 import numeral from 'numeral';
 import Icon from '@mdi/react';
-import { mdiCog, mdiFullscreen, mdiPause, mdiPlay, mdiQualityHigh, mdiVolumeHigh } from '@mdi/js';
+import { mdiFullscreen, mdiPause, mdiPlay } from '@mdi/js';
 import clsx from 'clsx';
 import VideoVolume from '@/lib/video-player/VideoVolume';
 import VideoSettings from '@/lib/video-player/VideoSettings';
+import { secToMMSS } from '@/lib/video-player/secToMMSS';
 
 type Props = {
   url: string;
@@ -59,7 +60,7 @@ const VideoPlayer = ({
   };
 
   const handleSeek = (progressFromSlider: number) => {
-    ref.current?.seekTo(progressFromSlider);
+    ref.current?.seekTo(progressFromSlider, 'fraction');
     startTransition(() => {
       setPlaying(false);
     });
@@ -69,7 +70,7 @@ const VideoPlayer = ({
     setVolume(Math.max(Math.min(volume, 1), 0));
   };
 
-  const label = length ? numeral(length * progress).format('00:00:00') : '00:00';
+  const label = secToMMSS(length ? length * progress : 0);
 
   useEffect(() => {
     const onMouseUp = () => {
@@ -85,7 +86,7 @@ const VideoPlayer = ({
   }, []);
 
   const timeoutRef = useRef<number | null>(null);
-  const briefShowUi = (shouldHide = false, immediateHide = false) => {
+  const briefShowUi = (shouldHide = false, immediateHide = false, hideTimeoutMs = 800) => {
     setHideUi(false);
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -102,10 +103,21 @@ const VideoPlayer = ({
 
     timeoutRef.current = window.setTimeout(() => {
       setHideUi(true);
-    }, 800);
+    }, hideTimeoutMs);
   };
 
-  const onClick = () => {
+  const onClick = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (e.nativeEvent.pointerType === 'touch') {
+      // TODO: Here, if UI is visible, hide it
+      briefShowUi(true, false, 2000);
+      return;
+    }
+    onPlay(e);
+  };
+
+  const onPlay = (e: SyntheticEvent) => {
+    e.stopPropagation();
     const newPlaying = !playing;
     setPlaying(newPlaying);
     briefShowUi(newPlaying, true);
@@ -155,11 +167,21 @@ const VideoPlayer = ({
         size="70px"
         aria-label={playing ? 'Pause' : 'Play'}
         className={css.playIcon}
+        onClick={onPlay}
       >
         <Icon path={playing ? mdiPause : mdiPlay} size={3} />
       </ActionIcon>
 
       <Group className={css.sliderBar}>
+        <Text
+          c="white"
+          size="xs"
+          onClick={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
+        >
+          {label} / {secToMMSS(length)}
+        </Text>
+
         <Slider
           ref={sliderRef}
           color="white"
@@ -177,7 +199,7 @@ const VideoPlayer = ({
           style={{ flex: 1 }}
         />
 
-        <VideoVolume volume={volume} setVolume={setVolume} />
+        <VideoVolume volume={volume} setVolume={setVolumeLimited} />
 
         <VideoSettings
           qualities={qualities}

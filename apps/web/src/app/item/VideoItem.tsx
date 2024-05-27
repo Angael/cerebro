@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import type { VideoItem as VideoItemType } from '@cerebro/shared';
 import css from './Item.module.scss';
 import numeral from 'numeral';
-import { Select } from '@mantine/core';
 import VideoPlayer from '@/lib/video-player/VideoPlayer';
 
 type Props = {
@@ -25,7 +24,7 @@ const VideoItem = ({ item }: Props) => {
     setQuality(quality);
   };
 
-  const bitrate = numeral(bitrateKb * 1000).format('0.00 b');
+  const bitrateStr = numeral(bitrateKb * 1000).format('0.00 b');
   const durationStr = numeral(durationMs / 1000).format('00:00:00');
   const sizeStr = numeral(item.videos.find((v) => v.mediaType === quality)?.size ?? 0).format(
     '0.00 b',
@@ -46,10 +45,11 @@ const VideoItem = ({ item }: Props) => {
         setQuality={onSelectQuality}
         stats={[
           { label: 'Resolution', value: `${width}x${height}` },
-          { label: 'Bitrate', value: bitrate },
+          { label: 'Bitrate', value: bitrateStr },
           { label: 'Duration', value: durationStr },
           { label: 'Size', value: sizeStr },
         ]}
+        style={style}
       />
     </div>
   );
