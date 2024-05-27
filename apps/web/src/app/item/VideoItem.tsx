@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import type { VideoItem as VideoItemType } from '@cerebro/shared';
 import css from './Item.module.scss';
 import numeral from 'numeral';
-import { Select } from '@mantine/core';
 import VideoPlayer from '@/lib/video-player/VideoPlayer';
 
 type Props = {
