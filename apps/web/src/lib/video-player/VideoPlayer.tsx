@@ -173,7 +173,12 @@ const VideoPlayer = ({
       </ActionIcon>
 
       <Group className={css.sliderBar}>
-        <Text c="white" size="xs">
+        <Text
+          c="white"
+          size="xs"
+          onClick={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
+        >
           {label} / {secToMMSS(length)}
         </Text>
 
