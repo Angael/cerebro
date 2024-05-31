@@ -172,17 +172,20 @@ const VideoPlayer = ({
         <Icon path={playing ? mdiPause : mdiPlay} size={3} />
       </ActionIcon>
 
-      <Group className={css.sliderBar}>
+      <div className={css.sliderBar}>
         <Text
           c="white"
           size="xs"
           onClick={(e) => e.stopPropagation()}
           onDoubleClick={(e) => e.stopPropagation()}
+          className={css.length}
         >
           {label} / {secToMMSS(length)}
         </Text>
 
         <Slider
+          size="lg"
+          className={css.slider}
           ref={sliderRef}
           color="white"
           // value={progress}
@@ -196,31 +199,33 @@ const VideoPlayer = ({
             seekContinuePlaying.current = playing;
             setPlaying(false);
           }}
-          style={{ flex: 1 }}
+          style={{ flex: 1, gridArea: 'progress' }}
         />
 
-        <VideoVolume volume={volume} setVolume={setVolumeLimited} />
+        <Group className={css.settings}>
+          <VideoVolume volume={volume} setVolume={setVolumeLimited} />
 
-        <VideoSettings
-          qualities={qualities}
-          selectedQuality={selectedQuality}
-          setQuality={setQuality}
-          stats={stats}
-        />
+          <VideoSettings
+            qualities={qualities}
+            selectedQuality={selectedQuality}
+            setQuality={setQuality}
+            stats={stats}
+          />
 
-        <ActionIcon
-          variant="light"
-          color="white"
-          size="sm"
-          aria-label="Full Screen"
-          onClick={(e) => {
-            e.stopPropagation();
-            onFullScreen();
-          }}
-        >
-          <Icon path={mdiFullscreen} size={1} />
-        </ActionIcon>
-      </Group>
+          <ActionIcon
+            variant="light"
+            color="white"
+            size="sm"
+            aria-label="Full Screen"
+            onClick={(e) => {
+              e.stopPropagation();
+              onFullScreen();
+            }}
+          >
+            <Icon path={mdiFullscreen} size={1} />
+          </ActionIcon>
+        </Group>
+      </div>
 
       <div className={css.videoOverlayBg} />
     </div>
