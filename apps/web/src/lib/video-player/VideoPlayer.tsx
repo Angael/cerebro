@@ -76,6 +76,7 @@ const VideoPlayer = ({
     const onMouseUp = () => {
       if (seekContinuePlaying.current) {
         setPlaying(true);
+        seekContinuePlaying.current = false;
       }
     };
 
