@@ -34,6 +34,7 @@ const VideoPlayer = ({
   const currentTimeText = useRef<string>('00:00');
   const ref = useRef<ReactPlayer>(null);
   const sliderRef = useRef<any>(null);
+  const isSeeking = useRef<boolean>(false);
   const seekContinuePlaying = useRef<boolean>(false);
   const [hideUi, setHideUi] = useState(false);
   const [length, setLength] = useState(0);
@@ -60,9 +61,11 @@ const VideoPlayer = ({
   };
 
   const handleSeek = (progressFromSlider: number) => {
+    isSeeking.current = true;
     ref.current?.seekTo(progressFromSlider, 'fraction');
     startTransition(() => {
       setPlaying(false);
+      briefShowUi(playing, false);
     });
   };
 
@@ -73,15 +76,20 @@ const VideoPlayer = ({
   const label = secToMMSS(length ? length * progress : 0);
 
   useEffect(() => {
-    const onMouseUp = () => {
+    const onMouseUp = (e: any) => {
+      console.log('onMouseUp', e.type, seekContinuePlaying.current);
       if (seekContinuePlaying.current) {
         setPlaying(true);
+        seekContinuePlaying.current = false;
+        isSeeking.current = false;
       }
     };
 
     document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('touchend', onMouseUp);
     return () => {
       document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('touchend', onMouseUp);
     };
   }, []);
 
@@ -92,7 +100,7 @@ const VideoPlayer = ({
       clearTimeout(timeoutRef.current);
     }
 
-    if (!shouldHide) {
+    if (!shouldHide || isSeeking.current) {
       return;
     }
 
@@ -118,6 +126,9 @@ const VideoPlayer = ({
 
   const onPlay = (e: SyntheticEvent) => {
     e.stopPropagation();
+    isSeeking.current = false;
+    seekContinuePlaying.current = false;
+
     const newPlaying = !playing;
     setPlaying(newPlaying);
     briefShowUi(newPlaying, true);
@@ -134,6 +145,14 @@ const VideoPlayer = ({
     } else if (player?.msRequestFullscreen) {
       player.msRequestFullscreen();
     }
+  };
+
+  const handleSliderPointerStartEvent = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+  ) => {
+    e.stopPropagation();
+    seekContinuePlaying.current = playing;
+    setPlaying(false);
   };
 
   return (
@@ -172,17 +191,20 @@ const VideoPlayer = ({
         <Icon path={playing ? mdiPause : mdiPlay} size={3} />
       </ActionIcon>
 
-      <Group className={css.sliderBar}>
+      <div className={css.sliderBar}>
         <Text
           c="white"
           size="xs"
           onClick={(e) => e.stopPropagation()}
           onDoubleClick={(e) => e.stopPropagation()}
+          className={css.length}
         >
           {label} / {secToMMSS(length)}
         </Text>
 
         <Slider
+          size="lg"
+          className={css.slider}
           ref={sliderRef}
           color="white"
           // value={progress}
@@ -190,37 +212,38 @@ const VideoPlayer = ({
           onChange={handleSeek}
           step={0.001}
           label={label}
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => {
+          onClick={(e) => {
             e.stopPropagation();
-            seekContinuePlaying.current = playing;
-            setPlaying(false);
           }}
+          onMouseDown={handleSliderPointerStartEvent}
+          onTouchStart={handleSliderPointerStartEvent}
           style={{ flex: 1 }}
         />
 
-        <VideoVolume volume={volume} setVolume={setVolumeLimited} />
+        <Group className={css.settings}>
+          <VideoVolume volume={volume} setVolume={setVolumeLimited} />
 
-        <VideoSettings
-          qualities={qualities}
-          selectedQuality={selectedQuality}
-          setQuality={setQuality}
-          stats={stats}
-        />
+          <VideoSettings
+            qualities={qualities}
+            selectedQuality={selectedQuality}
+            setQuality={setQuality}
+            stats={stats}
+          />
 
-        <ActionIcon
-          variant="light"
-          color="white"
-          size="sm"
-          aria-label="Full Screen"
-          onClick={(e) => {
-            e.stopPropagation();
-            onFullScreen();
-          }}
-        >
-          <Icon path={mdiFullscreen} size={1} />
-        </ActionIcon>
-      </Group>
+          <ActionIcon
+            variant="light"
+            color="white"
+            size="sm"
+            aria-label="Full Screen"
+            onClick={(e) => {
+              e.stopPropagation();
+              onFullScreen();
+            }}
+          >
+            <Icon path={mdiFullscreen} size={1} />
+          </ActionIcon>
+        </Group>
+      </div>
 
       <div className={css.videoOverlayBg} />
     </div>
