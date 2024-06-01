@@ -1,19 +1,17 @@
 'use client';
-import React, { startTransition, SyntheticEvent, useEffect, useRef, useState } from 'react';
-import ReactPlayer, { FilePlayerProps } from 'react-player/file';
-import { OnProgressProps } from 'react-player/base';
+import React, { useRef, useState } from 'react';
+import ReactPlayer from 'react-player/file';
 import css from './VideoPlayer.module.scss';
 import { ActionIcon, Group, Slider, Text } from '@mantine/core';
-import { env } from '@/utils/env';
-import numeral from 'numeral';
 import Icon from '@mdi/react';
 import { mdiFullscreen, mdiPause, mdiPlay } from '@mdi/js';
 import clsx from 'clsx';
 import VideoVolume from '@/lib/video-player/VideoVolume';
 import VideoSettings from '@/lib/video-player/VideoSettings';
 import { secToMMSS } from '@/lib/video-player/secToMMSS';
-import { useVideoProgressSlider } from '@/lib/video-player/useVideoProgressSlider';
 import { useVideoPlayerBasics } from '@/lib/video-player/useVideoPlayerBasics';
+import { useVideoPlay } from '@/lib/video-player/useVideoPlay';
+import { useHideVideoUi } from '@/lib/video-player/useHideVideoUi';
 
 type Props = {
   url: string;
@@ -33,104 +31,41 @@ const VideoPlayer = ({
   stats,
   ...other
 }: Props) => {
-  const isSeeking = useRef<boolean>(false);
-  const seekContinuePlaying = useRef<boolean>(false);
-  const [hideUi, setHideUi] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [volume, setVolume] = useState(env.IS_PROD ? 0.8 : 0.2);
+  const isSeeking = useRef<boolean>(false);
 
-  const { sliderRef, setSliderProgress } = useVideoProgressSlider();
-  const { reactPlayerRef, length, progress, onReady, onProgress, onFullScreen } =
-    useVideoPlayerBasics({ setSliderProgress });
+  const {
+    reactPlayerRef,
+    sliderRef,
+    length,
+    progress,
+    volume,
+    setVolumeLimited,
+    onReady,
+    onProgress,
+    onFullScreen,
+  } = useVideoPlayerBasics();
 
-  const handleSeek = (progressFromSlider: number) => {
-    isSeeking.current = true;
-    reactPlayerRef.current?.seekTo(progressFromSlider, 'fraction');
-    startTransition(() => {
-      setPlaying(false);
-      briefShowUi(playing, false);
-    });
-  };
+  const { hideUi, briefShowUi } = useHideVideoUi({
+    isSeeking,
+  });
 
-  const setVolumeLimited = (volume: number) => {
-    setVolume(Math.max(Math.min(volume, 1), 0));
-  };
+  const { handleSliderPointerStartEvent, handleSeek, onPlay, onClick } = useVideoPlay({
+    reactPlayerRef,
+    isSeeking,
+    playing,
+    setPlaying,
+    briefShowUi,
+  });
 
   const label = secToMMSS(length ? length * progress : 0);
-
-  useEffect(() => {
-    const onMouseUp = (e: any) => {
-      console.log('onMouseUp', e.type, seekContinuePlaying.current);
-      if (seekContinuePlaying.current) {
-        setPlaying(true);
-        seekContinuePlaying.current = false;
-        isSeeking.current = false;
-      }
-    };
-
-    document.addEventListener('mouseup', onMouseUp);
-    document.addEventListener('touchend', onMouseUp);
-    return () => {
-      document.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('touchend', onMouseUp);
-    };
-  }, []);
-
-  const timeoutRef = useRef<number | null>(null);
-  const briefShowUi = (shouldHide = false, immediateHide = false, hideTimeoutMs = 800) => {
-    setHideUi(false);
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    if (!shouldHide || isSeeking.current) {
-      return;
-    }
-
-    if (immediateHide) {
-      setHideUi(true);
-      return;
-    }
-
-    timeoutRef.current = window.setTimeout(() => {
-      setHideUi(true);
-    }, hideTimeoutMs);
-  };
-
-  const onClick = (e: React.PointerEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    if (e.nativeEvent.pointerType === 'touch') {
-      // TODO: Here, if UI is visible, hide it
-      briefShowUi(true, false, 2000);
-      return;
-    }
-    onPlay(e);
-  };
-
-  const onPlay = (e: SyntheticEvent) => {
-    e.stopPropagation();
-    isSeeking.current = false;
-    seekContinuePlaying.current = false;
-
-    const newPlaying = !playing;
-    setPlaying(newPlaying);
-    briefShowUi(newPlaying, true);
-  };
-
-  const handleSliderPointerStartEvent = (
-    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
-  ) => {
-    e.stopPropagation();
-    seekContinuePlaying.current = playing;
-    setPlaying(false);
-  };
 
   return (
     <div
       className={clsx(css.ReactPlayerWrapper, hideUi && css.hideUi)}
       onClick={onClick}
       onMouseMove={() => briefShowUi(playing)}
-      onMouseLeave={() => setHideUi(true)}
+      onMouseLeave={() => briefShowUi(true, true)}
       onDoubleClick={onFullScreen}
       style={{ aspectRatio: `${width}/${height}`, width: '100%' }}
     >
