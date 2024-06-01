@@ -13,6 +13,7 @@ import VideoVolume from '@/lib/video-player/VideoVolume';
 import VideoSettings from '@/lib/video-player/VideoSettings';
 import { secToMMSS } from '@/lib/video-player/secToMMSS';
 import { useVideoProgressSlider } from '@/lib/video-player/useVideoProgressSlider';
+import { useVideoPlayerBasics } from '@/lib/video-player/useVideoPlayerBasics';
 
 type Props = {
   url: string;
@@ -32,28 +33,15 @@ const VideoPlayer = ({
   stats,
   ...other
 }: Props) => {
-  const currentTimeText = useRef<string>('00:00');
   const ref = useRef<ReactPlayer>(null);
   const isSeeking = useRef<boolean>(false);
   const seekContinuePlaying = useRef<boolean>(false);
   const [hideUi, setHideUi] = useState(false);
-  const [length, setLength] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(env.IS_PROD ? 0.8 : 0.2);
 
   const { sliderRef, setSliderProgress } = useVideoProgressSlider();
-
-  const onReady = (reactPlayer: FilePlayerProps) => {
-    setLength(reactPlayer.getDuration());
-  };
-
-  const onProgress = (state: OnProgressProps) => {
-    // Optimize and querySelector only once
-    setProgress(state.played);
-    setSliderProgress(state.played);
-    currentTimeText.current = numeral(state.played * length).format('00:00:00');
-  };
+  const { length, progress, onReady, onProgress } = useVideoPlayerBasics({ setSliderProgress });
 
   const handleSeek = (progressFromSlider: number) => {
     isSeeking.current = true;
