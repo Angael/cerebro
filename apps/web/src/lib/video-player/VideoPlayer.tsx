@@ -98,29 +98,29 @@ const VideoPlayer = ({
 
       <div className={css.sliderBar}>
         <Text
-          c="white"
-          size="xs"
           onClick={(e) => e.stopPropagation()}
           onDoubleClick={(e) => e.stopPropagation()}
           className={css.length}
+          c="white"
+          size="xs"
         >
           {label} / {secToMMSS(length)}
         </Text>
 
         <Slider
-          size="lg"
-          className={css.slider}
           ref={sliderRef}
-          color="white"
           max={1}
           onChange={handleSeek}
           step={0.001}
-          label={label}
           onClick={(e) => {
             e.stopPropagation();
           }}
           onMouseDown={handleSliderPointerStartEvent}
           onTouchStart={handleSliderPointerStartEvent}
+          label={label}
+          color="white"
+          size="lg"
+          className={css.slider}
           style={{ flex: 1 }}
         />
 
@@ -135,14 +135,14 @@ const VideoPlayer = ({
           />
 
           <ActionIcon
-            variant="light"
-            color="white"
-            size="sm"
-            aria-label="Full Screen"
             onClick={(e) => {
               e.stopPropagation();
               onFullScreen();
             }}
+            variant="light"
+            color="white"
+            size="sm"
+            aria-label="Full Screen"
           >
             <Icon path={mdiFullscreen} size={1} />
           </ActionIcon>
