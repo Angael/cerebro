@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import VideoVolume from '@/lib/video-player/VideoVolume';
 import VideoSettings from '@/lib/video-player/VideoSettings';
 import { secToMMSS } from '@/lib/video-player/secToMMSS';
+import { useVideoProgressSlider } from '@/lib/video-player/useVideoProgressSlider';
 
 type Props = {
   url: string;
@@ -33,7 +34,6 @@ const VideoPlayer = ({
 }: Props) => {
   const currentTimeText = useRef<string>('00:00');
   const ref = useRef<ReactPlayer>(null);
-  const sliderRef = useRef<any>(null);
   const isSeeking = useRef<boolean>(false);
   const seekContinuePlaying = useRef<boolean>(false);
   const [hideUi, setHideUi] = useState(false);
@@ -42,6 +42,8 @@ const VideoPlayer = ({
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(env.IS_PROD ? 0.8 : 0.2);
 
+  const { sliderRef, setSliderProgress } = useVideoProgressSlider();
+
   const onReady = (reactPlayer: FilePlayerProps) => {
     setLength(reactPlayer.getDuration());
   };
@@ -49,14 +51,7 @@ const VideoPlayer = ({
   const onProgress = (state: OnProgressProps) => {
     // Optimize and querySelector only once
     setProgress(state.played);
-    const bar = sliderRef.current?.querySelector('.mantine-Slider-bar') as HTMLDivElement;
-    const thumb = sliderRef.current?.querySelector('.mantine-Slider-thumb') as HTMLDivElement;
-
-    bar.style.setProperty(
-      '--slider-bar-width',
-      `calc(${state.played * 100}% + var(--slider-size))`,
-    );
-    thumb.style.setProperty('--slider-thumb-offset', `${state.played * 100}%`);
+    setSliderProgress(state.played);
     currentTimeText.current = numeral(state.played * length).format('00:00:00');
   };
 
