@@ -33,7 +33,6 @@ const VideoPlayer = ({
   stats,
   ...other
 }: Props) => {
-  const ref = useRef<ReactPlayer>(null);
   const isSeeking = useRef<boolean>(false);
   const seekContinuePlaying = useRef<boolean>(false);
   const [hideUi, setHideUi] = useState(false);
@@ -41,11 +40,12 @@ const VideoPlayer = ({
   const [volume, setVolume] = useState(env.IS_PROD ? 0.8 : 0.2);
 
   const { sliderRef, setSliderProgress } = useVideoProgressSlider();
-  const { length, progress, onReady, onProgress } = useVideoPlayerBasics({ setSliderProgress });
+  const { reactPlayerRef, length, progress, onReady, onProgress, onFullScreen } =
+    useVideoPlayerBasics({ setSliderProgress });
 
   const handleSeek = (progressFromSlider: number) => {
     isSeeking.current = true;
-    ref.current?.seekTo(progressFromSlider, 'fraction');
+    reactPlayerRef.current?.seekTo(progressFromSlider, 'fraction');
     startTransition(() => {
       setPlaying(false);
       briefShowUi(playing, false);
@@ -117,19 +117,6 @@ const VideoPlayer = ({
     briefShowUi(newPlaying, true);
   };
 
-  const onFullScreen = () => {
-    const player = ref.current?.getInternalPlayer();
-    if (player?.requestFullscreen) {
-      player.requestFullscreen();
-    } else if (player?.webkitRequestFullscreen) {
-      player.webkitRequestFullscreen();
-    } else if (player?.mozRequestFullScreen) {
-      player.mozRequestFullScreen();
-    } else if (player?.msRequestFullscreen) {
-      player.msRequestFullscreen();
-    }
-  };
-
   const handleSliderPointerStartEvent = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
   ) => {
@@ -148,7 +135,7 @@ const VideoPlayer = ({
       style={{ aspectRatio: `${width}/${height}`, width: '100%' }}
     >
       <ReactPlayer
-        ref={ref}
+        ref={reactPlayerRef}
         url={url}
         playing={playing}
         volume={volume}
@@ -190,7 +177,6 @@ const VideoPlayer = ({
           className={css.slider}
           ref={sliderRef}
           color="white"
-          // value={progress}
           max={1}
           onChange={handleSeek}
           step={0.001}
