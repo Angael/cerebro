@@ -5,7 +5,7 @@ type Args = {
   isSeeking: React.MutableRefObject<boolean>;
   playing: boolean;
   setPlaying: (playing: boolean) => void;
-  briefShowUi: (shouldHide: boolean, immediateHide?: boolean, hideTimeoutMs?: number) => void;
+  briefShowUi: (shouldHide: boolean, hideTimeoutMs?: number) => void;
 };
 
 // TODO: usePlayback?
@@ -23,7 +23,7 @@ export const useVideoPlay = ({
     reactPlayerRef.current?.seekTo(progressFromSlider, 'fraction');
     startTransition(() => {
       setPlaying(false);
-      briefShowUi(playing, false);
+      // briefShowUi(playing);
     });
   };
 
@@ -31,20 +31,19 @@ export const useVideoPlay = ({
     e.stopPropagation();
     if (e.nativeEvent.pointerType === 'touch') {
       // TODO: hide UI if visible,
-      briefShowUi(true, false, 2000);
-      return;
+      briefShowUi(true, 2000);
+    } else {
+      onClickPlayIcon(e);
     }
-    onPlay(e);
   };
 
-  const onPlay = (e: SyntheticEvent) => {
+  const onClickPlayIcon = (e: SyntheticEvent) => {
     e.stopPropagation();
     isSeeking.current = false;
     seekContinuePlaying.current = false;
 
     const newPlaying = !playing;
     setPlaying(newPlaying);
-    briefShowUi(newPlaying, true);
   };
 
   const handleSliderPointerStartEvent = (
@@ -75,7 +74,7 @@ export const useVideoPlay = ({
   return {
     handleSeek,
     handleSliderPointerStartEvent,
-    onClick: onClickVideo,
-    onPlay,
+    onClickVideo,
+    onClickPlayIcon,
   };
 };

@@ -46,26 +46,28 @@ const VideoPlayer = ({
     onFullScreen,
   } = useVideoPlayerBasics();
 
-  const { hideUi, briefShowUi } = useHideVideoUi({
+  const { hideUi, briefShowUi, setHideVideoUi } = useHideVideoUi({
     isSeeking,
   });
 
-  const { handleSliderPointerStartEvent, handleSeek, onPlay, onClick } = useVideoPlay({
-    reactPlayerRef,
-    isSeeking,
-    playing,
-    setPlaying,
-    briefShowUi,
-  });
+  const { handleSliderPointerStartEvent, handleSeek, onClickPlayIcon, onClickVideo } = useVideoPlay(
+    {
+      reactPlayerRef,
+      isSeeking,
+      playing,
+      setPlaying,
+      briefShowUi,
+    },
+  );
 
   const label = secToMMSS(length ? length * progress : 0);
 
   return (
     <div
       className={clsx(css.ReactPlayerWrapper, hideUi && css.hideUi)}
-      onClick={onClick}
+      onClick={onClickVideo}
       onMouseMove={() => briefShowUi(playing)}
-      onMouseLeave={() => briefShowUi(true, true)}
+      onMouseLeave={() => setHideVideoUi()}
       onDoubleClick={onFullScreen}
       style={{ aspectRatio: `${width}/${height}`, width: '100%' }}
     >
@@ -74,7 +76,10 @@ const VideoPlayer = ({
         url={url}
         playing={playing}
         volume={volume}
-        onPlay={() => setPlaying(true)}
+        onPlay={() => {
+          setPlaying(true);
+          setHideVideoUi(500);
+        }}
         onPause={() => setPlaying(false)}
         onReady={onReady}
         onProgress={onProgress}
@@ -91,7 +96,7 @@ const VideoPlayer = ({
         size="70px"
         aria-label={playing ? 'Pause' : 'Play'}
         className={css.playIcon}
-        onClick={onPlay}
+        onClick={onClickPlayIcon}
       >
         <Icon path={playing ? mdiPause : mdiPlay} size={3} />
       </ActionIcon>

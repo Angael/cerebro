@@ -8,25 +8,31 @@ export const useHideVideoUi = ({ isSeeking }: Args) => {
   const [hideUi, setHideUi] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
-  const briefShowUi = (shouldHide = false, immediateHide = false, hideTimeoutMs = 800) => {
-    setHideUi(false);
+  const setHideVideoUi = (hideTimeoutMs = 0) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
-    if (!shouldHide || isSeeking.current) {
-      return;
-    }
-
-    if (immediateHide) {
+    if (hideTimeoutMs === 0) {
       setHideUi(true);
-      return;
+    } else {
+      timeoutRef.current = window.setTimeout(() => {
+        if (!isSeeking.current) {
+          setHideUi(true);
+        }
+      }, hideTimeoutMs);
     }
-
-    timeoutRef.current = window.setTimeout(() => {
-      setHideUi(true);
-    }, hideTimeoutMs);
   };
 
-  return { hideUi, briefShowUi };
+  const briefShowUi = (shouldHide = false, hideTimeoutMs = 800) => {
+    setHideUi(false);
+
+    if (!shouldHide) {
+      return;
+    }
+
+    setHideVideoUi(hideTimeoutMs);
+  };
+
+  return { hideUi, briefShowUi, setHideVideoUi };
 };
