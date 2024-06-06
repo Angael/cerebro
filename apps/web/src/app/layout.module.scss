@@ -12,6 +12,13 @@
   flex: 1;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 16px;
+
+  .LayoutStack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+  }
 }

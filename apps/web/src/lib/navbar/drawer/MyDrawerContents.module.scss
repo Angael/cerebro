@@ -1,0 +1,6 @@
+.MyDrawerContents {
+  top: 76px;
+  position: sticky;
+  //max-height: calc(100svh - 36px - 55px);
+  height: fit-content;
+}
