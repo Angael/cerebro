@@ -20,7 +20,7 @@ const MyDrawerContents = ({ onClose }: Props) => {
   });
 
   return (
-    <Stack miw={300} h={'100%'} gap="0" className={css.MyDrawerContents}>
+    <Stack gap="0" className={css.MyDrawerContents}>
       <RouteNavLink href="/browse" label="Browse" onClick={onClose} />
       {user.data && <RouteNavLink href="/upload" label="Upload" onClick={onClose} />}
 
