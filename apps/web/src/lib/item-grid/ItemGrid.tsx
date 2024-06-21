@@ -16,7 +16,10 @@ const ItemGrid: React.FunctionComponent<Props> = ({ items, isLoading }) => {
 
   return (
     <section className={clsx(css.ItemGrid, css[viewMode])} style={{ opacity: isLoading ? 0.5 : 1 }}>
-      {items && items.map((item, i) => <ItemThumb key={item.id} item={item} />)}
+      {items &&
+        items.map((item, i) => (
+          <ItemThumb key={item.id} selfSetRowSpan={viewMode === 'columns'} item={item} />
+        ))}
     </section>
   );
 };
