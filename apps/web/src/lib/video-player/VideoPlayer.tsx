@@ -1,10 +1,10 @@
 'use client';
 import React, { useRef, useState } from 'react';
-import ReactPlayer from 'react-player/file';
+import ReactPlayer, { FilePlayerProps } from 'react-player/file';
 import css from './VideoPlayer.module.scss';
-import { ActionIcon, Group, Slider, Text } from '@mantine/core';
+import { ActionIcon, Group, Loader, Slider, Text } from '@mantine/core';
 import Icon from '@mdi/react';
-import { mdiFullscreen, mdiPause, mdiPlay } from '@mdi/js';
+import { mdiFullscreen, mdiLoading, mdiPause, mdiPlay } from '@mdi/js';
 import clsx from 'clsx';
 import VideoVolume from '@/lib/video-player/VideoVolume';
 import VideoSettings from '@/lib/video-player/VideoSettings';
@@ -35,6 +35,8 @@ const VideoPlayer = ({
   const isSeeking = useRef<boolean>(false);
 
   const {
+    isBuffering,
+    setIsBuffering,
     reactPlayerRef,
     sliderRef,
     length,
@@ -84,22 +86,30 @@ const VideoPlayer = ({
         onReady={onReady}
         onProgress={onProgress}
         onEnded={briefShowUi}
+        onBuffer={() => setIsBuffering(true)}
+        onBufferEnd={() => setIsBuffering(false)}
         progressInterval={36}
         width="100%"
         height="100%"
         {...other}
       />
 
-      <ActionIcon
-        color="white"
-        variant="default"
-        size="70px"
-        aria-label={playing ? 'Pause' : 'Play'}
-        className={css.playIcon}
-        onClick={onClickPlayIcon}
-      >
-        <Icon path={playing ? mdiPause : mdiPlay} size={3} />
-      </ActionIcon>
+      {isBuffering ? (
+        <div className={css.buffering}>
+          <Loader size={48} type="bars" color="white" />
+        </div>
+      ) : (
+        <ActionIcon
+          color="white"
+          variant="default"
+          size="70px"
+          aria-label={playing ? 'Pause' : 'Play'}
+          className={css.playIcon}
+          onClick={onClickPlayIcon}
+        >
+          <Icon path={playing ? mdiPause : mdiPlay} size={3} />
+        </ActionIcon>
+      )}
 
       <div className={css.sliderBar}>
         <Text
