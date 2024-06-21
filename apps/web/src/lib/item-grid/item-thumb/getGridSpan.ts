@@ -33,3 +33,15 @@ export const getGridSpan = (item: FrontItem): '' | 'tall' | 'wide' => {
     return '';
   }
 };
+
+export const getMasonryRowSpan = (item: FrontItem): number => {
+  const { w, h } = getWH(item);
+
+  if (!h || !w) {
+    return 300;
+  }
+
+  const scale = w / 300;
+
+  return Math.round(h / scale);
+};

@@ -3,8 +3,9 @@ import React from 'react';
 import { Menu, SegmentedControl } from '@mantine/core';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 
-export type ViewMode = 'grid' | 'dynamic-grid' | 'list';
+export type ViewMode = 'grid' | 'dynamic-grid' | 'list' | 'columns';
 const data: { label: string; value: ViewMode }[] = [
+  { label: 'Columns', value: 'columns' },
   { label: 'Dynamic Grid', value: 'dynamic-grid' },
   { label: 'Grid', value: 'grid' },
   { label: 'List', value: 'list' },

@@ -8,6 +8,7 @@ export const useVideoPlayerBasics = () => {
   const { sliderRef, setSliderProgress } = useVideoProgressSlider();
   const reactPlayerRef = useRef<ReactPlayer>(null);
 
+  const [isBuffering, setIsBuffering] = useState(true);
   const [length, setLength] = useState(0);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(env.IS_PROD ? 0.8 : 0.2);
@@ -18,6 +19,7 @@ export const useVideoPlayerBasics = () => {
 
   const onReady = (reactPlayer: FilePlayerProps) => {
     setLength(reactPlayer.getDuration());
+    setIsBuffering(false);
   };
 
   const onProgress = (state: OnProgressProps) => {
@@ -39,6 +41,8 @@ export const useVideoPlayerBasics = () => {
   };
 
   return {
+    isBuffering,
+    setIsBuffering,
     reactPlayerRef,
     sliderRef,
     length,

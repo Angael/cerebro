@@ -54,4 +54,12 @@
       grid-row: auto/span 1;
     }
   }
+
+  &.columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    grid-auto-rows: 1px;
+    grid-auto-flow: dense;
+    justify-content: center;
+  }
 }
