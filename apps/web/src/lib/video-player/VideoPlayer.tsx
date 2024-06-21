@@ -31,7 +31,7 @@ const VideoPlayer = ({
   stats,
   ...other
 }: Props) => {
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const isSeeking = useRef<boolean>(false);
 
   const {
