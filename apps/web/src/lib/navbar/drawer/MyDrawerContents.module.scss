@@ -2,8 +2,6 @@
   --offset: calc(var(--navbar-height) + 16px);
   top: var(--offset);
   position: sticky;
-  //max-height: calc(100svh - 36px - 55px);
-  //height: fit-content;
 
   min-width: 300px;
   height: calc(100vh - var(--offset) - 16px);
