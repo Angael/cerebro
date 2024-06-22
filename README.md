@@ -1,16 +1,28 @@
 # Cerebro Monorepo
 
-100% Type safe monorepo.
+100% Type safe content upload platform.
+![image](https://github.com/Angael/cerebro/assets/21974933/1c5ad4bb-c6ae-4d36-80b9-b26440d2b002)
 
 ## What's inside?
 
-Apps:
+### Apps:
 - `web` - Next.js Static export frontend
+  - Lightweight static export Next.js app
+  - Mantine for styling
+  - React Query
+  - 
 - `server` - Express backend
+  - Authorization with Lucia
+  - Integrates with Cloudflare R2
+  - Queries mySQL
+  - Handles file uploads with Multer
+  - Generates thumbnails
+  - Analyzes videos with FFPROBE
+  - Compresses images with sharp
+  - Compresses videos with FFMPEG
+- Packages to share code between repos
 
-And packages to simplify sharing variables and types.
-
-### Dependancies
+### Tech stack
 
 - Node.js
 - Pnpm
@@ -19,6 +31,9 @@ And packages to simplify sharing variables and types.
 - FFprobe
 - Turborepo
 - stripe CLI (dev)
+- Cloudflare R2
+- mySQL
+- nginx
 
 ## Development
 
