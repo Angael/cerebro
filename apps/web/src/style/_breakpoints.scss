@@ -9,3 +9,9 @@
     @content;
   }
 }
+
+@mixin show-drawer($width: 1280px) {
+  @media screen and (min-width: $width) {
+    @content;
+  }
+}

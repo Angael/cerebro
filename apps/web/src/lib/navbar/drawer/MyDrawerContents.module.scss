@@ -1,0 +1,8 @@
+.MyDrawerContents {
+  --offset: calc(var(--navbar-height) + 16px);
+  top: var(--offset);
+  position: sticky;
+
+  min-width: 300px;
+  height: calc(100vh - var(--offset) - 16px);
+}

@@ -40,6 +40,7 @@ const Page = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             error={parsedErr?.fields.email}
+            autoComplete="email"
           />
           <TextInput
             label={'Password'}
@@ -48,6 +49,7 @@ const Page = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={parsedErr?.fields.password}
+            autoComplete="current-password"
           />
           {parsedErr && (
             <Text size="sm" c="red.8">

@@ -2,11 +2,14 @@ $layer-1: 10;
 $layer-2: 20;
 $layer-navbar: 1000;
 
-$containerWidth: 1000px;
-
-@mixin container($width: $containerWidth) {
+@mixin container() {
   width: 100%;
-  max-width: $width;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 16px;
+
+  // Px value has to be same as useShowDrawer.ts
+  @media (min-width: 1280px) {
+    max-width: 1280px;
+  }
 }
