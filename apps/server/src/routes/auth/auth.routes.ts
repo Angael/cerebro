@@ -5,7 +5,7 @@ import { db } from '@cerebro/db';
 import { Argon2id } from 'oslo/password';
 import z from 'zod';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
-import { requireSession } from '@/middleware/requireSession.js';
+import { parseCookies } from 'oslo/cookie';
 
 const authRouter = express.Router({ mergeParams: true });
 authRouter.use('/auth', express.json());
@@ -73,7 +73,6 @@ authRouter.post('/auth/signin', async (req, res) => {
       return res.status(400).json(badEmailOrPassword);
     }
 
-    await db.deleteFrom('user_session').where('user_id', '=', user.id).execute();
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     res.cookie(sessionCookie.name, sessionCookie.value, {
@@ -88,10 +87,16 @@ authRouter.post('/auth/signin', async (req, res) => {
 
 authRouter.delete('/auth/signout', async (req, res) => {
   try {
-    const { user, session } = await requireSession(req);
+    const cookies = parseCookies(req.headers.cookie ?? '');
+    const auth_session = cookies.get('auth_session');
 
-    await db.deleteFrom('user_session').where('user_id', '=', user.id).execute();
-    await lucia.invalidateUserSessions(user.id);
+    if (!auth_session) {
+      res.sendStatus(400);
+      return;
+    }
+
+    await db.deleteFrom('user_session').where('id', '=', auth_session).execute();
+    await lucia.invalidateSession(auth_session);
 
     const sessionCookie = lucia.createBlankSessionCookie();
     res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
