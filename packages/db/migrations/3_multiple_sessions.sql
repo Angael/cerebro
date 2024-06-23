@@ -1,0 +1,1 @@
+drop index user_id on user_session;
