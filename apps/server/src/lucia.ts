@@ -10,7 +10,7 @@ const adapter = new Mysql2Adapter(dbPool, {
 
 export const lucia = new Lucia(adapter, {
   // Express js uses ms, and it should be seconds, so we need 1000 fix
-  sessionExpiresIn: new TimeSpan(2 * 1000, 'w'), // 2 weeks
+  sessionExpiresIn: new TimeSpan(2, 'w'), // 2 weeks
   sessionCookie: {
     attributes: {
       // set to `true` when using HTTPS

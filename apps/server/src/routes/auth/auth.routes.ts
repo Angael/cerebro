@@ -76,8 +76,10 @@ authRouter.post('/auth/signin', async (req, res) => {
     await db.deleteFrom('user_session').where('user_id', '=', user.id).execute();
     const session = await lucia.createSession(user.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
-
-    res.cookie(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    res.cookie(sessionCookie.name, sessionCookie.value, {
+      ...sessionCookie.attributes,
+      maxAge: sessionCookie.attributes.maxAge! * 1000,
+    });
     res.sendStatus(204);
   } catch (e) {
     errorResponse(res, e);
