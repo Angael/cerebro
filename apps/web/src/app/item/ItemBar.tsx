@@ -75,7 +75,10 @@ const ItemBar = ({ itemId, isMine }: Props) => {
         component={Link}
         href="/browse"
         variant="default"
-        onClick={router.back}
+        onClick={(e) => {
+          e.preventDefault();
+          router.back();
+        }}
         style={{ marginRight: 'auto', width: '80px' }}
       >
         <Icon path={mdiArrowLeft} size={0.8} />
