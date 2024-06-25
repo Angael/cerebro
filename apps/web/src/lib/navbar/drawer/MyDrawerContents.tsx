@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Stack } from '@mantine/core';
+import { Flex, Paper, Stack } from '@mantine/core';
 import css from './MyDrawerContents.module.scss';
 import { RouteNavLink } from '@/lib/route-nav-link/RouteNavLink';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
@@ -13,6 +13,7 @@ import {
   mdiShieldCrownOutline,
   mdiUpload,
 } from '@mdi/js';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   onClose?: () => void;
@@ -20,6 +21,7 @@ type Props = {
 
 const MyDrawerContents = ({ onClose }: Props) => {
   const user = useCurrentUser();
+  const router = useRouter();
 
   const queryClient = useQueryClient();
   const logout = useMutation({
@@ -28,7 +30,7 @@ const MyDrawerContents = ({ onClose }: Props) => {
   });
 
   return (
-    <Stack gap="0" className={css.MyDrawerContents}>
+    <Stack className={css.MyDrawerContents} gap="md">
       <Paper p="md">
         <RouteNavLink
           href="/browse"
@@ -48,8 +50,6 @@ const MyDrawerContents = ({ onClose }: Props) => {
         )}
       </Paper>
 
-      <div style={{ flex: 1 }}></div>
-
       <Paper p="md">
         {user.data?.type === 'ADMIN' && (
           <RouteNavLink
@@ -59,25 +59,29 @@ const MyDrawerContents = ({ onClose }: Props) => {
             description="Manage the site"
           />
         )}
-        <RouteNavLink
-          href={user.data ? '/account' : '/signin'}
-          label={user.data ? user.data.email : 'My account'}
-          description={user.data ? 'View your account' : 'Login'}
-          onClick={onClose}
-          leftSection={<Icon path={mdiAccountCircleOutline} size="24px" />}
-        />
-        {user.data && (
+        <Flex gap="0" align="stretch">
           <RouteNavLink
-            href="/signin"
-            label="Logout"
-            onClick={() => {
-              logout.mutate();
-              onClose?.();
-            }}
-            leftSection={<Icon path={mdiLogout} size="24px" />}
-            style={{ opacity: logout.isPending ? 0.5 : 1 }}
+            href={user.data ? '/account' : '/signin'}
+            label={user.data ? user.data.email : 'My account'}
+            description={user.data ? 'View your account' : 'Login'}
+            onClick={onClose}
+            leftSection={<Icon path={mdiAccountCircleOutline} size="24px" />}
+            style={{ flex: 1 }}
           />
-        )}
+          {user.data && (
+            <button
+              className={css.logoutBtn}
+              type="button"
+              onClick={() => {
+                logout.mutate();
+                onClose?.();
+                router.push('/signin');
+              }}
+            >
+              <Icon path={mdiLogout} size="24px" />
+            </button>
+          )}
+        </Flex>
       </Paper>
     </Stack>
   );
