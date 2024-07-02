@@ -33,9 +33,9 @@ const ItemPage = () => {
 
   return (
     <>
-      <ItemBar itemId={itemId} isMine={data?.isMine} />
       {data?.type === 'IMAGE' && <ImageItem item={data} />}
       {data?.type === 'VIDEO' && <VideoItem item={data} />}
+      <ItemBar itemId={itemId} isMine={data?.isMine} />
     </>
   );
 };

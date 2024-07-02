@@ -29,6 +29,8 @@ const VideoPlayer = ({
   selectedQuality,
   setQuality,
   stats,
+  className,
+  style,
   ...other
 }: Props) => {
   const [playing, setPlaying] = useState(true);
@@ -66,14 +68,15 @@ const VideoPlayer = ({
 
   return (
     <div
-      className={clsx(css.ReactPlayerWrapper, hideUi && css.hideUi)}
+      className={clsx(css.ReactPlayerWrapper, hideUi && css.hideUi, className)}
       onClick={onClickVideo}
       onMouseMove={() => briefShowUi(playing)}
       onMouseLeave={() => setHideVideoUi()}
       onDoubleClick={onFullScreen}
-      style={{ aspectRatio: `${width}/${height}`, width: '100%' }}
+      style={style}
     >
       <ReactPlayer
+        className={css.videoPlayer}
         ref={reactPlayerRef}
         url={url}
         playing={playing}

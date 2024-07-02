@@ -22,10 +22,15 @@
 }
 
 .videoItem {
-  height: auto;
-  max-height: calc(100svh - 200px);
-  width: 100%;
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
+  max-height: 650px;
+
+  video {
+    max-height: 650px;
+    height: calc(100svh - 100px);
+    min-height: 300px;
+    width: 100%;
+  }
 }
