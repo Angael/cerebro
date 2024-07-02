@@ -18,6 +18,8 @@ const VideoItem = ({ item }: Props) => {
   )!;
   const style = {
     backgroundImage: `url(${placeholder})`,
+    width: '100%',
+    height,
   } as React.CSSProperties;
 
   const onSelectQuality = (quality: any) => {
@@ -33,7 +35,9 @@ const VideoItem = ({ item }: Props) => {
   const qualities = item.videos.map((video) => video.mediaType);
   return (
     <div className={css.relativeWrapper}>
-      {placeholder && <img src={placeholder} alt="" className={css.blurPlaceholderBg} />}
+      {placeholder && (
+        <img src={placeholder} alt="" className={css.blurPlaceholderBg} height={height} />
+      )}
 
       <VideoPlayer
         url={src}

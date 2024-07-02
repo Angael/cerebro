@@ -6,3 +6,17 @@
   min-width: 300px;
   height: calc(100vh - var(--offset) - 16px);
 }
+
+.logoutBtn {
+  all: unset;
+  padding: var(--mantine-spacing-md);
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background: var(--mantine-color-dark-6);
+  }
+}

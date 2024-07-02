@@ -3,19 +3,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Icon from '@mdi/react';
-import {
-  mdiArrowLeft,
-  mdiCrownOutline,
-  mdiDeleteOutline,
-  mdiLink,
-  mdiShieldCrownOutline,
-} from '@mdi/js';
-import Link from 'next/link';
+import { mdiCrownOutline, mdiDeleteOutline, mdiLink } from '@mdi/js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { FrontItem, QueryItems } from '@cerebro/shared';
-import { ActionIcon, Button, Flex } from '@mantine/core';
+import { Button, Flex } from '@mantine/core';
 import { useIsAdmin } from '@/utils/hooks/useIsAdmin';
 import { notifications } from '@mantine/notifications';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
@@ -70,17 +63,7 @@ const ItemBar = ({ itemId, isMine }: Props) => {
   };
 
   return (
-    <Flex gap="sm" align="center" wrap="wrap">
-      <ActionIcon
-        component={Link}
-        href="/browse"
-        variant="default"
-        onClick={router.back}
-        style={{ marginRight: 'auto', width: '80px' }}
-      >
-        <Icon path={mdiArrowLeft} size={0.8} />
-      </ActionIcon>
-
+    <Flex gap="sm" align="center" justify="flex-end" wrap="wrap">
       <Button
         variant="light"
         color="blue"
