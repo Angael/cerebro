@@ -1,19 +1,28 @@
 'use client';
 import React, { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { useStory } from '@/utils/hooks/useStory';
 import { useStoryStore } from '@/app/story/edit/story.store';
-import { Button, Stack, Textarea, TextInput, Title } from '@mantine/core';
+import {
+  Button,
+  Card,
+  LoadingOverlay,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { notifications } from '@mantine/notifications';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import { PostEditStory_EndpointPayload } from '@cerebro/shared';
 import { useForm } from '@mantine/form';
+import { useStoryStats } from '@/app/story/edit/useStoryStats';
+import { useUrlParam } from '@/utils/hooks/useUrlParam';
 
 const StoryEditPage = () => {
-  const searchParams = useSearchParams();
-  const storyId = searchParams.get('storyId')!;
+  const [storyId] = useUrlParam('storyId')!;
 
   const queryClient = useQueryClient();
   const storyQuery = useStory(storyId);
@@ -70,8 +79,11 @@ const StoryEditPage = () => {
     },
   });
 
+  const storyStats = useStoryStats(storyQuery.data?.story.story_json ?? null);
+
   return (
-    <Stack>
+    <Stack pos="relative">
+      <LoadingOverlay visible={storyQuery.isPending} />
       <Title>Editing story:</Title>
       <form onSubmit={form.onSubmit((vals) => editStory.mutate(vals))}>
         <Stack>
@@ -84,8 +96,17 @@ const StoryEditPage = () => {
         </Stack>
       </form>
 
-      <details open>
-        <summary>Story</summary>
+      {storyStats && (
+        <Card>
+          <Text>Chapters: {storyStats.chapters}</Text>
+          <Text>Scenes: {storyStats.scenes}</Text>
+          <Text>Dialogs: {storyStats.dialogs}</Text>
+          <Text>Choices: {storyStats.choices}</Text>
+        </Card>
+      )}
+
+      <details>
+        <summary>Story JSON</summary>
         <pre>{JSON.stringify(storyQuery.data, null, 2)}</pre>
       </details>
     </Stack>

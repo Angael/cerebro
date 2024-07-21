@@ -1,11 +1,10 @@
 'use client';
 import React from 'react';
-import { useSearchParams } from 'next/navigation';
 import { useStory } from '@/utils/hooks/useStory';
+import { useUrlParam } from '@/utils/hooks/useUrlParam';
 
 const StoryPlayPage = () => {
-  const searchParams = useSearchParams();
-  const storyId = searchParams.get('storyId')!;
+  const [storyId] = useUrlParam('storyId')!;
 
   const storyQuery = useStory(storyId);
 

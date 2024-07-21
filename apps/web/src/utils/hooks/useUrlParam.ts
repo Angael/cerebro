@@ -8,6 +8,7 @@ type UrlParamValues = {
   viewMode: ViewMode;
   itemCount: `${number}`;
   author: AuthorQuery;
+  storyId: string;
 };
 
 type UrlParamKeys = keyof UrlParamValues;
@@ -17,6 +18,7 @@ const defaultValues: Record<UrlParamKeys, UrlParamValues[UrlParamKeys]> = {
   viewMode: 'dynamic-grid',
   itemCount: '40',
   author: 'all',
+  storyId: '',
 } as const;
 
 export const useUrlParam = <T extends UrlParamKeys>(param: T) => {
