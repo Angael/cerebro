@@ -24,9 +24,14 @@ const StoryBrowsePage = () => {
           <Stack>
             <Title order={3}>{story.title}</Title>
             <Text>{story.description}</Text>
-            <Button component={Link} href={`/story/play?storyId=${encodeURIComponent(story.id)}`}>
-              Read
-            </Button>
+            <Group>
+              <Button component={Link} href={`/story/edit?storyId=${encodeURIComponent(story.id)}`}>
+                Edit
+              </Button>
+              <Button component={Link} href={`/story/play?storyId=${encodeURIComponent(story.id)}`}>
+                Read
+              </Button>
+            </Group>
           </Stack>
         </Card>
       ))}
