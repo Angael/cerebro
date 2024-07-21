@@ -9,6 +9,7 @@ export interface Database {
   thumbnail: ThumbnailTable;
   image: ImageTable;
   video: VideoTable;
+  story: StoryTable;
 }
 
 export type UserType = 'PREMIUM' | 'FREE' | 'ADMIN';
@@ -118,3 +119,31 @@ export type Video = Selectable<VideoTable>;
 // export type Person = Selectable<PersonTable>;
 // export type NewPerson = Insertable<PersonTable>;
 // export type PersonUpdate = Updateable<PersonTable>;
+
+export type SingleDialogChoice = {
+  id: string;
+  text: string;
+  nextDialogId: string;
+};
+
+export type SingleDialog = {
+  id: string;
+  title: string;
+  content: string;
+  choices: SingleDialogChoice[];
+  who?: string;
+  img?: string;
+};
+
+interface StoryTable {
+  id: string;
+  title: string;
+  description: string;
+  dialogs: SingleDialog[];
+  first_dialog_id: string;
+
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
+export type StoryEntity = Selectable<StoryTable>;

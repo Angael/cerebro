@@ -1,5 +1,6 @@
 import { FrontItem } from './types.js';
 import { StripeCustomer } from '@cerebro/db';
+import { StoryEntity, StorySummary } from './types.js';
 
 export type QueryItems = {
   count: number;
@@ -34,4 +35,13 @@ export type AdminUserPreview_Endpoint = {
   usedSpace: number;
   maxSpace: number;
   itemCount: number;
+};
+
+export type GetStories_Endpoint = {
+  count: number;
+  stories: StorySummary[];
+};
+
+export type GetStory_Endpoint = {
+  story: StoryEntity;
 };

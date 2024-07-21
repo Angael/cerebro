@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Paper, Stack } from '@mantine/core';
+import { Flex, Paper, Stack, Title } from '@mantine/core';
 import css from './MyDrawerContents.module.scss';
 import { RouteNavLink } from '@/lib/route-nav-link/RouteNavLink';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
@@ -8,6 +8,7 @@ import { API } from '@/utils/API';
 import { Icon } from '@mdi/react';
 import {
   mdiAccountCircleOutline,
+  mdiBook,
   mdiHome,
   mdiLogout,
   mdiShieldCrownOutline,
@@ -47,6 +48,30 @@ const MyDrawerContents = ({ onClose }: Props) => {
             onClick={onClose}
             leftSection={<Icon path={mdiUpload} size="24px" />}
           />
+        )}
+      </Paper>
+
+      <Paper p="md">
+        <Title component="header" order={3} ml="sm" mb="xs">
+          Story
+        </Title>
+        <RouteNavLink
+          href="/story/browse"
+          label="Browse"
+          description="Read stories"
+          onClick={onClose}
+          leftSection={<Icon path={mdiBook} size="24px" />}
+        />
+        {user.data && (
+          <>
+            <RouteNavLink
+              href="/story/browse-my"
+              label="Your stories"
+              description="Create and manage your stories"
+              onClick={onClose}
+              leftSection={<Icon path={mdiHome} size="24px" />}
+            />
+          </>
         )}
       </Paper>
 

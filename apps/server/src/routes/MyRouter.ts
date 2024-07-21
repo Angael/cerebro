@@ -10,10 +10,12 @@ import logger from '@/utils/log.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import authRouter from '@/routes/auth/auth.routes.js';
 import adminRoutes from '@/routes/admin/admin.routes.js';
+import storyRouter from '@/routes/story/story.routes.js';
 import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
 
 const routes3: Router[] = [
   itemRouter,
+  storyRouter,
   authRouter,
   userRouter,
   adminRoutes,
