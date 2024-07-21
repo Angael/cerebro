@@ -5,10 +5,11 @@ import { API } from '@/utils/API';
 import { GetStories_Endpoint } from '@cerebro/shared';
 import { Button, Card, Group, Stack, Text, Title } from '@mantine/core';
 import Link from 'next/link';
+import { QUERY_KEYS } from '@/utils/consts';
 
 const StoryBrowsePage = () => {
   const storiesQuery = useQuery({
-    queryKey: ['stories'],
+    queryKey: [QUERY_KEYS.stories],
     queryFn: () => API.get<GetStories_Endpoint>('/story/list-stories').then((res) => res.data),
   });
 

@@ -45,3 +45,9 @@ export type GetStories_Endpoint = {
 export type GetStory_Endpoint = {
   story: StoryEntity;
 };
+
+export type PostEditStory_EndpointPayload = {
+  storyId: string;
+  title: string;
+  description: string;
+};

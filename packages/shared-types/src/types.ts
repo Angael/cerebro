@@ -44,5 +44,12 @@ export type AuthorQuery = 'my' | 'all' | 'other';
 
 import { StoryEntity } from '@cerebro/db';
 
-export type { StoryEntity, SingleDialog, SingleDialogChoice } from '@cerebro/db';
+export type {
+  StoryEntity,
+  SingleDialog,
+  SingleDialogChoice,
+  Scene,
+  Chapter,
+  StoryJson,
+} from '@cerebro/db';
 export type StorySummary = Pick<StoryEntity, 'id' | 'title' | 'description'>;

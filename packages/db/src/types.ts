@@ -135,12 +135,33 @@ export type SingleDialog = {
   img?: string;
 };
 
+export type Scene = {
+  id: string;
+  title: string;
+  dialogs: SingleDialog[];
+};
+
+export type Chapter = {
+  id: string;
+  title: string;
+  scenes: Scene[];
+};
+
+export type StoryJson = {
+  startingPoint: {
+    chapterId: string;
+    sceneId: string;
+    dialogId: string;
+  } | null;
+  chapters: Chapter[];
+};
+
 interface StoryTable {
   id: string;
   title: string;
-  description: string;
-  dialogs: SingleDialog[];
-  first_dialog_id: string;
+  description: string | null;
+  user_id: string;
+  story_json: StoryJson | null;
 
   created_at: Generated<Date>;
   updated_at: Generated<Date>;

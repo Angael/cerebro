@@ -184,6 +184,9 @@ importers:
       '@mantine/core':
         specifier: ^7.8.0
         version: 7.8.0(@mantine/hooks@7.8.0(react@18.2.0))(@types/react@18.2.46)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@mantine/form':
+        specifier: ^7.11.2
+        version: 7.11.2(react@18.2.0)
       '@mantine/hooks':
         specifier: ^7.8.0
         version: 7.8.0(react@18.2.0)
@@ -250,6 +253,9 @@ importers:
       sass:
         specifier: ^1.69.5
         version: 1.71.1
+      zustand:
+        specifier: ^4.5.4
+        version: 4.5.4(@types/react@18.2.46)(react@18.2.0)
     devDependencies:
       '@types/clamp':
         specifier: ^1.0.2
@@ -752,6 +758,11 @@ packages:
       '@mantine/hooks': 7.8.0
       react: ^18.2.0
       react-dom: ^18.2.0
+
+  '@mantine/form@7.11.2':
+    resolution: {integrity: sha512-NRY4HDgcArDEP+wUaHITnoVh0Ce3rM3Blo9fLNj2VYO8k7AfuSWp+fQdqrjDI0k9wGU3YEj4/dbwOjKbtXEhxw==}
+    peerDependencies:
+      react: ^18.2.0
 
   '@mantine/hooks@7.8.0':
     resolution: {integrity: sha512-+70fkgjhVJeJ+nJqnburIM3UAsfvxat1Low9HMPobLbv64FIdB4Nzu5ct3qojNQ58r5sK01tg5UoFIJYslaVrg==}
@@ -3058,6 +3069,10 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
+  klona@2.0.6:
+    resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
+    engines: {node: '>= 8'}
+
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
 
@@ -4175,6 +4190,11 @@ packages:
       '@types/react':
         optional: true
 
+  use-sync-external-store@1.2.0:
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -4259,6 +4279,21 @@ packages:
 
   zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+
+  zustand@4.5.4:
+    resolution: {integrity: sha512-/BPMyLKJPtFEvVL0E9E9BTUM63MNyhPGlvxk1XjrfWTUlV+BR8jufjsovHzrtR6YNcBEcL7cMHovL1n9xHawEg==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0.6'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
 
 snapshots:
 
@@ -4988,6 +5023,12 @@ snapshots:
       type-fest: 4.15.0
     transitivePeerDependencies:
       - '@types/react'
+
+  '@mantine/form@7.11.2(react@18.2.0)':
+    dependencies:
+      fast-deep-equal: 3.1.3
+      klona: 2.0.6
+      react: 18.2.0
 
   '@mantine/hooks@7.8.0(react@18.2.0)':
     dependencies:
@@ -7520,6 +7561,8 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
+  klona@2.0.6: {}
+
   kuler@2.0.0: {}
 
   kysely@0.27.3: {}
@@ -8685,6 +8728,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.2.46
 
+  use-sync-external-store@1.2.0(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+
   util-deprecate@1.0.2: {}
 
   utils-merge@1.0.1: {}
@@ -8811,3 +8858,10 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   zod@3.22.4: {}
+
+  zustand@4.5.4(@types/react@18.2.46)(react@18.2.0):
+    dependencies:
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 18.2.46
+      react: 18.2.0
