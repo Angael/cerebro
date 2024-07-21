@@ -20,6 +20,7 @@ import { PostEditStory_EndpointPayload } from '@cerebro/shared';
 import { useForm } from '@mantine/form';
 import { useStoryStats } from '@/app/story/edit/useStoryStats';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
+import StoryNav from '@/lib/story/StoryNav';
 
 const StoryEditPage = () => {
   const [storyId] = useUrlParam('storyId')!;
@@ -97,12 +98,19 @@ const StoryEditPage = () => {
       </form>
 
       {storyStats && (
-        <Card>
-          <Text>Chapters: {storyStats.chapters}</Text>
-          <Text>Scenes: {storyStats.scenes}</Text>
-          <Text>Dialogs: {storyStats.dialogs}</Text>
-          <Text>Choices: {storyStats.choices}</Text>
-        </Card>
+        <details>
+          <summary>Statistics</summary>
+          <Card>
+            <Text>Chapters: {storyStats.chapters}</Text>
+            <Text>Scenes: {storyStats.scenes}</Text>
+            <Text>Dialogs: {storyStats.dialogs}</Text>
+            <Text>Choices: {storyStats.choices}</Text>
+          </Card>
+        </details>
+      )}
+
+      {storyQuery.data?.story.story_json && (
+        <StoryNav storyJson={storyQuery.data.story.story_json} />
       )}
 
       <details>

@@ -9,6 +9,9 @@ type UrlParamValues = {
   itemCount: `${number}`;
   author: AuthorQuery;
   storyId: string;
+  chapterId: string;
+  sceneId: string;
+  dialogId: string;
 };
 
 type UrlParamKeys = keyof UrlParamValues;
@@ -19,6 +22,9 @@ const defaultValues: Record<UrlParamKeys, UrlParamValues[UrlParamKeys]> = {
   itemCount: '40',
   author: 'all',
   storyId: '',
+  chapterId: '',
+  sceneId: '',
+  dialogId: '',
 } as const;
 
 export const useUrlParam = <T extends UrlParamKeys>(param: T) => {
