@@ -47,7 +47,6 @@ export type GetStory_Endpoint = {
 };
 
 export type PostEditStory_EndpointPayload = {
-  storyId: string;
   title: string;
   description: string;
 };

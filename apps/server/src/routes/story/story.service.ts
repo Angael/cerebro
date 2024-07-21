@@ -1,4 +1,4 @@
-import { db } from '@cerebro/db';
+import { db, StoryJson } from '@cerebro/db';
 import logger from '@/utils/log.js';
 import { nanoid } from 'nanoid';
 import { PostEditStory_EndpointPayload } from '@cerebro/shared';
@@ -21,13 +21,19 @@ export const getStory = (storyId: string) => {
   return db.selectFrom('story').selectAll().where('id', '=', storyId).executeTakeFirstOrThrow();
 };
 
-export const editStory = (payload: PostEditStory_EndpointPayload) => {
-  logger.info(`Changing story ${payload.storyId}`);
+export const editStory = (storyId: string, payload: PostEditStory_EndpointPayload) => {
+  logger.info(`Changing story ${storyId}`);
 
   return db
     .updateTable('story')
     .set('title', payload.title)
     .set('description', payload.description)
-    .where('id', '=', payload.storyId)
+    .where('id', '=', storyId)
     .execute();
+};
+
+export const editStoryJson = (storyId: string, storyJson: StoryJson) => {
+  logger.info(`Changing storyJson ${storyId}`);
+
+  return db.updateTable('story').set('story_json', storyJson).where('id', '=', storyId).execute();
 };

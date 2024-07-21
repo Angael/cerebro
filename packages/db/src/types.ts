@@ -1,4 +1,12 @@
 import type { Generated, Selectable } from 'kysely';
+import { z } from 'zod';
+import {
+  chapterZod,
+  sceneZod,
+  singleDialogChoiceZod,
+  singleDialogZod,
+  storyJsonZod,
+} from './typesZod.js';
 
 export interface Database {
   user: UserTable;
@@ -120,41 +128,11 @@ export type Video = Selectable<VideoTable>;
 // export type NewPerson = Insertable<PersonTable>;
 // export type PersonUpdate = Updateable<PersonTable>;
 
-export type SingleDialogChoice = {
-  id: string;
-  text: string;
-  nextDialogId: string;
-};
-
-export type SingleDialog = {
-  id: string;
-  title: string;
-  content: string;
-  choices: SingleDialogChoice[];
-  who?: string;
-  img?: string;
-};
-
-export type Scene = {
-  id: string;
-  title: string;
-  dialogs: SingleDialog[];
-};
-
-export type Chapter = {
-  id: string;
-  title: string;
-  scenes: Scene[];
-};
-
-export type StoryJson = {
-  startingPoint: {
-    chapterId: string;
-    sceneId: string;
-    dialogId: string;
-  } | null;
-  chapters: Chapter[];
-};
+export type SingleDialogChoice = z.infer<typeof singleDialogChoiceZod>;
+export type SingleDialog = z.infer<typeof singleDialogZod>;
+export type Scene = z.infer<typeof sceneZod>;
+export type Chapter = z.infer<typeof chapterZod>;
+export type StoryJson = z.infer<typeof storyJsonZod>;
 
 interface StoryTable {
   id: string;

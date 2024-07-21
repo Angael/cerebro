@@ -62,7 +62,6 @@ const StoryEditPage = () => {
   const editStory = useMutation({
     mutationFn: (values: { title: string; desc: string }) =>
       API.post(`/story/edit/${storyId}`, {
-        storyId,
         title: values.title,
         description: values.desc,
       } satisfies PostEditStory_EndpointPayload),

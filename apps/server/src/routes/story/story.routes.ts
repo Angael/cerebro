@@ -6,11 +6,13 @@ import z from 'zod';
 import {
   createStory,
   editStory,
+  editStoryJson,
   getStoriesSummaries,
   getStory,
 } from '@/routes/story/story.service.js';
 import { requireSession } from '@/middleware/requireSession.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
+import { storyJsonZod } from '@cerebro/db';
 
 const storyRouter = express.Router({ mergeParams: true });
 storyRouter.use('/story', express.json());
@@ -60,26 +62,48 @@ storyRouter.post('/story/create', async (req, res) => {
 });
 
 const editStoryPayload = z.object({
-  storyId: idZod,
   title: z.string(),
   description: z.string(),
 });
-storyRouter.post('/story/edit/:id', async (req, res) => {
+storyRouter.post('/story/edit/:storyId', async (req, res) => {
   const { user } = await requireSession(req);
 
   try {
+    const storyId = idZod.parse(req?.params?.storyId);
     const payload = editStoryPayload.parse(req.body);
-    const { user_id } = await getStory(payload.storyId);
+    const { user_id } = await getStory(storyId);
 
     if (user_id !== user.id) {
       throw new HttpError(403, 'You are not the owner of this story');
     }
 
-    await editStory(payload);
+    await editStory(storyId, payload);
 
     res.sendStatus(204);
   } catch (e) {
-    logger.error(`Failed to change story ${req?.params?.id}`);
+    logger.error(`Failed to change story ${req?.params?.storyId}`);
+    errorResponse(res, e);
+  }
+});
+
+storyRouter.post('/story/edit-json/:storyId', async (req, res) => {
+  const { user } = await requireSession(req);
+
+  try {
+    const storyId = idZod.parse(req?.params?.storyId);
+    const { user_id } = await getStory(storyId);
+
+    if (user_id !== user.id) {
+      throw new HttpError(403, 'You are not the owner of this story');
+    }
+
+    const storyJson = storyJsonZod.parse(req.body.storyJson);
+
+    await editStoryJson(storyId, storyJson);
+
+    res.sendStatus(204);
+  } catch (e) {
+    logger.error(`Failed to change story ${req?.params?.storyId}`);
     errorResponse(res, e);
   }
 });
