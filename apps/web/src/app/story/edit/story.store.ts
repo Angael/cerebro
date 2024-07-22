@@ -10,6 +10,8 @@ interface IStoryStore {
   addChapter: (chapterName: string) => string;
   addScene: (chapterId: string, sceneName: string) => string;
   addDialog: (chapterId: string, sceneId: string, dialogName: string) => string;
+
+  setChapterName: (chapterId: string, chapterName: string) => void;
 }
 
 export const useStoryStore = create(
@@ -62,6 +64,16 @@ export const useStoryStore = create(
       });
 
       return newDialog.id;
+    },
+
+    setChapterName(chapterId, chapterName) {
+      set((state) => {
+        const chapter = state.storyJson?.chapters.find((chapter) => chapter.id === chapterId);
+
+        if (chapter) {
+          chapter.title = chapterName;
+        }
+      });
     },
   })),
 );
