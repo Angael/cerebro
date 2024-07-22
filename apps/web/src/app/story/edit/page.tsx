@@ -27,7 +27,8 @@ const StoryEditPage = () => {
 
   const queryClient = useQueryClient();
   const storyQuery = useStory(storyId);
-  const storyStore = useStoryStore();
+  const setStory = useStoryStore((s) => s.setStory);
+  const storyJson = useStoryStore((s) => s.storyJson);
 
   const form = useForm({
     mode: 'uncontrolled',
@@ -55,7 +56,7 @@ const StoryEditPage = () => {
 
     // todo: maybe set default story on server when creating
     if (storyQuery.data.story.story_json) {
-      storyStore.setStory(storyQuery.data.story.story_json);
+      setStory(storyQuery.data.story.story_json);
     }
   }, [storyQuery.data]);
 
@@ -79,7 +80,7 @@ const StoryEditPage = () => {
     },
   });
 
-  const storyStats = useStoryStats(storyQuery.data?.story.story_json ?? null);
+  const storyStats = useStoryStats(storyJson ?? null);
 
   return (
     <Stack pos="relative">
@@ -108,13 +109,11 @@ const StoryEditPage = () => {
         </details>
       )}
 
-      {storyQuery.data?.story.story_json && (
-        <StoryNav storyJson={storyQuery.data.story.story_json} />
-      )}
+      {storyJson && <StoryNav storyJson={storyJson} />}
 
       <details>
         <summary>Story JSON</summary>
-        <pre>{JSON.stringify(storyQuery.data, null, 2)}</pre>
+        <pre>{JSON.stringify(storyJson, null, 2)}</pre>
       </details>
     </Stack>
   );

@@ -26,6 +26,7 @@
     "clamp": "^1.0.1",
     "clsx": "^2.0.0",
     "eslint-config-turbo": "^1.12.4",
+    "immer": "^10.1.1",
     "nanoid": "^5.0.3",
     "next": "14.2.1",
     "numeral": "^2.0.6",
