@@ -27,7 +27,6 @@ const StoryNav = ({ storyJson }: Props) => {
 
   const chapter = storyJson.chapters.find((chapter) => chapter.id === chapterId);
   const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
-  const dialog = scene?.dialogs.find((dialog) => dialog.id === dialogId);
 
   const chapters = storyJson.chapters.map((chapter) => ({
     value: chapter.id,
@@ -68,6 +67,7 @@ const StoryNav = ({ storyJson }: Props) => {
           }}
         />
       </Group>
+
       <Group align="flex-end" gap="xs">
         <Select
           label="Scene"
@@ -85,6 +85,7 @@ const StoryNav = ({ storyJson }: Props) => {
           disabled={!chapterId}
         />
       </Group>
+
       <Group align="flex-end" gap="xs">
         <Select
           label="Dialog"
