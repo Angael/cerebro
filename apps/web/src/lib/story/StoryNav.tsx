@@ -1,5 +1,5 @@
 'use client';
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { StoryJson } from '@cerebro/shared';
 import { Group, Select } from '@mantine/core';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
@@ -14,6 +14,16 @@ const StoryNav = ({ storyJson }: Props) => {
   const [chapterId, setChapterId] = useUrlParam('chapterId');
   const [sceneId, setSceneId] = useUrlParam('sceneId');
   const [dialogId, setDialogId] = useUrlParam('dialogId');
+
+  useEffect(() => {
+    console.log('chapterId changed', chapterId);
+    setSceneId(null, true);
+  }, [chapterId]);
+
+  useEffect(() => {
+    console.log('sceneId changed', sceneId);
+    setDialogId(null, true);
+  }, [sceneId]);
 
   const chapter = storyJson.chapters.find((chapter) => chapter.id === chapterId);
   const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
@@ -37,6 +47,8 @@ const StoryNav = ({ storyJson }: Props) => {
     })) ?? [];
 
   const addChapter = useStoryStore((s) => s.addChapter);
+  const addScene = useStoryStore((s) => s.addScene);
+  const addDialog = useStoryStore((s) => s.addDialog);
 
   return (
     <Group>
@@ -45,15 +57,14 @@ const StoryNav = ({ storyJson }: Props) => {
           label="Chapter"
           value={chapterId}
           data={chapters}
-          onChange={(v) => setChapterId(v)}
+          onChange={(v) => setChapterId(v, true)}
           disabled={chapters.length === 0}
           allowDeselect={false}
         />
         <AddStoryPart
           usedNames={chapters.map((c) => c.label)}
           onCreate={(name) => {
-            const addedChapterId = addChapter(name);
-            setChapterId(addedChapterId);
+            setChapterId(addChapter(name));
           }}
         />
       </Group>
@@ -62,22 +73,34 @@ const StoryNav = ({ storyJson }: Props) => {
           label="Scene"
           value={sceneId}
           data={scenes}
-          onChange={(v) => setSceneId(v)}
+          onChange={(v) => setSceneId(v, true)}
           disabled={!chapterId}
           allowDeselect={false}
         />
-        <AddStoryPart />
+        <AddStoryPart
+          usedNames={scenes.map((s) => s.label)}
+          onCreate={(name) => {
+            setSceneId(addScene(chapterId!, name));
+          }}
+          disabled={!chapterId}
+        />
       </Group>
       <Group align="flex-end" gap="xs">
         <Select
           label="Dialog"
           value={dialogId}
           data={dialogs}
-          onChange={(v) => setDialogId(v)}
+          onChange={(v) => setDialogId(v, true)}
           disabled={!sceneId}
           allowDeselect={false}
         />
-        <AddStoryPart />
+        <AddStoryPart
+          disabled={!chapterId}
+          onCreate={(name) => {
+            setDialogId(addDialog(chapterId!, sceneId!, name));
+          }}
+          usedNames={dialogs.map((d) => d.label)}
+        />
       </Group>
     </Group>
   );

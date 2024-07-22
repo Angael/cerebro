@@ -9,9 +9,9 @@ type UrlParamValues = {
   itemCount: `${number}`;
   author: AuthorQuery;
   storyId: string;
-  chapterId: string;
-  sceneId: string;
-  dialogId: string;
+  chapterId: string | null;
+  sceneId: string | null;
+  dialogId: string | null;
 };
 
 type UrlParamKeys = keyof UrlParamValues;
@@ -22,9 +22,9 @@ const defaultValues: Record<UrlParamKeys, UrlParamValues[UrlParamKeys]> = {
   itemCount: '40',
   author: 'all',
   storyId: '',
-  chapterId: '',
-  sceneId: '',
-  dialogId: '',
+  chapterId: null,
+  sceneId: null,
+  dialogId: null,
 } as const;
 
 export const useUrlParam = <T extends UrlParamKeys>(param: T) => {
@@ -53,7 +53,11 @@ export const useUrlParam = <T extends UrlParamKeys>(param: T) => {
   const createQueryString = useCallback(
     (value: UrlParamValues[typeof param]) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set(param, value);
+      if (value) {
+        params.set(param, value);
+      } else {
+        params.delete(param);
+      }
 
       return params.toString();
     },

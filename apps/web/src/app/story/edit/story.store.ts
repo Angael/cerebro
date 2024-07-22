@@ -8,8 +8,8 @@ interface IStoryStore {
 
   setStory: (story: StoryJson) => void;
   addChapter: (chapterName: string) => string;
-  // addScene: (chapterId: string, sceneName: string) => void;
-  // addDialog: (chapterId: string, sceneId: string, dialogName: string) => void;
+  addScene: (chapterId: string, sceneName: string) => string;
+  addDialog: (chapterId: string, sceneId: string, dialogName: string) => string;
 }
 
 export const useStoryStore = create(
@@ -17,6 +17,7 @@ export const useStoryStore = create(
     storyJson: null,
 
     setStory: (story) => set({ storyJson: story }),
+
     addChapter: (chapterName) => {
       const newChapter = {
         id: nanoid(),
@@ -29,6 +30,38 @@ export const useStoryStore = create(
       });
 
       return newChapter.id;
+    },
+
+    addScene: (chapterId, sceneName) => {
+      const newScene = {
+        id: nanoid(),
+        title: sceneName,
+        dialogs: [],
+      };
+
+      set((state) => {
+        const chapter = state.storyJson?.chapters.find((chapter) => chapter.id === chapterId);
+        chapter?.scenes.push(newScene);
+      });
+
+      return newScene.id;
+    },
+
+    addDialog(chapterId, sceneId, dialogName) {
+      const newDialog = {
+        id: nanoid(),
+        title: dialogName,
+        content: '',
+        choices: [],
+      };
+
+      set((state) => {
+        const chapter = state.storyJson?.chapters.find((chapter) => chapter.id === chapterId);
+        const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
+        scene?.dialogs.push(newDialog);
+      });
+
+      return newDialog.id;
     },
   })),
 );

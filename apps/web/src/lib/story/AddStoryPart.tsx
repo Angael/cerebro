@@ -7,9 +7,10 @@ import { useForm } from '@mantine/form';
 type Props = {
   onCreate: (name: string) => void;
   usedNames: string[];
+  disabled?: boolean;
 };
 
-const AddStoryPart = ({ onCreate, usedNames }: Props) => {
+const AddStoryPart = ({ onCreate, usedNames, disabled }: Props) => {
   const [opened, setOpened] = useState(false);
 
   const form = useForm({
@@ -27,9 +28,9 @@ const AddStoryPart = ({ onCreate, usedNames }: Props) => {
   });
 
   return (
-    <Menu withArrow opened={opened} onChange={setOpened}>
+    <Menu withArrow opened={opened} onChange={setOpened} disabled={disabled}>
       <Menu.Target>
-        <ActionIcon size="lg">
+        <ActionIcon size="lg" disabled={disabled}>
           <Icon path={mdiPlus} size={16} />
         </ActionIcon>
       </Menu.Target>
