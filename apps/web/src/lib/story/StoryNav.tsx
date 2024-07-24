@@ -5,6 +5,7 @@ import { Group, Select } from '@mantine/core';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import AddStoryPart from '@/lib/story/AddStoryPart';
 import { useStoryStore } from '@/app/story/edit/story.store';
+import EditStoryPart from '@/lib/story/EditStoryPart';
 
 type Props = {
   storyJson: StoryJson;
@@ -27,6 +28,7 @@ const StoryNav = ({ storyJson }: Props) => {
 
   const chapter = storyJson.chapters.find((chapter) => chapter.id === chapterId);
   const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
+  const dialog = scene?.dialogs.find((dialog) => dialog.id === dialogId);
 
   const chapters = storyJson.chapters.map((chapter) => ({
     value: chapter.id,
@@ -49,6 +51,10 @@ const StoryNav = ({ storyJson }: Props) => {
   const addScene = useStoryStore((s) => s.addScene);
   const addDialog = useStoryStore((s) => s.addDialog);
 
+  const setChapterName = useStoryStore((s) => s.setChapterName);
+  const setSceneName = useStoryStore((s) => s.setSceneName);
+  const setDialogName = useStoryStore((s) => s.setDialogName);
+
   return (
     <Group>
       <Group align="flex-end" gap="xs">
@@ -60,6 +66,15 @@ const StoryNav = ({ storyJson }: Props) => {
           disabled={chapters.length === 0}
           allowDeselect={false}
         />
+        {chapter && (
+          <EditStoryPart
+            storyPartName={chapter.title}
+            usedNames={chapters.map((c) => c.label)}
+            onCreate={(name) => {
+              setChapterName(chapter.id, name);
+            }}
+          />
+        )}
         <AddStoryPart
           usedNames={chapters.map((c) => c.label)}
           onCreate={(name) => {
@@ -77,13 +92,23 @@ const StoryNav = ({ storyJson }: Props) => {
           disabled={!chapterId}
           allowDeselect={false}
         />
-        <AddStoryPart
-          usedNames={scenes.map((s) => s.label)}
-          onCreate={(name) => {
-            setSceneId(addScene(chapterId!, name));
-          }}
-          disabled={!chapterId}
-        />
+        {scene && (
+          <EditStoryPart
+            storyPartName={scene.title}
+            onCreate={(name) => {
+              setSceneName(chapterId!, scene.id, name);
+            }}
+            usedNames={scenes.map((s) => s.label)}
+          />
+        )}
+        {chapter && (
+          <AddStoryPart
+            usedNames={scenes.map((s) => s.label)}
+            onCreate={(name) => {
+              setSceneId(addScene(chapter.id, name));
+            }}
+          />
+        )}
       </Group>
 
       <Group align="flex-end" gap="xs">
@@ -95,13 +120,23 @@ const StoryNav = ({ storyJson }: Props) => {
           disabled={!sceneId}
           allowDeselect={false}
         />
-        <AddStoryPart
-          disabled={!chapterId}
-          onCreate={(name) => {
-            setDialogId(addDialog(chapterId!, sceneId!, name));
-          }}
-          usedNames={dialogs.map((d) => d.label)}
-        />
+        {dialog && (
+          <EditStoryPart
+            storyPartName={dialogs.find((d) => d.value === dialogId)?.label!}
+            onCreate={(name) => {
+              setDialogName(chapter!.id, scene!.id, dialog.id, name);
+            }}
+            usedNames={dialogs.map((d) => d.label)}
+          />
+        )}
+        {scene && (
+          <AddStoryPart
+            onCreate={(name) => {
+              setDialogId(addDialog(chapterId!, sceneId!, name));
+            }}
+            usedNames={dialogs.map((d) => d.label)}
+          />
+        )}
       </Group>
     </Group>
   );

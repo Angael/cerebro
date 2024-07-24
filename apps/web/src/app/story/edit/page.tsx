@@ -21,7 +21,6 @@ import { useForm } from '@mantine/form';
 import { useStoryStats } from '@/app/story/edit/useStoryStats';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import StoryNav from '@/lib/story/StoryNav';
-import EditChapter from '@/lib/story/EditChapter';
 
 const StoryEditPage = () => {
   const [storyId] = useUrlParam('storyId');
@@ -113,7 +112,7 @@ const StoryEditPage = () => {
 
       {storyJson && <StoryNav storyJson={storyJson} />}
 
-      <EditChapter />
+      <Title>TODO Edit dialog here</Title>
 
       <details>
         <summary>Story JSON</summary>

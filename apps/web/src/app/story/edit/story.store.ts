@@ -12,6 +12,8 @@ interface IStoryStore {
   addDialog: (chapterId: string, sceneId: string, dialogName: string) => string;
 
   setChapterName: (chapterId: string, chapterName: string) => void;
+  setSceneName: (chapterId: string, sceneId: string, sceneName: string) => void;
+  setDialogName: (chapterId: string, sceneId: string, dialogId: string, dialogName: string) => void;
 }
 
 export const useStoryStore = create(
@@ -72,6 +74,29 @@ export const useStoryStore = create(
 
         if (chapter) {
           chapter.title = chapterName;
+        }
+      });
+    },
+
+    setSceneName(chapterId, sceneId, sceneName) {
+      set((state) => {
+        const chapter = state.storyJson?.chapters.find((chapter) => chapter.id === chapterId);
+        const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
+
+        if (scene) {
+          scene.title = sceneName;
+        }
+      });
+    },
+
+    setDialogName(chapterId, sceneId, dialogId, dialogName) {
+      set((state) => {
+        const chapter = state.storyJson?.chapters.find((chapter) => chapter.id === chapterId);
+        const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
+        const dialog = scene?.dialogs.find((dialog) => dialog.id === dialogId);
+
+        if (dialog) {
+          dialog.title = dialogName;
         }
       });
     },

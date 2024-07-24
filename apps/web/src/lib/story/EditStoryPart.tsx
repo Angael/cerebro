@@ -1,24 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActionIcon, Button, Menu, Stack, TextInput } from '@mantine/core';
 import Icon from '@mdi/react';
-import { mdiPlus } from '@mdi/js';
+import { mdiPencil } from '@mdi/js';
 import { useStoryPartForm } from '@/lib/story/useStoryPartForm';
 
 type Props = {
+  storyPartName: string;
   onCreate: (name: string) => void;
   usedNames: string[];
 };
 
-const AddStoryPart = ({ onCreate, usedNames }: Props) => {
+const AddStoryPart = ({ storyPartName, onCreate, usedNames }: Props) => {
   const [opened, setOpened] = useState(false);
 
   const form = useStoryPartForm(usedNames);
 
+  useEffect(() => {
+    if (opened) {
+      form.setValues({ name: storyPartName });
+    }
+  }, [opened, storyPartName]);
+
   return (
     <Menu withArrow opened={opened} onChange={setOpened}>
       <Menu.Target>
-        <ActionIcon size="lg">
-          <Icon path={mdiPlus} size="24px" />
+        <ActionIcon size="lg" color="gray.8">
+          <Icon path={mdiPencil} size="24px" />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown p="sm">
@@ -30,7 +37,7 @@ const AddStoryPart = ({ onCreate, usedNames }: Props) => {
         >
           <Stack>
             <TextInput label="Name" {...form.getInputProps('name')} />
-            <Button type="submit">Create</Button>
+            <Button type="submit">Save edit</Button>
           </Stack>
         </form>
       </Menu.Dropdown>
