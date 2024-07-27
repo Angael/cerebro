@@ -2,16 +2,7 @@
 import React, { useEffect } from 'react';
 import { useStory } from '@/utils/hooks/useStory';
 import { useStoryStore } from '@/app/story/edit/story.store';
-import {
-  Button,
-  Card,
-  LoadingOverlay,
-  Stack,
-  Text,
-  Textarea,
-  TextInput,
-  Title,
-} from '@mantine/core';
+import { Button, LoadingOverlay, Stack, Textarea, TextInput, Title } from '@mantine/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { notifications } from '@mantine/notifications';
@@ -21,6 +12,7 @@ import { useForm } from '@mantine/form';
 import { useStoryStats } from '@/app/story/edit/useStoryStats';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import StoryNav from '@/lib/story/StoryNav';
+import { StoryStats } from '@/app/story/edit/StoryStats';
 
 const StoryEditPage = () => {
   const [storyId] = useUrlParam('storyId');
@@ -98,26 +90,11 @@ const StoryEditPage = () => {
         </Stack>
       </form>
 
-      {storyStats && (
-        <details>
-          <summary>Statistics</summary>
-          <Card>
-            <Text>Chapters: {storyStats.chapters}</Text>
-            <Text>Scenes: {storyStats.scenes}</Text>
-            <Text>Dialogs: {storyStats.dialogs}</Text>
-            <Text>Choices: {storyStats.choices}</Text>
-          </Card>
-        </details>
-      )}
+      {storyStats && <StoryStats storyStats={storyStats} />}
 
       {storyJson && <StoryNav storyJson={storyJson} />}
 
       <Title>TODO Edit dialog here</Title>
-
-      <details>
-        <summary>Story JSON</summary>
-        <pre>{JSON.stringify(storyJson, null, 2)}</pre>
-      </details>
     </Stack>
   );
 };
