@@ -31,7 +31,7 @@ export const useUrlParam = <T extends UrlParamKeys>(param: T) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const value = (searchParams.get(param) as UrlParamValues[typeof param]) || defaultValues[param];
+  const value = (searchParams.get(param) || defaultValues[param]) as UrlParamValues[typeof param];
 
   const setParam = (newValue: UrlParamValues[typeof param] | null, replace = false) => {
     const params = new URLSearchParams(searchParams.toString());
