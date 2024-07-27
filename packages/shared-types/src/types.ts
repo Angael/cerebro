@@ -1,4 +1,4 @@
-import { MediaType } from '@cerebro/db';
+import { MediaType, StoryDialog, StoryEntity } from '@cerebro/db';
 
 export type VideoData = {
   mediaType: MediaType;
@@ -42,12 +42,10 @@ export type FrontItem = ImageItem | VideoItem;
 
 export type AuthorQuery = 'my' | 'all' | 'other';
 
-import { StoryEntity } from '@cerebro/db';
-
 export type {
   StoryEntity,
-  SingleDialog,
-  SingleDialogChoice,
+  StoryDialog,
+  StoryDialogChoice,
   Scene,
   Chapter,
   StoryJson,

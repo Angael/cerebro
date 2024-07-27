@@ -1,22 +1,22 @@
 import { z } from 'zod';
 
-export const singleDialogChoiceZod = z.object({
+export const storyDialogChoiceZod = z.object({
   id: z.string(),
   text: z.string(),
   nextDialogId: z.string(),
 });
-export const singleDialogZod = z.object({
+export const storyDialogZod = z.object({
   id: z.string(),
   title: z.string(),
   content: z.string(),
-  choices: z.array(singleDialogChoiceZod),
+  choices: z.array(storyDialogChoiceZod),
   who: z.string().optional(),
   img: z.string().optional(),
 });
 export const sceneZod = z.object({
   id: z.string(),
   title: z.string(),
-  dialogs: z.array(singleDialogZod),
+  dialogs: z.array(storyDialogZod),
 });
 export const chapterZod = z.object({
   id: z.string(),

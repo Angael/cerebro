@@ -3,8 +3,8 @@ import { z } from 'zod';
 import {
   chapterZod,
   sceneZod,
-  singleDialogChoiceZod,
-  singleDialogZod,
+  storyDialogChoiceZod,
+  storyDialogZod,
   storyJsonZod,
 } from './typesZod.js';
 
@@ -128,8 +128,8 @@ export type Video = Selectable<VideoTable>;
 // export type NewPerson = Insertable<PersonTable>;
 // export type PersonUpdate = Updateable<PersonTable>;
 
-export type SingleDialogChoice = z.infer<typeof singleDialogChoiceZod>;
-export type SingleDialog = z.infer<typeof singleDialogZod>;
+export type StoryDialogChoice = z.infer<typeof storyDialogChoiceZod>;
+export type StoryDialog = z.infer<typeof storyDialogZod>;
 export type Scene = z.infer<typeof sceneZod>;
 export type Chapter = z.infer<typeof chapterZod>;
 export type StoryJson = z.infer<typeof storyJsonZod>;
