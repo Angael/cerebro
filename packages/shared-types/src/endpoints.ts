@@ -1,6 +1,6 @@
 import { FrontItem } from './types.js';
 import { StripeCustomer } from '@cerebro/db';
-import { StoryEntity, StorySummary } from './types.js';
+import { Storyteller } from './types.js';
 
 export type QueryItems = {
   count: number;
@@ -39,11 +39,11 @@ export type AdminUserPreview_Endpoint = {
 
 export type GetStories_Endpoint = {
   count: number;
-  stories: StorySummary[];
+  stories: Storyteller.StorySummary[];
 };
 
 export type GetStory_Endpoint = {
-  story: StoryEntity;
+  story: Storyteller.StoryEntity;
 };
 
 export type PostEditStory_EndpointPayload = {

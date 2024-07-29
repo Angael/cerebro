@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import { StoryJson } from '@cerebro/shared';
+import { Storyteller } from '@cerebro/shared';
 import { nanoid } from 'nanoid';
 import { immer } from 'zustand/middleware/immer';
 
 interface IStoryStore {
-  storyJson: StoryJson | null;
+  storyJson: Storyteller.StoryJson | null;
 
-  setStory: (story: StoryJson) => void;
+  setStory: (story: Storyteller.StoryJson) => void;
   addChapter: (chapterName: string) => string;
   addScene: (chapterId: string, sceneName: string) => string;
   addDialog: (chapterId: string, sceneId: string, dialogName: string) => string;

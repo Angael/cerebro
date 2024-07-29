@@ -1,6 +1,6 @@
-import { StoryJson } from '@cerebro/shared';
+import { Storyteller } from '@cerebro/shared';
 
-export const useStoryStats = (storyJson: StoryJson | null) => {
+export const useStoryStats = (storyJson: Storyteller.StoryJson | null) => {
   if (!storyJson) {
     return null;
   }

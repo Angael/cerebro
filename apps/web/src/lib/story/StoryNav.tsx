@@ -1,6 +1,6 @@
 'use client';
 import React, { memo, useEffect } from 'react';
-import { StoryJson } from '@cerebro/shared';
+import { Storyteller } from '@cerebro/shared';
 import { Group, Select } from '@mantine/core';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import AddStoryPart from '@/lib/story/AddStoryPart';
@@ -8,7 +8,7 @@ import { useStoryStore } from '@/app/story/edit/story.store';
 import EditStoryPart from '@/lib/story/EditStoryPart';
 
 type Props = {
-  storyJson: StoryJson;
+  storyJson: Storyteller.StoryJson;
 };
 
 const StoryNav = ({ storyJson }: Props) => {

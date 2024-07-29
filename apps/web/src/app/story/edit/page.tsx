@@ -13,6 +13,7 @@ import { useStoryStats } from '@/app/story/edit/useStoryStats';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import StoryNav from '@/lib/story/StoryNav';
 import { StoryStats } from '@/app/story/edit/StoryStats';
+import StoryViewport from '@/lib/story/story-viewport/StoryViewport';
 
 const StoryEditPage = () => {
   const [storyId] = useUrlParam('storyId');
@@ -92,9 +93,13 @@ const StoryEditPage = () => {
 
       {storyStats && <StoryStats storyStats={storyStats} />}
 
-      {storyJson && <StoryNav storyJson={storyJson} />}
+      {storyJson && (
+        <>
+          <StoryNav storyJson={storyJson} />
 
-      <Title>TODO Edit dialog here</Title>
+          <StoryViewport storyJson={storyJson} />
+        </>
+      )}
     </Stack>
   );
 };
