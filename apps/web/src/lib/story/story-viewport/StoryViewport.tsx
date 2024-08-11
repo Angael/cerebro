@@ -4,32 +4,10 @@ import css from './StoryViewport.module.scss';
 import { boldenUnderlineEtc } from '@/lib/story/story-viewport/boldenUnderlineEtc';
 
 type Props = {
-  story: Storyteller.StoryJson;
-  chapterId: string;
-  sceneId: string;
-  dialogId: string;
+  dialog?: Storyteller.StoryDialog;
 };
 
-const mockDialog: Storyteller.StoryDialog = {
-  id: 'whatever',
-  who: 'Krzysztof Widacki',
-  title: '',
-  content: 'Halo? \nWidzę że się obudziłeś... \n' + 'Co robisz w moim domu?',
-  img: 'https://picsum.photos/900/570',
-  choices: [
-    {
-      id: 'next',
-      text: 'Next',
-      nextDialogId: 'whatever-2',
-    },
-  ],
-};
-
-const StoryViewport = ({ story, chapterId, sceneId, dialogId }: Props) => {
-  const chapter = story.chapters.find((chapter) => chapter.id === chapterId);
-  const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
-  const dialog = scene?.dialogs.find((dialog) => dialog.id === dialogId);
-
+const StoryViewport = ({ dialog }: Props) => {
   if (!dialog) {
     return null;
   }

@@ -6,12 +6,14 @@ import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import AddStoryPart from '@/lib/story/AddStoryPart';
 import { useStoryStore } from '@/app/story/edit/story.store';
 import EditStoryPart from '@/lib/story/EditStoryPart';
+import { useSetUrlParams } from '@/utils/hooks/useSetUrlParams';
 
 type Props = {
   storyJson: Storyteller.StoryJson;
 };
 
 const StoryNav = ({ storyJson }: Props) => {
+  const setUrlParams = useSetUrlParams();
   const [chapterId, setChapterId] = useUrlParam('chapterId');
   const [sceneId, setSceneId] = useUrlParam('sceneId');
   const [dialogId, setDialogId] = useUrlParam('dialogId');
@@ -21,15 +23,11 @@ const StoryNav = ({ storyJson }: Props) => {
   const dialog = scene?.dialogs.find((dialog) => dialog.id === dialogId);
 
   useEffect(() => {
-    if (!dialog && dialogId) {
-      setDialogId(null);
-    }
-    if (!scene && sceneId) {
-      setSceneId(null);
-    }
-    if (!chapter && chapterId) {
-      setChapterId(null);
-    }
+    setUrlParams({
+      chapterId: !chapter && chapterId ? null : chapterId,
+      sceneId: !scene && sceneId ? null : sceneId,
+      dialogId: !dialog && dialogId ? null : dialogId,
+    });
   }, [chapterId, sceneId, dialogId, chapter, scene, dialog]);
 
   const chapters = storyJson.chapters.map((chapter) => ({
@@ -107,7 +105,11 @@ const StoryNav = ({ storyJson }: Props) => {
           <AddStoryPart
             usedNames={scenes.map((s) => s.label)}
             onCreate={(name) => {
-              setSceneId(addScene(chapter.id, name));
+              const newSceneId = addScene(chapter.id, name);
+              // workaround for store hook not updating in time
+              setTimeout(() => {
+                setSceneId(newSceneId);
+              }, 1);
             }}
           />
         )}
@@ -134,7 +136,11 @@ const StoryNav = ({ storyJson }: Props) => {
         {scene && (
           <AddStoryPart
             onCreate={(name) => {
-              setDialogId(addDialog(chapterId!, sceneId!, name));
+              const newDialogId = addDialog(chapterId!, sceneId!, name);
+              // workaround for store hook not updating in time
+              setTimeout(() => {
+                setDialogId(newDialogId);
+              }, 1);
             }}
             usedNames={dialogs.map((d) => d.label)}
           />

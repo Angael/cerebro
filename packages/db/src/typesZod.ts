@@ -3,7 +3,10 @@ import { z } from 'zod';
 export const storyDialogChoiceZod = z.object({
   id: z.string(),
   text: z.string(),
-  nextDialogId: z.string(),
+
+  chapterId: z.string().optional(),
+  sceneId: z.string().optional(),
+  dialogId: z.string(),
 });
 export const storyDialogZod = z.object({
   id: z.string(),

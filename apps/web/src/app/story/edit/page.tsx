@@ -14,6 +14,7 @@ import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import StoryNav from '@/lib/story/StoryNav';
 import { StoryStats } from '@/app/story/edit/StoryStats';
 import StoryViewport from '@/lib/story/story-viewport/StoryViewport';
+import EditDialog from '@/lib/story/edit-dialog/EditDialog';
 
 const StoryEditPage = () => {
   const [storyId] = useUrlParam('storyId');
@@ -80,6 +81,11 @@ const StoryEditPage = () => {
   const [sceneId] = useUrlParam('sceneId');
   const [dialogId] = useUrlParam('dialogId');
 
+  const dialog = storyJson?.chapters
+    .find((chapter) => chapter.id === chapterId)
+    ?.scenes.find((scene) => scene.id === sceneId)
+    ?.dialogs.find((dialog) => dialog.id === dialogId);
+
   return (
     <Stack pos="relative">
       <LoadingOverlay visible={storyQuery.isPending} />
@@ -101,13 +107,11 @@ const StoryEditPage = () => {
         <>
           <StoryNav storyJson={storyJson} />
 
-          {chapterId && sceneId && dialogId && (
-            <StoryViewport
-              story={storyJson}
-              chapterId={chapterId}
-              sceneId={sceneId}
-              dialogId={dialogId}
-            />
+          {dialog && (
+            <>
+              <StoryViewport dialog={dialog} />
+              <EditDialog dialog={dialog} />
+            </>
           )}
         </>
       )}
