@@ -16,19 +16,21 @@ const StoryNav = ({ storyJson }: Props) => {
   const [sceneId, setSceneId] = useUrlParam('sceneId');
   const [dialogId, setDialogId] = useUrlParam('dialogId');
 
-  useEffect(() => {
-    console.log('chapterId changed', chapterId);
-    setSceneId(null, true);
-  }, [chapterId]);
-
-  useEffect(() => {
-    console.log('sceneId changed', sceneId);
-    setDialogId(null, true);
-  }, [sceneId]);
-
   const chapter = storyJson.chapters.find((chapter) => chapter.id === chapterId);
   const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
   const dialog = scene?.dialogs.find((dialog) => dialog.id === dialogId);
+
+  useEffect(() => {
+    if (!dialog && dialogId) {
+      setDialogId(null);
+    }
+    if (!scene && sceneId) {
+      setSceneId(null);
+    }
+    if (!chapter && chapterId) {
+      setChapterId(null);
+    }
+  }, [chapterId, sceneId, dialogId, chapter, scene, dialog]);
 
   const chapters = storyJson.chapters.map((chapter) => ({
     value: chapter.id,
