@@ -76,6 +76,10 @@ const StoryEditPage = () => {
 
   const storyStats = useStoryStats(storyJson ?? null);
 
+  const [chapterId] = useUrlParam('chapterId');
+  const [sceneId] = useUrlParam('sceneId');
+  const [dialogId] = useUrlParam('dialogId');
+
   return (
     <Stack pos="relative">
       <LoadingOverlay visible={storyQuery.isPending} />
@@ -97,7 +101,14 @@ const StoryEditPage = () => {
         <>
           <StoryNav storyJson={storyJson} />
 
-          <StoryViewport storyJson={storyJson} />
+          {chapterId && sceneId && dialogId && (
+            <StoryViewport
+              story={storyJson}
+              chapterId={chapterId}
+              sceneId={sceneId}
+              dialogId={dialogId}
+            />
+          )}
         </>
       )}
     </Stack>

@@ -1,11 +1,13 @@
 import React from 'react';
-import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import { Storyteller } from '@cerebro/shared';
 import css from './StoryViewport.module.scss';
 import { boldenUnderlineEtc } from '@/lib/story/story-viewport/boldenUnderlineEtc';
 
 type Props = {
-  storyJson: Storyteller.StoryJson;
+  story: Storyteller.StoryJson;
+  chapterId: string;
+  sceneId: string;
+  dialogId: string;
 };
 
 const mockDialog: Storyteller.StoryDialog = {
@@ -23,25 +25,21 @@ const mockDialog: Storyteller.StoryDialog = {
   ],
 };
 
-const StoryViewport = ({ storyJson }: Props) => {
-  const [chapterId] = useUrlParam('chapterId');
-  const [sceneId] = useUrlParam('sceneId');
-  const [dialogId] = useUrlParam('dialogId');
+const StoryViewport = ({ story, chapterId, sceneId, dialogId }: Props) => {
+  const chapter = story.chapters.find((chapter) => chapter.id === chapterId);
+  const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
+  const dialog = scene?.dialogs.find((dialog) => dialog.id === dialogId);
 
-  // const chapter = storyJson.chapters.find((chapter) => chapter.id === chapterId);
-  // const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
-  // const dialog = scene?.dialogs.find((dialog) => dialog.id === dialogId);
-
-  const dialog = mockDialog;
-
-  console.log('dialog', dialog);
+  if (!dialog) {
+    return null;
+  }
 
   return (
     <article className={css.storyViewport}>
-      <img className={css.bgImg} src={dialog.img} alt="Background image" />
+      {dialog.img && <img className={css.bgImg} src={dialog.img} alt="Background image" />}
 
       <div className={css.dialogueBox}>
-        <div className={css.whoLabel}>{dialog.who}</div>
+        {dialog.who && <div className={css.whoLabel}>{dialog.who}</div>}
 
         <div className={css.dialogueAndOptions}>
           <div
