@@ -64,7 +64,6 @@ img.thumbnail {
   object-fit: cover;
 
   animation-timeline: view();
-
   animation-name: appear;
   animation-fill-mode: both;
   animation-duration: 1ms; /* Firefox requires this to apply the animation */
