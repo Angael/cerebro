@@ -1,0 +1,89 @@
+.storyViewport {
+  position: relative;
+
+  display: grid;
+  grid-template-areas: 'stack';
+
+  // only when not in fullscreen mode?
+  aspect-ratio: 16 / 10;
+
+  .bgImg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+
+    z-index: 0;
+  }
+}
+
+// bottom 1/3rd of the screen, with a translucent background
+.dialogueBox {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 33%;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+
+  z-index: 1;
+
+  .whoLabel {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+
+    background: rgba(0, 0, 0, 1);
+    clip-path: polygon(0 0, calc(100% - 0.75rem) 0, 100% 100%, 0% 100%);
+    padding: 0.25rem 1rem 0.25rem 0.5rem;
+
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+  }
+
+  .content {
+    font-size: 1.25rem;
+    color: white;
+    overflow: scroll;
+
+    // respect \n
+    white-space: pre-wrap;
+
+    :global(.glitch) {
+      position: relative;
+      display: inline-block;
+      animation: glitch 0.15s infinite;
+
+      translate: 0 0;
+      opacity: 0.6;
+    }
+  }
+
+  .dialogueOptions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    translate: -0.1em 0;
+  }
+  50% {
+    translate: 0.1em 0;
+  }
+  100% {
+    translate: -0.1em 0;
+  }
+}
