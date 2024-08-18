@@ -98,6 +98,9 @@ storyRouter.post('/story/edit-json/:storyId', async (req, res) => {
     }
 
     const storyJson = storyJsonZod.parse(req.body.storyJson);
+    logger.verbose('Parsed storyJson');
+
+    // TODO: validate starting point exists in chapters etc
 
     await editStoryJson(storyId, storyJson);
 

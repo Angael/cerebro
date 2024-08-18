@@ -14,6 +14,13 @@ interface IStoryStore {
   setChapterName: (chapterId: string, chapterName: string) => void;
   setSceneName: (chapterId: string, sceneId: string, sceneName: string) => void;
   setDialogName: (chapterId: string, sceneId: string, dialogId: string, dialogName: string) => void;
+
+  modifyDialog: (
+    chapterId: string,
+    sceneId: string,
+    dialogId: string,
+    dialog: Partial<Storyteller.StoryDialog>,
+  ) => void;
 }
 
 export const useStoryStore = create(
@@ -97,6 +104,18 @@ export const useStoryStore = create(
 
         if (dialog) {
           dialog.title = dialogName;
+        }
+      });
+    },
+
+    modifyDialog(chapterId, sceneId, dialogId, newDialogPartial: Partial<Storyteller.StoryDialog>) {
+      set((state) => {
+        const chapter = state.storyJson?.chapters.find((chapter) => chapter.id === chapterId);
+        const scene = chapter?.scenes.find((scene) => scene.id === sceneId);
+        const dialog = scene?.dialogs.find((dialog) => dialog.id === dialogId);
+
+        if (dialog) {
+          Object.assign(dialog, newDialogPartial);
         }
       });
     },

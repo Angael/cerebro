@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { notifications } from '@mantine/notifications';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
-import { PostEditStory_EndpointPayload } from '@cerebro/shared';
+import { PostEditStory_EndpointPayload, Storyteller } from '@cerebro/shared';
 import { useForm } from '@mantine/form';
 import { useStoryStats } from '@/app/story/edit/useStoryStats';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
@@ -15,6 +15,7 @@ import StoryNav from '@/lib/story/StoryNav';
 import { StoryStats } from '@/app/story/edit/StoryStats';
 import StoryViewport from '@/lib/story/story-viewport/StoryViewport';
 import EditDialog from '@/lib/story/edit-dialog/EditDialog';
+import { useAutoSaveStory } from '@/app/story/edit/useAutoSaveStory';
 
 const StoryEditPage = () => {
   const [storyId] = useUrlParam('storyId');
@@ -24,6 +25,8 @@ const StoryEditPage = () => {
   const storyQuery = useStory(storyId);
   const setStory = useStoryStore((s) => s.setStory);
   const storyJson = useStoryStore((s) => s.storyJson);
+
+  const autoSaveMutation = useAutoSaveStory(storyId, storyJson);
 
   const form = useForm({
     mode: 'uncontrolled',
@@ -86,6 +89,12 @@ const StoryEditPage = () => {
     ?.scenes.find((scene) => scene.id === sceneId)
     ?.dialogs.find((dialog) => dialog.id === dialogId);
 
+  const _modifyDialog = useStoryStore((s) => s.modifyDialog);
+  const modifyDialog = (dialog: Partial<Storyteller.StoryDialog>) => {
+    if (!chapterId || !sceneId || !dialogId) return;
+    _modifyDialog(chapterId, sceneId, dialogId, dialog);
+  };
+
   return (
     <Stack pos="relative">
       <LoadingOverlay visible={storyQuery.isPending} />
@@ -110,7 +119,7 @@ const StoryEditPage = () => {
           {dialog && (
             <>
               <StoryViewport dialog={dialog} />
-              <EditDialog dialog={dialog} />
+              <EditDialog dialog={dialog} modifyDialog={modifyDialog} />
             </>
           )}
         </>

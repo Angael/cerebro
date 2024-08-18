@@ -8,6 +8,7 @@ export const storyDialogChoiceZod = z.object({
   sceneId: z.string().optional(),
   dialogId: z.string(),
 });
+
 export const storyDialogZod = z.object({
   id: z.string(),
   title: z.string(),
@@ -16,16 +17,19 @@ export const storyDialogZod = z.object({
   who: z.string().optional(),
   img: z.string().optional(),
 });
+
 export const sceneZod = z.object({
   id: z.string(),
   title: z.string(),
   dialogs: z.array(storyDialogZod),
 });
+
 export const chapterZod = z.object({
   id: z.string(),
   title: z.string(),
   scenes: z.array(sceneZod),
 });
+
 export const storyJsonZod = z.object({
   startingPoint: z
     .object({

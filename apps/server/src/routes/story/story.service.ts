@@ -35,5 +35,10 @@ export const editStory = (storyId: string, payload: PostEditStory_EndpointPayloa
 export const editStoryJson = (storyId: string, storyJson: StoryJson) => {
   logger.info(`Changing storyJson ${storyId}`);
 
-  return db.updateTable('story').set('story_json', storyJson).where('id', '=', storyId).execute();
+  const query = db
+    .updateTable('story')
+    .set('story_json', JSON.stringify(storyJson))
+    .where('id', '=', storyId);
+
+  return query.execute();
 };

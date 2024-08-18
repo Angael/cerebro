@@ -1,4 +1,4 @@
-import type { Generated, Selectable } from 'kysely';
+import type { ColumnType, Generated, Selectable } from 'kysely';
 import { z } from 'zod';
 import {
   chapterZod,
@@ -139,7 +139,7 @@ interface StoryTable {
   title: string;
   description: string | null;
   user_id: string;
-  story_json: StoryJson | null;
+  story_json: ColumnType<StoryJson | null, string | undefined, string | undefined>;
 
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
