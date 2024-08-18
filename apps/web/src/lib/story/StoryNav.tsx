@@ -65,6 +65,7 @@ const StoryNav = ({ storyJson }: Props) => {
           onChange={(v) => setChapterId(v, true)}
           disabled={chapters.length === 0}
           allowDeselect={false}
+          w={200}
         />
         {chapter && (
           <EditStoryPart
@@ -91,6 +92,7 @@ const StoryNav = ({ storyJson }: Props) => {
           onChange={(v) => setSceneId(v, true)}
           disabled={!chapterId}
           allowDeselect={false}
+          w={200}
         />
         {scene && (
           <EditStoryPart
@@ -123,6 +125,7 @@ const StoryNav = ({ storyJson }: Props) => {
           onChange={(v) => setDialogId(v, true)}
           disabled={!sceneId}
           allowDeselect={false}
+          w={200}
         />
         {dialog && (
           <EditStoryPart
