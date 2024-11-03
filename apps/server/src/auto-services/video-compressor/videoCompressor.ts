@@ -1,7 +1,7 @@
 import path from 'path';
 import { Scheduler } from 'modern-async';
 import { db, Item } from '@cerebro/db';
-import { analyzeVideo, compressVideo, VideoStats } from '@vanih/dunes-node';
+import { analyze, compressVideo, SimpleAnalysisStats } from '@vanih/dunes-node';
 
 import { findUncompressedVideoItem } from './findUncompressedVideoItem.js';
 import { S3Download, S3SimpleUpload } from '@/aws/s3-helpers.js';
@@ -10,8 +10,13 @@ import { OPTIMIZATION_DIR } from '@/utils/consts.js';
 import { makeS3Path } from '@/utils/makeS3Path.js';
 import { betterUnlink } from '@/utils/betterUnlink.js';
 import { changeExtension } from '@/utils/changeExtension.js';
+import { env } from '@/utils/env.js';
 
-const insertIntoDb = (itemId: Item['id'], outputStats: VideoStats, s3path: string): Promise<any> =>
+const insertIntoDb = (
+  itemId: Item['id'],
+  outputStats: SimpleAnalysisStats,
+  s3path: string,
+): Promise<any> =>
   db
     .insertInto('video')
     .values({
@@ -19,8 +24,8 @@ const insertIntoDb = (itemId: Item['id'], outputStats: VideoStats, s3path: strin
       media_type: 'COMPRESSED',
       path: s3path,
       size: outputStats.sizeBytes,
-      width: outputStats.width,
-      height: outputStats.height,
+      width: outputStats.video?.width ?? 0,
+      height: outputStats.video?.height ?? 0,
       duration_ms: outputStats.durationMs,
       bitrate_kb: outputStats.bitrateKb,
     })
@@ -51,8 +56,11 @@ const videoCompressor = new Scheduler(
       await insertIntoDb(
         item.id,
         {
-          height: video.height,
-          width: video.width,
+          video: {
+            fps: 30, // not used
+            height: video.height,
+            width: video.width,
+          },
           durationMs: video.duration_ms,
           bitrateKb: video.bitrate_kb,
           sizeBytes: video.size,
@@ -63,8 +71,8 @@ const videoCompressor = new Scheduler(
 
     try {
       if (decided.shouldCompress || requireCompression) {
-        await compressVideo(srcVidPath, outVidPath, decided);
-        const outputStats = await analyzeVideo(outVidPath);
+        await compressVideo(env.FFMPEG, srcVidPath, outVidPath, decided);
+        const outputStats = await analyze(env.FFPROBE, outVidPath);
         if (video.size > outputStats.sizeBytes || requireCompression) {
           await insertIntoDb(item.id, outputStats, s3KeyPath);
           await S3SimpleUpload({ key: s3KeyPath, filePath: outVidPath });
