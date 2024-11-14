@@ -18,6 +18,7 @@ import { uploadThumbnails } from '../uploadThumbnails.js';
 import { calculateThumbnailDimensions } from '@/utils/calculateThumbnailDimensions.js';
 import { THUMBNAILS_DIR } from '@/utils/consts.js';
 import logger from '@/utils/log.js';
+import { env } from '@/utils/env.js';
 
 function fetchDetails(item: Item) {
   return db
@@ -44,7 +45,7 @@ async function generateThumbnails(video: Video, path: string): Promise<IGenerate
       async ({ dimension, outPath }: UploadedThumbnail) => {
         const { width, height } = dimension;
 
-        await createThumbnail(path, outPath, {
+        await createThumbnail(env.FFMPEG, path, outPath, {
           height,
           width,
         });
