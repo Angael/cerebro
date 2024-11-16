@@ -1,4 +1,3 @@
-import './loadEnv.js';
 import './serverHooks.js';
 import startRouter from './routes/MyRouter.js';
 import mediaProcessor from './auto-services/media-processor/mediaProcessor.js';

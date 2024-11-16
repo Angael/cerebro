@@ -4,9 +4,8 @@
   "type": "module",
   "main": "src/main.ts",
   "scripts": {
-    "start": "dotenv -e .env -- node -r source-map-support/register dist/main.js",
-    "dev": "tsup-node src/main.ts --env.NODE_ENV=development --watch --onSuccess \"dotenv -e .env -- node -r source-map-support/register dist/main.js\"",
-    "build": "tsup-node src/main.ts --env.NODE_ENV=production",
+    "start": "NODE_ENV=production bun run src/main.ts",
+    "dev": "NODE_ENV=development bun --watch run src/main.ts",
     "lint": "tsc",
     "ngrok": "ngrok http 3000"
   },
