@@ -5,7 +5,8 @@
       "script": "bun",
       "args": "run start",
       "instances": 1,
-      "watch": false
+      "watch": false,
+      "interpreter": "bun"
     }
   ]
 }
