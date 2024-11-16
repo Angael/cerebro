@@ -5,7 +5,7 @@ test('Finds first item', async ({ page }) => {
   await page.goto(`${testEnv.DOMAIN}/`);
 
   await expect(page).toHaveTitle(/Cerebro/);
-  await expect(page.getByRole('link', { name: 'item' }).first()).toBeVisible();
+  await expect(page.getByTestId('item').first()).toBeVisible();
 });
 
 test('Login page works', async ({ page }) => {

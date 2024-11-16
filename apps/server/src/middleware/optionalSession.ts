@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { lucia } from '@/lucia.js';
+import { lucia } from '@/my-lucia.js';
 
 // Define the function that retrieves the return type of getStuff
 type UnwrappedReturnType<T extends (...args: any) => Promise<any>> = T extends (

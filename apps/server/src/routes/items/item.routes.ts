@@ -73,15 +73,12 @@ itemRoutes.post(
     const file = req.file;
 
     try {
-      console.log(0);
       if (!file) {
-        console.log(1);
         res.sendStatus(400);
         return;
       }
 
       if (file.size > MAX_UPLOAD_SIZE) {
-        console.log(2);
         throw new Error('File too big');
       }
 
@@ -96,9 +93,7 @@ itemRoutes.post(
         throw new HttpError(413);
       }
 
-      console.log('start uploadFileForUser');
       await uploadFileForUser({ file, userId: user.id });
-      console.log('end uploadFileForUser');
 
       logger.info('Uploaded file %o', { userId: user.id, file });
       res.status(200).send();

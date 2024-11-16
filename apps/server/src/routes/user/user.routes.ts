@@ -4,7 +4,7 @@ import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
-import { stripe } from '@/stripe.js';
+import { stripe } from '@/my-stripe.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 
 const userRoutes = express.Router({ mergeParams: true });

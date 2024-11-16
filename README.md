@@ -6,11 +6,13 @@
 ## What's inside?
 
 ### Apps:
+
 - `web` - Next.js Static export frontend
+
   - Lightweight static export Next.js app
   - Mantine for styling
   - React Query
-  - 
+
 - `server` - Express backend
   - Authorization with Lucia
   - Integrates with Cloudflare R2
@@ -24,8 +26,7 @@
 
 ### Tech stack
 
-- Node.js
-- Pnpm
+- Bun
 - Docker (dev)
 - FFmpeg
 - FFprobe
@@ -41,34 +42,40 @@ Download stripe cli to test webhooks locally
 https://docs.stripe.com/stripe-cli
 
 To run the whole stack run the following command:
+
 ```bash
-pnpm i
-npx turbo dev
+bun i
+turbo dev
 ```
 
 In other terminal
-```bash
-pnpm dev:stripe
-```
 
+```bash
+bun dev:stripe
+```
 
 ## Build
 
 ```bash
-pnpm i
-npx turbo build
+bun i
+turbo build
 ```
 
 To filter only one app run:
+
 ```bash
-npx turbo build --filter web
+turbo build --filter web
 # or
-npx turbo build --filter server
+turbo build --filter server
 ```
 
 ### Env
 
-Each app contains a `.env.template` file that needs to be changed to `.env` and filled with the correct values.
+Each app contains a `.env.template` file.
+
+This file is changed in CI/CD into `.env` with prod values.
+
+To develop locally, copy `.env.template` into a local `.env` with the correct values.
 
 ## Deployment
 

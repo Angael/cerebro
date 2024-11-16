@@ -30,7 +30,6 @@ export async function uploadFileForUser({ file, userId }: uploadPayload) {
       const result = await uploadImage({ file, userId });
       path = result.path;
     } else if (itemType === 'VIDEO') {
-      console.log('is video');
       const result = await uploadVideo({ file, userId });
       path = result.path;
     }
