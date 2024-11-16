@@ -1,6 +1,6 @@
 import express from 'express';
 import { generateId } from 'lucia';
-import { lucia } from '@/lucia.js';
+import { lucia } from '@/my-lucia.js';
 import { db } from '@cerebro/db';
 import { Argon2id } from 'oslo/password';
 import z from 'zod';

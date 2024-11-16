@@ -1,5 +1,5 @@
 import type { Request } from 'express';
-import { stripe } from '@/stripe.js';
+import { stripe } from '@/my-stripe.js';
 import logger from '@/utils/log.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import { env } from '@/utils/env.js';

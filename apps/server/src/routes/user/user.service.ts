@@ -7,7 +7,7 @@ import { MyFile } from '../items/upload/upload.type.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import { GetUploadLimits } from '@cerebro/shared';
 import logger from '@/utils/log.js';
-import { stripe } from '@/stripe.js';
+import { stripe } from '@/my-stripe.js';
 import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
 import { User } from 'lucia';
 import { env } from '@/utils/env.js';
