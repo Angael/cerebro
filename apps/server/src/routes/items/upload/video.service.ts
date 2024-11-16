@@ -39,18 +39,14 @@ async function insertIntoDb(
 }
 
 export async function uploadVideo({ file, userId }: uploadPayload) {
-  console.log('analyze start');
   const videoData = await analyze(env.FFPROBE, file.path);
-  console.log('analyze end');
 
   const key = makeS3Path(userId, 'source', replaceFileWithHash(file.originalname));
-  console.log('key', key);
 
   await S3SimpleUpload({
     key,
     filePath: file.path,
   });
-  console.log('uploaded to s3');
 
   try {
     await insertIntoDb(key, videoData, file, userId);
