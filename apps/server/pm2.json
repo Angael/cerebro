@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "cerebro_api",
-      "script": "npm",
+      "script": "bun",
       "args": "run start",
       "instances": 1,
       "watch": false
