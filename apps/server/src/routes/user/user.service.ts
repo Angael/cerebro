@@ -12,6 +12,7 @@ import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
 import { User } from 'lucia';
 import { env } from '@/utils/env.js';
 import { STRIPE_ACCESS_PLAN_PRODUCT } from '@/utils/consts.js';
+import { HTTPException } from 'hono/http-exception';
 
 export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   let used: number;
@@ -77,7 +78,7 @@ export async function getStripeCustomer(userId: string) {
     .executeTakeFirst();
 
   if (!stripeCustomer) {
-    throw new HttpError(404, 'User is not a stripe customer yet');
+    throw new HTTPException(404, { message: 'User is not a stripe customer yet' });
   }
 
   const { active_plan, plan_expiration } = stripeCustomer;

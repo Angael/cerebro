@@ -1,12 +1,12 @@
 import { honoFactory } from '@/routes/myHono.js';
 import { createAccessPlanCheckout, getLimitsForUser, getStripeCustomer } from './user.service.js';
-import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 import { stripe } from '@/my-stripe.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
 import { env } from '@/utils/env.js';
+import { HTTPException } from 'hono/http-exception';
 
 const userRoutes = honoFactory()
   .get('/user/me', async (c) => {
@@ -25,61 +25,45 @@ const userRoutes = honoFactory()
     }
   })
   .get('/user/limits', async (c) => {
+    const { user } = await requireSession(c);
     try {
-      const { user } = await requireSession(c);
-      try {
-        const uploadLimits = await getLimitsForUser(user.id);
-        return c.json(uploadLimits);
-      } catch (e) {
-        logger.error('Failed to list limits for user: %n', user.id);
-        return errorResponse(c, e);
-      }
+      const uploadLimits = await getLimitsForUser(user.id);
+      return c.json(uploadLimits);
     } catch (e) {
-      return c.body('', 401);
+      logger.error('Failed to list limits for user: %s', user.id);
+      throw e;
     }
   })
   .get('/user/plan', async (c) => {
     try {
       const { user } = await requireSession(c);
 
-      try {
-        const userPlan = await getStripeCustomer(user.id);
-        return c.json(userPlan satisfies UserPlan_Endpoint);
-      } catch (e) {
-        if (e instanceof HttpError && e.status === 404) {
-          return c.json(null satisfies UserPlan_Endpoint);
-        } else {
-          throw e;
-        }
-      }
+      const userPlan = await getStripeCustomer(user.id);
+      return c.json(userPlan satisfies UserPlan_Endpoint);
     } catch (e) {
+      if (e instanceof HTTPException && e.status === 404) {
+        return c.json(null satisfies UserPlan_Endpoint);
+      }
+
       logger.error('Failed to get user plan');
-      return errorResponse(c, e);
+      throw e;
     }
   })
   .post('/user/subscribe', async (c) => {
-    try {
-      const { user } = await requireSession(c);
+    const { user } = await requireSession(c);
 
-      return c.json(await createAccessPlanCheckout(user));
-    } catch (e) {
-      return errorResponse(c, e);
-    }
+    return c.json(await createAccessPlanCheckout(user));
   })
   .get('/user/billing', async (c) => {
-    try {
-      const { user } = await requireSession(c);
-      const stripeCustomer = await getStripeCustomer(user.id);
+    const { user } = await requireSession(c);
+    const stripeCustomer = await getStripeCustomer(user.id);
 
-      const portalSession = await stripe.billingPortal.sessions.create({
-        customer: stripeCustomer.customerId,
-        return_url: c.req.header('origin') ?? env.CORS_URL,
-      });
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: stripeCustomer.customerId,
+      return_url: c.req.header('origin') ?? env.CORS_URL,
+    });
 
-      return c.json({ url: portalSession.url });
-    } catch (e) {
-      return errorResponse(c, e);
-    }
+    return c.json({ url: portalSession.url });
   });
 
 export default userRoutes;

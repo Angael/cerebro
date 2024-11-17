@@ -111,9 +111,9 @@ export async function deleteItem(itemId: number, user: User) {
         await S3DeleteMany(s3PathsToDelete);
       }
     } else {
-      throw new HttpError(403);
+      throw new HTTPException(403, { message: 'This user cannot delete this item' });
     }
   } else {
-    throw new HttpError(404);
+    throw new HTTPException(404, { message: 'Item not found' });
   }
 }

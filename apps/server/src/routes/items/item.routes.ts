@@ -12,7 +12,6 @@ import { doesUserHaveSpaceLeftForFile } from '@/routes/user/user.service.js';
 import { betterUnlink } from '@/utils/betterUnlink.js';
 import { MAX_UPLOAD_SIZE } from '@/utils/consts.js';
 import { env } from '@/utils/env.js';
-import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
 import { zValidator } from '@hono/zod-validator';
 import invariant from 'tiny-invariant';
@@ -46,9 +45,9 @@ const itemRoutes = honoFactory()
         logger.info('Listing items %o', { userId: user?.id, page, limit });
         return c.json(responseJson satisfies QueryItems);
       } catch (e) {
-        // TODO: is this still necessary? Hono should probably catch errors itself
         logger.error('Failed to list items for user: %s', user?.id);
-        return errorResponse(c, e);
+
+        throw e;
       }
     },
   )
@@ -133,7 +132,7 @@ const itemRoutes = honoFactory()
         }
       } catch (e) {
         logger.error('Failed to upload file from link for user: %s', user!.id);
-        return errorResponse(c, e);
+        throw e;
       }
     },
   )
@@ -158,7 +157,7 @@ const itemRoutes = honoFactory()
         return c.json(stats);
       } catch (e) {
         logger.error('Failed to get stats from link for user: %s', user.id);
-        return errorResponse(c, e);
+        throw e;
       }
     },
   )
@@ -173,7 +172,7 @@ const itemRoutes = honoFactory()
       return c.body('', 200);
     } catch (e) {
       logger.error('Failed to delete item for user: %s', user.id);
-      return errorResponse(c, e);
+      throw e;
     }
   });
 
