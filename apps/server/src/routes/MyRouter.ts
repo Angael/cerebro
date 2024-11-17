@@ -9,7 +9,7 @@ import itemRouter from './items/item.routes.js';
 import authRouter from '@/routes/auth/auth.routes.js';
 import userRouter from '@/routes/user/user.routes.js';
 import adminRoutes from '@/routes/admin/admin.routes.js';
-// import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
+import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
 
 export const app = honoFactory()
   .use(csrf({ origin: env.CORS_URL }))
@@ -19,5 +19,5 @@ export const app = honoFactory()
   .route('/', authRouter)
   .route('/', userRouter)
   .route('/', adminRoutes)
-  // .route('/', stripeRoutes)
+  .route('/', stripeRoutes)
   .onError((e, c) => errorResponse(c, e));
