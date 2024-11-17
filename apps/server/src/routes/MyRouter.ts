@@ -4,10 +4,10 @@ import { csrf } from 'hono/csrf';
 import { env } from '../utils/env.js';
 
 import { errorResponse } from '@/utils/errors/errorResponse.js';
-import itemRouter from './items/item.routes.js';
 import { honoFactory } from './myHono.js';
+import itemRouter from './items/item.routes.js';
+import authRouter from '@/routes/auth/auth.routes.js';
 // import userRouter from '@/routes/user/user.routes.js';
-// import authRouter from '@/routes/auth/auth.routes.js';
 // import adminRoutes from '@/routes/admin/admin.routes.js';
 // import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
 
@@ -15,7 +15,7 @@ const app = honoFactory();
 
 const routers = [
   itemRouter,
-  // authRouter,
+  authRouter,
   // userRouter,
   // adminRoutes,
   // stripeRoutes,

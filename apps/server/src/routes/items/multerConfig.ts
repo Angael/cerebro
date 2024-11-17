@@ -6,6 +6,7 @@ import { MAX_UPLOAD_SIZE, UPLOADS_DIR } from '@/utils/consts.js';
 
 fs.mkdirs(UPLOADS_DIR);
 
+// TODO: get rid of multer, but UPLOADS_DIR is probably still needed
 // Get rid of this, uploads will not be used after this
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
