@@ -13,7 +13,6 @@ import { betterUnlink } from '@/utils/betterUnlink.js';
 import { MAX_UPLOAD_SIZE } from '@/utils/consts.js';
 import { env } from '@/utils/env.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
-import { HttpError } from '@/utils/errors/HttpError.js';
 import logger from '@/utils/log.js';
 import { zValidator } from '@hono/zod-validator';
 import invariant from 'tiny-invariant';
@@ -24,6 +23,7 @@ import {
 import { deleteItem, getItem, getItems } from './item.service.js';
 import { uploadFileForUser } from './upload/upload.service.js';
 import { handleUpload } from './handleUpload.js';
+import { HTTPException } from 'hono/http-exception';
 
 const itemRoutes = honoFactory()
   .get(
@@ -48,22 +48,18 @@ const itemRoutes = honoFactory()
       } catch (e) {
         // TODO: is this still necessary? Hono should probably catch errors itself
         logger.error('Failed to list items for user: %s', user?.id);
-        errorResponse(c, e);
+        return errorResponse(c, e);
       }
     },
   )
   .get('/items/item/:id', async (c) => {
     const { user } = await optionalSession(c);
-    try {
-      const id = Number(c.req.param('id'));
-      const item = await getItem(id, user?.id ?? undefined);
 
-      logger.info('Getting item %o', { userId: user?.id, id });
-      c.json(item);
-    } catch (e) {
-      logger.error('Failed to get item for user: %s', user?.id);
-      errorResponse(c, e);
-    }
+    const id = Number(c.req.param('id'));
+    const item = await getItem(id, user?.id ?? undefined);
+
+    logger.info('Got item %o', { userId: user?.id, id });
+    return c.json(item);
   })
   .post(
     '/items/upload/file',
@@ -85,7 +81,7 @@ const itemRoutes = honoFactory()
         }
 
         if (!(await doesUserHaveSpaceLeftForFile(user.id, file))) {
-          throw new HttpError(413);
+          throw new HTTPException(413, { message: 'Not enough space left' });
         }
 
         await uploadFileForUser({ file, userId: user.id });
@@ -97,7 +93,8 @@ const itemRoutes = honoFactory()
         if (file) {
           betterUnlink(file.path);
         }
-        return errorResponse(c, e);
+
+        throw e;
       }
     },
   )

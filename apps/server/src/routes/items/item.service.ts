@@ -8,6 +8,7 @@ import { queryAndMergeItems } from '@/utils/queryAndMergeItems.js';
 import invariant from 'tiny-invariant';
 import { User } from 'lucia';
 import { isUserOrAdmin } from '@/utils/isUserOrAdmin.js';
+import { HTTPException } from 'hono/http-exception';
 
 export async function getItems(
   limit: number,
@@ -61,7 +62,7 @@ export async function getItem(id: number, userId?: string): Promise<FrontItem> {
     invariant(mergedItem, 'mergedItem is undefined');
     return getFrontItem(mergedItem, userId);
   } else {
-    throw new HttpError(404);
+    throw new HTTPException(404, { message: 'Item not found' });
   }
 }
 
