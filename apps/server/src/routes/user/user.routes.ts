@@ -73,7 +73,7 @@ const userRoutes = honoFactory()
 
       const portalSession = await stripe.billingPortal.sessions.create({
         customer: stripeCustomer.customerId,
-        return_url: c.header('origin') ?? env.CORS_URL,
+        return_url: c.req.header('origin') ?? env.CORS_URL,
       });
 
       return c.json({ url: portalSession.url });

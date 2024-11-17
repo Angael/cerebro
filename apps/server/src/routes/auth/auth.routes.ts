@@ -4,10 +4,10 @@ import { db } from '@cerebro/db';
 import { Argon2id } from 'oslo/password';
 import z from 'zod';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
-import { parseCookies } from 'oslo/cookie';
 import { honoFactory } from '../myHono';
 import { zValidator } from '@hono/zod-validator';
-import { setCookie } from 'hono/cookie';
+import { setCookie, getCookie } from 'hono/cookie';
+import { HTTPException } from 'hono/http-exception';
 
 const badEmailOrPassword = { msg: 'Bad email or password' };
 
@@ -99,12 +99,10 @@ const authRouter = honoFactory()
   )
   .delete('/auth/signout', async (c) => {
     try {
-      // Maybe OSLO is not necessary anymore?
-      const cookies = parseCookies(c.header('cookie') ?? '');
-      const auth_session = cookies.get('auth_session');
+      const auth_session = getCookie(c, 'auth_session');
 
       if (!auth_session) {
-        return c.body('', 400);
+        throw new HTTPException(401);
       }
 
       await db.deleteFrom('user_session').where('id', '=', auth_session).execute();

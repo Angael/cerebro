@@ -3,7 +3,6 @@ import { csrf } from 'hono/csrf';
 
 import { env } from '../utils/env.js';
 
-import logger from '@/utils/log.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import { honoFactory } from './myHono.js';
 import itemRouter from './items/item.routes.js';
