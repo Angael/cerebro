@@ -22,7 +22,6 @@
     "@types/promise-retry": "^1.1.6",
     "@vanih/dunes-node": "5.1.0",
     "async": "^3.2.4",
-    "body-parser": "^1.20.2",
     "easy-yt-dlp": "0.7.0",
     "fast-glob": "^3.2.12",
     "fastq": "^1.15.0",
@@ -42,7 +41,6 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "@types/body-parser": "^1.19.5",
     "@types/node": "^18.11.18",
     "@types/sharp": "^0.31.1",
     "tslib": "2.5",
