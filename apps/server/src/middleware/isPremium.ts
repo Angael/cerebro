@@ -1,18 +1,16 @@
-import { NextFunction, Request, Response } from 'express';
+import { createMiddleware } from 'hono/factory';
 import logger from '@/utils/log.js';
 import { optionalSession } from '@/middleware/optionalSession.js';
 
-export const isPremium = async (req: Request, res: Response, next: NextFunction) => {
-  const { user } = await optionalSession(req);
+export const isPremium = createMiddleware(async (c, next) => {
+  const { user } = await optionalSession(c);
+
   if (user?.type === 'PREMIUM' || user?.type === 'ADMIN') {
-    next();
+    await next();
   } else {
-    const { method, url } = req;
-    logger.error('User is not premium %o', {
-      method,
-      url,
-      userId: user?.id,
-    });
-    res.status(403).send();
+    const { method, url } = c.req;
+
+    logger.error('User %s is not premium. Method: %s. Url: %s ', user?.id, method, url);
+    c.json({ error: 'User is not premium' }, 403);
   }
-};
+});

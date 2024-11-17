@@ -1,17 +1,21 @@
-import { Response } from 'express';
-import { HttpError } from './HttpError.js';
-import logger from '../log.js';
+import { MyContext } from '@/routes/myHono.js';
+import { StatusCode } from 'hono/utils/http-status';
 import { ZodError } from 'zod';
+import logger from '../log.js';
+import { HttpError } from './HttpError.js';
 
 // TODO: is this necessary? Hono should probably catch errors itself
-export const errorResponse = (res: Response, e: any) => {
+export const errorResponse = (c: MyContext, e: any) => {
   if (e instanceof HttpError) {
-    res.status(e.status).send(e.message);
+    logger.error('HttpError Error: %s', e.message);
+    return c.json({ error: e.message }, e.status as StatusCode);
   } else if (e instanceof ZodError) {
-    logger.error('Error: %O', e.issues); // Should we log validation issues?
-    res.status(400).json(e.issues);
+    logger.error('Zod Error: %O', e.issues); // Should we log validation issues?
+    // Changed to include error beside of issues
+    return c.json({ error: e.message, issues: e.issues }, 400);
   } else {
-    logger.error('Error: %s', e.message);
-    res.sendStatus(500);
+    logger.error('Unknown Error: %s', e.message);
+    // Changed to include json
+    return c.json({ error: 'Internal server error' }, 500);
   }
 };
