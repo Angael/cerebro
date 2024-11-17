@@ -1,17 +1,22 @@
-import type { Request } from 'express';
 import { stripe } from '@/my-stripe.js';
 import logger from '@/utils/log.js';
-import { HttpError } from '@/utils/errors/HttpError.js';
 import { env } from '@/utils/env.js';
+import { MyContext } from '@/routes/honoFactory';
+import { HTTPException } from 'hono/http-exception';
 
-export const stripeVerifySignature = async (req: Request) => {
-  const signature = req.headers['stripe-signature'];
+export const stripeVerifySignature = async (c: MyContext) => {
+  const signature = c.req.header('stripe-signature');
   const endpointSecret = env.STRIPE_WEBHOOK_SECRET;
 
+  if (!signature) {
+    throw new HTTPException(400, { message: 'Signature missing' });
+  }
+
   try {
-    return stripe.webhooks.constructEvent(req.body, signature as any, endpointSecret);
+    const body = await c.req.text();
+    return stripe.webhooks.constructEvent(body, signature as any, endpointSecret);
   } catch (err) {
     logger.error('Stripe signature verification failed! Someone hacking?');
-    throw new HttpError(400, 'Stripe signature verification failed!');
+    throw new HTTPException(400, { message: 'Stripe signature verification failed' });
   }
 };
