@@ -4,6 +4,7 @@ import { forEachSeries } from 'modern-async';
 
 const config = { retries: 20, factor: 2, minTimeout: 5 * 1000, maxTimeout: 10 * 60 * 1000 };
 
+// todo bun
 export const betterUnlink = (paths: string | string[]) => {
   const pathsToUnlink = [paths].flat(1);
 

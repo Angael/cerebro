@@ -4,7 +4,7 @@ export type ErrorFromApi = {
 };
 
 export const parseErrorResponse = (error: any): ErrorFromApi | null => {
-  let general: string | undefined = error?.data?.msg ?? error?.data?.message;
+  let general: string | undefined = error?.data?.msg ?? error?.data?.message ?? error.error;
   let fields: Record<string, string> = {};
 
   if (!general && error) {

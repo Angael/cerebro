@@ -23,6 +23,7 @@ import {
 } from './download-from-link/downloadFromLink.service.js';
 import { deleteItem, getItem, getItems } from './item.service.js';
 import { uploadFileForUser } from './upload/upload.service.js';
+import { handleUpload } from './handleUpload.js';
 
 const itemRoutes = honoFactory()
   .get(
@@ -73,46 +74,31 @@ const itemRoutes = honoFactory()
     isPremium,
     async (c) => {
       const { user } = await requireSession(c);
+      const file = await handleUpload(c);
 
-      const body = await c.req.parseBody();
-      const file = body['file'];
+      try {
+        if (env.MOCK_UPLOADS) {
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          betterUnlink(file.path);
+          c.body('', 200);
+          return;
+        }
 
-      console.log('typeof file', typeof file);
-      console.log('file', file);
+        if (!(await doesUserHaveSpaceLeftForFile(user.id, file))) {
+          throw new HttpError(413);
+        }
 
-      if (!file || typeof file === 'string') {
-        logger.error('Somehow file was a string');
-        return c.json({ error: 'No file provided' }, 400);
+        await uploadFileForUser({ file, userId: user.id });
+
+        logger.info('Uploaded file %o', { userId: user.id, file });
+        return c.body('', 200);
+      } catch (e) {
+        logger.error('Failed to upload file for user: %s', user!.id);
+        if (file) {
+          betterUnlink(file.path);
+        }
+        return errorResponse(c, e);
       }
-
-      if (file.size > MAX_UPLOAD_SIZE) {
-        logger.error('File too big');
-        return c.json({ error: 'File too big' }, 413);
-      }
-
-      // try {
-      //   if (env.MOCK_UPLOADS) {
-      //     await new Promise((resolve) => setTimeout(resolve, 200));
-      //     betterUnlink(file.path);
-      //     c.body('', 200);
-      //     return;
-      //   }
-
-      //   if (!(await doesUserHaveSpaceLeftForFile(user.id, file))) {
-      //     throw new HttpError(413);
-      //   }
-
-      //   await uploadFileForUser({ file, userId: user.id });
-
-      //   logger.info('Uploaded file %o', { userId: user.id, file });
-      //   res.status(200).send();
-      // } catch (e) {
-      //   logger.error('Failed to upload file for user: %s', user!.id);
-      //   if (file) {
-      //     betterUnlink(file?.path);
-      //   }
-      //   errorResponse(c, e);
-      // }
     },
   )
   .post(
@@ -132,8 +118,7 @@ const itemRoutes = honoFactory()
 
         if (env.MOCK_UPLOADS) {
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          c.body('ok', 200);
-          return;
+          return c.body('ok', 200);
         }
 
         const file = await downloadFromLinkService(link, user.id, format);
@@ -141,7 +126,7 @@ const itemRoutes = honoFactory()
         try {
           await uploadFileForUser({ file, userId: user.id });
 
-          c.body('ok', 200);
+          return c.body('ok', 200);
         } catch (e) {
           logger.error(e);
           throw e;
@@ -151,7 +136,7 @@ const itemRoutes = honoFactory()
         }
       } catch (e) {
         logger.error('Failed to upload file from link for user: %s', user!.id);
-        errorResponse(c, e);
+        return errorResponse(c, e);
       }
     },
   )
@@ -173,10 +158,10 @@ const itemRoutes = honoFactory()
 
         const stats = await getStatsFromLink(link);
 
-        c.json(stats);
+        return c.json(stats);
       } catch (e) {
         logger.error('Failed to get stats from link for user: %s', user.id);
-        errorResponse(c, e);
+        return errorResponse(c, e);
       }
     },
   )
@@ -188,10 +173,10 @@ const itemRoutes = honoFactory()
       await deleteItem(id, user);
 
       usedSpaceCache.del(user.id);
-      c.body('', 200);
+      return c.body('', 200);
     } catch (e) {
       logger.error('Failed to delete item for user: %s', user.id);
-      errorResponse(c, e);
+      return errorResponse(c, e);
     }
   });
 

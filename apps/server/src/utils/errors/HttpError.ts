@@ -1,3 +1,6 @@
+/**
+ * @deprecated use HTTPException from hono/http-exception
+ */
 export class HttpError extends Error {
   public readonly status: number;
 
@@ -10,5 +13,9 @@ export class HttpError extends Error {
 
     this.status = status;
     this.name = 'HttpError';
+  }
+
+  public toString(): string {
+    return `${this.status} - ${this.message}`;
   }
 }

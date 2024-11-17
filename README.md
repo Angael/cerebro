@@ -17,7 +17,7 @@
   - Authorization with Lucia
   - Integrates with Cloudflare R2
   - Queries mySQL
-  - Handles file uploads with Multer
+  - Handles file uploads with Hono
   - Generates thumbnails
   - Analyzes videos with FFPROBE
   - Compresses images with sharp
