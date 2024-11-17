@@ -13,7 +13,7 @@
   - Mantine for styling
   - React Query
 
-- `server` - Express backend
+- `server` - Hono backend
   - Authorization with Lucia
   - Integrates with Cloudflare R2
   - Queries mySQL
