@@ -4,7 +4,7 @@ import { csrf } from 'hono/csrf';
 import { env } from '../utils/env.js';
 
 import { errorResponse } from '@/utils/errors/errorResponse.js';
-import { honoFactory } from './myHono.js';
+import { honoFactory } from './honoFactory.js';
 import itemRouter from './items/item.routes.js';
 import authRouter from '@/routes/auth/auth.routes.js';
 import userRouter from '@/routes/user/user.routes.js';
