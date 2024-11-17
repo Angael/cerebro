@@ -6,6 +6,9 @@ import log from '../utils/log.js';
 import { env } from '../utils/env.js';
 import logger from '@/utils/log.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
+import { HttpError } from '@/utils/errors/HttpError.js';
+import { StatusCode } from 'hono/utils/http-status';
+import { ZodError } from 'zod';
 
 // import itemRouter from './items/item.routes.js';
 // import userRouter from '@/routes/user/user.routes.js';
@@ -47,10 +50,20 @@ const startRouter = () => {
   //   log.info(`Router started on http://localhost:${port}/`);
   // });
 
-  // // on error
-  // router.on('error', (err) => {
-  //   log.error(err);
-  // });
+  app.onError((e, c) => {
+    if (e instanceof HttpError) {
+      logger.error('HttpError Error: %s', e.message);
+      return c.json({ error: e.message }, e.status as StatusCode);
+    } else if (e instanceof ZodError) {
+      logger.error('Zod Error: %O', e.issues); // Should we log validation issues?
+      // Changed to include error beside of issues
+      return c.json({ error: e.message, issues: e.issues }, 400);
+    } else {
+      logger.error('Unknown Error: %s', e.message);
+      // Changed to include json
+      return c.json({ error: 'Internal server error' }, 500);
+    }
+  });
 
   // Not in docs for some reason, could it be bad?
   Bun.serve({
