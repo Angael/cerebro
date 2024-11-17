@@ -1,5 +1,5 @@
 import './serverHooks.js';
-import { app } from './routes/MyRouter.js';
+import { app } from './routes/honoApp.js';
 import mediaProcessor from './auto-services/media-processor/mediaProcessor.js';
 
 import './prepare.js';

@@ -3,7 +3,7 @@ import { extname, join } from 'path';
 import { nanoid } from 'nanoid';
 import { MAX_UPLOAD_SIZE, UPLOADS_DIR } from '@/utils/consts.js';
 import { MyFile } from './upload/upload.type';
-import { MyContext } from '../myHono';
+import { MyContext } from '../honoFactory';
 import { HTTPException } from 'hono/http-exception';
 import logger from '@/utils/log';
 

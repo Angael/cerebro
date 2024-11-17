@@ -9,7 +9,7 @@ import {
 } from '@/routes/admin/admin.service.js';
 import z from 'zod';
 import { limitsConfig } from '@/utils/limits.js';
-import { honoFactory } from '../myHono';
+import { honoFactory } from '../honoFactory';
 import { HTTPException } from 'hono/http-exception';
 import { zValidator } from '@hono/zod-validator';
 

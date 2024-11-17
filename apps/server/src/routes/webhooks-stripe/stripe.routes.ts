@@ -4,7 +4,7 @@ import { checkoutCompleted } from '@/routes/webhooks-stripe/checkoutCompleted.js
 import Stripe from 'stripe';
 import { subscriptionDeleted } from '@/routes/webhooks-stripe/subscriptionDeleted.js';
 import { subscriptionUpdated } from '@/routes/webhooks-stripe/subscriptionUpdated.js';
-import { honoFactory } from '../myHono';
+import { honoFactory } from '../honoFactory';
 import { HTTPException } from 'hono/http-exception';
 
 const eventHandlers: Partial<Record<Stripe.Event.Type, (event: Stripe.Event) => Promise<void>>> = {

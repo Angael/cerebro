@@ -1,7 +1,7 @@
 import { stripe } from '@/my-stripe.js';
 import logger from '@/utils/log.js';
 import { env } from '@/utils/env.js';
-import { MyContext } from '@/routes/myHono';
+import { MyContext } from '@/routes/honoFactory';
 import { HTTPException } from 'hono/http-exception';
 
 export const stripeVerifySignature = async (c: MyContext) => {

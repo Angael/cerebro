@@ -1,4 +1,4 @@
-import { MyContext } from '@/routes/myHono';
+import { MyContext } from '@/routes/honoFactory';
 import { lucia } from '@/my-lucia';
 
 export const optionalSession = async (c: MyContext): ReturnType<typeof lucia.validateSession> => {

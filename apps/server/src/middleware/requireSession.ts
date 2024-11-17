@@ -1,5 +1,5 @@
 import { optionalSession } from '@/middleware/optionalSession.js';
-import { MyContext } from '@/routes/myHono';
+import { MyContext } from '@/routes/honoFactory';
 import { HTTPException } from 'hono/http-exception';
 
 export const requireSession = async (c: MyContext) => {

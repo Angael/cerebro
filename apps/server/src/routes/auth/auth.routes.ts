@@ -3,7 +3,7 @@ import { lucia } from '@/my-lucia.js';
 import { db } from '@cerebro/db';
 import { Argon2id } from 'oslo/password';
 import z from 'zod';
-import { honoFactory } from '../myHono';
+import { honoFactory } from '../honoFactory';
 import { zValidator } from '@hono/zod-validator';
 import { setCookie, getCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
