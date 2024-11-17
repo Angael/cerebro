@@ -85,11 +85,7 @@ const authRouter = honoFactory()
         const session = await lucia.createSession(user.id, {});
         const sessionCookie = lucia.createSessionCookie(session.id);
 
-        setCookie(c, sessionCookie.name, sessionCookie.value, {
-          ...sessionCookie.attributes,
-          // TODO: check if this is correct
-          maxAge: sessionCookie.attributes.maxAge! * 1000,
-        });
+        setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
         return c.body('', 204);
       } catch (e) {
