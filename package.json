@@ -10,7 +10,8 @@
     "dev:web": "turbo dev --filter web",
     "dev:stripe": "stripe login & stripe listen -e checkout.session.completed,customer.subscription.updated,customer.subscription.deleted --forward-to http://localhost:3000/webhooks/stripe",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "ngrok": "ngrok http 3000"
   },
   "devDependencies": {
     "@types/bun": "^1.1.13",
