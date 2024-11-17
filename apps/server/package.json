@@ -41,5 +41,9 @@
     "@types/sharp": "^0.31.1",
     "tslib": "2.5",
     "tsutils": "~3.21"
-  }
+  },
+  "trustedDependencies": [
+    "sharp",
+    "esbuild"
+  ]
 }
