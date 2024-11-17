@@ -3,6 +3,7 @@ import { HttpError } from './HttpError.js';
 import logger from '../log.js';
 import { ZodError } from 'zod';
 
+// TODO: is this necessary? Hono should probably catch errors itself
 export const errorResponse = (res: Response, e: any) => {
   if (e instanceof HttpError) {
     res.status(e.status).send(e.message);
