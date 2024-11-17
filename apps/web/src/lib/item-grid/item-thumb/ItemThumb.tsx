@@ -36,7 +36,7 @@ const ItemThumb = ({ item, selfSetRowSpan }: IProps) => {
       href={`/item?itemId=${item.id}`}
       className={clsx(css.itemBtn, gridSpanClass)}
       style={style}
-      data-testId="item"
+      data-testid="item"
     >
       {item.private && <Icon path={mdiEyeOff} size={1} className={css.private} />}
       <div className={css.thumbnailContainer} style={thumbContainerStyle}>
