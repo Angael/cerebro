@@ -1,6 +1,6 @@
 import { requireSession } from '@/middleware/requireSession.js';
 import { stripe } from '@/my-stripe.js';
-import { honoFactory } from '@/routes/myHono.js';
+import { honoFactory } from '@/routes/honoFactory.js';
 import { env } from '@/utils/env.js';
 import logger from '@/utils/log.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';

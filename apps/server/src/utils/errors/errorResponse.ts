@@ -1,4 +1,4 @@
-import { MyContext } from '@/routes/myHono.js';
+import { MyContext } from '@/routes/honoFactory.js';
 import { ZodError } from 'zod';
 import logger from '../log.js';
 import { HTTPException } from 'hono/http-exception';

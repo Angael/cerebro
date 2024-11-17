@@ -1,4 +1,4 @@
-import { honoFactory } from '../myHono.js';
+import { honoFactory } from '../honoFactory.js';
 import { bodyLimit } from 'hono/body-limit';
 import { cache } from 'hono/cache';
 import { QueryItems } from '@cerebro/shared';
