@@ -1,12 +1,11 @@
-import { honoFactory } from '@/routes/myHono.js';
-import { createAccessPlanCheckout, getLimitsForUser, getStripeCustomer } from './user.service.js';
-import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
-import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 import { stripe } from '@/my-stripe.js';
-import { HttpError } from '@/utils/errors/HttpError.js';
+import { honoFactory } from '@/routes/myHono.js';
 import { env } from '@/utils/env.js';
+import logger from '@/utils/log.js';
+import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 import { HTTPException } from 'hono/http-exception';
+import { createAccessPlanCheckout, getLimitsForUser, getStripeCustomer } from './user.service.js';
 
 const userRoutes = honoFactory()
   .get('/user/me', async (c) => {

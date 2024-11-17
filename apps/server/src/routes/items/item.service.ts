@@ -1,14 +1,13 @@
-import { AuthorQuery, FrontItem, QueryItems } from '@cerebro/shared';
 import { S3DeleteMany } from '@/aws/s3-helpers.js';
-import { HttpError } from '@/utils/errors/HttpError.js';
-import logger from '@/utils/log.js';
 import { getFrontItem } from '@/utils/getFrontItem.js';
-import { db } from '@cerebro/db';
-import { queryAndMergeItems } from '@/utils/queryAndMergeItems.js';
-import invariant from 'tiny-invariant';
-import { User } from 'lucia';
 import { isUserOrAdmin } from '@/utils/isUserOrAdmin.js';
+import logger from '@/utils/log.js';
+import { queryAndMergeItems } from '@/utils/queryAndMergeItems.js';
+import { db } from '@cerebro/db';
+import { AuthorQuery, FrontItem, QueryItems } from '@cerebro/shared';
 import { HTTPException } from 'hono/http-exception';
+import { User } from 'lucia';
+import invariant from 'tiny-invariant';
 
 export async function getItems(
   limit: number,

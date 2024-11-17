@@ -1,9 +1,9 @@
 import { Image, Video } from '@cerebro/db';
 import { BaseItem, FrontItem, ImageItem, VideoItem } from '@cerebro/shared';
 import { s3PathToUrl } from './s3PathToUrl.js';
-import { HttpError } from './errors/HttpError.js';
 import logger from './log.js';
 import { MergedItem } from '@/utils/queryAndMergeItems.js';
+import { HTTPException } from 'hono/http-exception';
 
 export function getFrontItem(merged: MergedItem, user_id?: string): FrontItem {
   const { item, videos, images, thumbnails } = merged;
@@ -22,7 +22,7 @@ export function getFrontItem(merged: MergedItem, user_id?: string): FrontItem {
 
   // Last worst case scenario check
   if (!baseItem.isMine && baseItem.private) {
-    throw new HttpError(404);
+    throw new HTTPException(404, { message: 'Item not found' });
   }
 
   if (item.type === 'IMAGE') {
@@ -62,6 +62,6 @@ export function getFrontItem(merged: MergedItem, user_id?: string): FrontItem {
   } else {
     logger.error('Error when converting item to FrontItem, itemId: %i', item.id);
     // TODO: Maybe queue item for fixing?
-    throw new HttpError(500);
+    throw new HTTPException(500, { message: 'Failed to convert item to FrontItem' });
   }
 }

@@ -1,18 +1,17 @@
-import { limitsConfig } from '@/utils/limits.js';
 import { usedSpaceCache, userTypeCache } from '@/cache/userCache.js';
+import { limitsConfig } from '@/utils/limits.js';
 import { db, UserType } from '@cerebro/db';
 import { sql } from 'kysely';
 
-import { MyFile } from '../items/upload/upload.type.js';
-import { HttpError } from '@/utils/errors/HttpError.js';
-import { GetUploadLimits } from '@cerebro/shared';
-import logger from '@/utils/log.js';
-import { stripe } from '@/my-stripe.js';
 import { checkoutMetadataZod } from '@/models/StripeCheckout.js';
-import { User } from 'lucia';
-import { env } from '@/utils/env.js';
+import { stripe } from '@/my-stripe.js';
 import { STRIPE_ACCESS_PLAN_PRODUCT } from '@/utils/consts.js';
+import { env } from '@/utils/env.js';
+import logger from '@/utils/log.js';
+import { GetUploadLimits } from '@cerebro/shared';
 import { HTTPException } from 'hono/http-exception';
+import { User } from 'lucia';
+import { MyFile } from '../items/upload/upload.type.js';
 
 export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   let used: number;
@@ -51,7 +50,7 @@ export async function getUserType(uid: string): Promise<UserType> {
       return type;
     } catch (e) {
       logger.error('Failed to get userType for uid: %n, %o', uid, e);
-      throw new HttpError(404);
+      throw e;
     }
   }
 }
@@ -99,7 +98,7 @@ export async function createAccessPlanCheckout(user: User): Promise<{ url: strin
     limit: 1,
   });
   if (!prices.data[0]) {
-    throw new HttpError(500, 'No active price found for access plan');
+    throw new HTTPException(500, { message: 'No active price found for access plan' });
   }
 
   const cutomerData = stripeCustomer
