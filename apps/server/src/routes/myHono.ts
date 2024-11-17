@@ -4,4 +4,5 @@ import { Context } from 'hono';
 
 type HonoVariables = { Variables: Awaited<ReturnType<typeof lucia.validateSession>> };
 export type MyContext = Context<HonoVariables>;
+
 export const honoFactory = () => new Hono<HonoVariables>();

@@ -11,6 +11,6 @@ export const isPremium = createMiddleware(async (c, next) => {
     const { method, url } = c.req;
 
     logger.error('User %s is not premium. Method: %s. Url: %s ', user?.id, method, url);
-    c.json({ error: 'User is not premium' }, 403);
+    return c.json({ error: 'User is not premium' }, 403);
   }
 });

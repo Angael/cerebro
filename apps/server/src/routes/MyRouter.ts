@@ -7,7 +7,7 @@ import { errorResponse } from '@/utils/errors/errorResponse.js';
 import { honoFactory } from './myHono.js';
 import itemRouter from './items/item.routes.js';
 import authRouter from '@/routes/auth/auth.routes.js';
-// import userRouter from '@/routes/user/user.routes.js';
+import userRouter from '@/routes/user/user.routes.js';
 // import adminRoutes from '@/routes/admin/admin.routes.js';
 // import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
 
@@ -16,7 +16,7 @@ const app = honoFactory();
 const routers = [
   itemRouter,
   authRouter,
-  // userRouter,
+  userRouter,
   // adminRoutes,
   // stripeRoutes,
 ] as const satisfies (typeof app)[];

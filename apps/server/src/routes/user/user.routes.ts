@@ -1,4 +1,4 @@
-import express from 'express';
+import { honoFactory } from '@/routes/myHono.js';
 import { createAccessPlanCheckout, getLimitsForUser, getStripeCustomer } from './user.service.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
@@ -6,85 +6,80 @@ import { requireSession } from '@/middleware/requireSession.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 import { stripe } from '@/my-stripe.js';
 import { HttpError } from '@/utils/errors/HttpError.js';
+import { env } from '@/utils/env.js';
 
-const userRoutes = express.Router({ mergeParams: true });
-userRoutes.use('/user', express.json());
-
-userRoutes.get('/user/me', async (req, res) => {
-  try {
-    const { user, session } = await requireSession(req);
-    res.json({
-      id: user.id,
-      email: user.email,
-      type: user.type,
-      sessionExpiresAt: session.expiresAt.toISOString(),
-    } satisfies UserMe);
-  } catch (e) {
-    logger.verbose('Not logged in');
-
-    res.json(null satisfies UserMe);
-  }
-});
-
-userRoutes.get('/user/limits', async (req, res) => {
-  try {
-    const { user } = await requireSession(req);
+const userRoutes = honoFactory()
+  .get('/user/me', async (c) => {
     try {
-      const uploadLimits = await getLimitsForUser(user.id);
-      res.json(uploadLimits);
+      const { user, session } = await requireSession(c);
+      return c.json({
+        id: user.id,
+        email: user.email,
+        type: user.type,
+        sessionExpiresAt: session.expiresAt.toISOString(),
+      } satisfies UserMe);
     } catch (e) {
-      logger.error('Failed to list limits for user: %n', user.id);
-      errorResponse(res, e);
+      logger.verbose('Not logged in');
+
+      return c.json(null satisfies UserMe);
     }
-  } catch (e) {
-    res.sendStatus(401);
-  }
-});
-
-userRoutes.get('/user/plan', async (req, res) => {
-  try {
-    const { user } = await requireSession(req);
-
+  })
+  .get('/user/limits', async (c) => {
     try {
-      const userPlan = await getStripeCustomer(user.id);
-      res.json(userPlan satisfies UserPlan_Endpoint);
-    } catch (e) {
-      if (e instanceof HttpError && e.status === 404) {
-        res.json(null satisfies UserPlan_Endpoint);
-      } else {
-        throw e;
+      const { user } = await requireSession(c);
+      try {
+        const uploadLimits = await getLimitsForUser(user.id);
+        return c.json(uploadLimits);
+      } catch (e) {
+        logger.error('Failed to list limits for user: %n', user.id);
+        return errorResponse(c, e);
       }
+    } catch (e) {
+      return c.body('', 401);
     }
-  } catch (e) {
-    logger.error('Failed to get user plan');
-    errorResponse(res, e);
-  }
-});
+  })
+  .get('/user/plan', async (c) => {
+    try {
+      const { user } = await requireSession(c);
 
-userRoutes.post('/user/subscribe', async (req, res) => {
-  try {
-    const { user } = await requireSession(req);
+      try {
+        const userPlan = await getStripeCustomer(user.id);
+        return c.json(userPlan satisfies UserPlan_Endpoint);
+      } catch (e) {
+        if (e instanceof HttpError && e.status === 404) {
+          return c.json(null satisfies UserPlan_Endpoint);
+        } else {
+          throw e;
+        }
+      }
+    } catch (e) {
+      logger.error('Failed to get user plan');
+      return errorResponse(c, e);
+    }
+  })
+  .post('/user/subscribe', async (c) => {
+    try {
+      const { user } = await requireSession(c);
 
-    res.json(await createAccessPlanCheckout(user));
-  } catch (e) {
-    errorResponse(res, e);
-  }
-});
+      return c.json(await createAccessPlanCheckout(user));
+    } catch (e) {
+      return errorResponse(c, e);
+    }
+  })
+  .get('/user/billing', async (c) => {
+    try {
+      const { user } = await requireSession(c);
+      const stripeCustomer = await getStripeCustomer(user.id);
 
-userRoutes.get('/user/billing', async (req, res) => {
-  try {
-    const { user } = await requireSession(req);
-    const stripeCustomer = await getStripeCustomer(user.id);
+      const portalSession = await stripe.billingPortal.sessions.create({
+        customer: stripeCustomer.customerId,
+        return_url: c.header('origin') ?? env.CORS_URL,
+      });
 
-    const portalSession = await stripe.billingPortal.sessions.create({
-      customer: stripeCustomer.customerId,
-      return_url: req.headers.origin,
-    });
-
-    res.json({ url: portalSession.url });
-  } catch (e) {
-    errorResponse(res, e);
-  }
-});
+      return c.json({ url: portalSession.url });
+    } catch (e) {
+      return errorResponse(c, e);
+    }
+  });
 
 export default userRoutes;

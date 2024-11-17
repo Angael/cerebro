@@ -47,10 +47,10 @@ const authRouter = honoFactory()
         const sessionCookie = lucia.createSessionCookie(session.id);
 
         setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-        c.body('', 204);
+        return c.body('', 204);
       } catch (e) {
         // db error, email taken, etc
-        errorResponse(c, e);
+        return errorResponse(c, e);
       }
     },
   )
@@ -91,9 +91,9 @@ const authRouter = honoFactory()
           maxAge: sessionCookie.attributes.maxAge! * 1000,
         });
 
-        c.body('', 204);
+        return c.body('', 204);
       } catch (e) {
-        errorResponse(c, e);
+        return errorResponse(c, e);
       }
     },
   )
@@ -104,8 +104,7 @@ const authRouter = honoFactory()
       const auth_session = cookies.get('auth_session');
 
       if (!auth_session) {
-        c.body('', 400);
-        return;
+        return c.body('', 400);
       }
 
       await db.deleteFrom('user_session').where('id', '=', auth_session).execute();
@@ -114,9 +113,9 @@ const authRouter = honoFactory()
       const sessionCookie = lucia.createBlankSessionCookie();
       setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-      c.body('', 204);
+      return c.body('', 204);
     } catch (e) {
-      errorResponse(c, e);
+      return errorResponse(c, e);
     }
   });
 
