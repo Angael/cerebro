@@ -1,31 +1,28 @@
-import express, { Router } from 'express';
-import cors from 'cors';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+
 import log from '../utils/log.js';
 
-import itemRouter from './items/item.routes.js';
-import userRouter from '@/routes/user/user.routes.js';
-import localFsRouter from './local-fs/localFsRouter.js';
 import { env } from '../utils/env.js';
 import logger from '@/utils/log.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
-import authRouter from '@/routes/auth/auth.routes.js';
-import adminRoutes from '@/routes/admin/admin.routes.js';
-import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
 
-const routes3: Router[] = [
-  itemRouter,
-  authRouter,
-  userRouter,
-  adminRoutes,
-  stripeRoutes,
-  !env.isProd && localFsRouter,
-].filter((router): router is Router => !!router);
+// import itemRouter from './items/item.routes.js';
+// import userRouter from '@/routes/user/user.routes.js';
+// import authRouter from '@/routes/auth/auth.routes.js';
+// import adminRoutes from '@/routes/admin/admin.routes.js';
+// import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
+
+// const routes3: Router[] = [itemRouter, authRouter, userRouter, adminRoutes, stripeRoutes].filter(
+//   (router): router is Router => !!router,
+// );
 
 const startRouter = () => {
-  const router = express();
+  const app = new Hono();
+
   const port = env.PORT;
 
-  router.use(
+  app.use(
     cors({
       origin: env.CORS_URL,
       credentials: true,
@@ -33,26 +30,32 @@ const startRouter = () => {
     }),
   );
 
-  router.get('/', (req, res) => {
-    res.send('v0.8');
+  app.get('/', (c) => {
+    return c.json({ version: 'v0.9' });
   });
 
-  routes3.forEach((nestedRouter) => {
-    router.use(nestedRouter);
-  });
+  // routes3.forEach((nestedRouter) => {
+  //   router.use(nestedRouter);
+  // });
 
-  router.use((err: any, req: any, res: any, _next: any) => {
-    logger.error('General error route');
-    errorResponse(res, err);
-  });
+  // router.use((err: any, req: any, res: any, _next: any) => {
+  //   logger.error('General error route');
+  //   errorResponse(res, err);
+  // });
 
-  router.listen(port, () => {
-    log.info(`Router started on http://localhost:${port}/`);
-  });
+  // router.listen(port, () => {
+  //   log.info(`Router started on http://localhost:${port}/`);
+  // });
 
-  // on error
-  router.on('error', (err) => {
-    log.error(err);
+  // // on error
+  // router.on('error', (err) => {
+  //   log.error(err);
+  // });
+
+  // Not in docs for some reason, could it be bad?
+  Bun.serve({
+    port: port,
+    fetch: app.fetch,
   });
 };
 
