@@ -1,5 +1,4 @@
 import sharp, { OutputInfo, Sharp } from 'sharp';
-import async, { AsyncResultCallback } from 'async';
 import { nanoid } from 'nanoid';
 import { join } from 'path';
 import fs from 'fs-extra';
@@ -51,24 +50,22 @@ export async function generateThumbnails(filePath: string): Promise<IGeneratedTh
 
     const dimensions = await measure(animatedPipeline);
 
-    // TODO: Make into modern-async, async fails at typechecking
-    return await async.map(
-      dimensions,
-      (dimensions, callback: AsyncResultCallback<IGeneratedThumbnail>) => {
-        resizeFileAndSave({
-          pipeline: animatedPipeline,
-          width: dimensions.width,
-          height: dimensions.height,
-        })
-          .then(({ info, path }) => {
-            callback(null, { diskPath: path, dimensions, size: info.size, animated: false });
-          })
-          .catch((error) => {
-            // TODO: Need to unlink files that crashed!
-            callback(error);
+    const thumbnails = await Promise.all(
+      dimensions.map(async (dimension) => {
+        try {
+          const { info, path } = await resizeFileAndSave({
+            pipeline: animatedPipeline,
+            width: dimension.width,
+            height: dimension.height,
           });
-      },
+          return { diskPath: path, dimensions: dimension, size: info.size, animated: false };
+        } catch (error) {
+          // TODO: Need to unlink files that crashed!
+          throw error;
+        }
+      }),
     );
+    return thumbnails;
   } catch (e: any) {
     logger.error(e);
     throw new Error(e);

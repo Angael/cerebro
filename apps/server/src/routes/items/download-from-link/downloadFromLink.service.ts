@@ -1,16 +1,16 @@
-import { nanoid } from 'nanoid';
-import { downloadVideo, getVideoStats } from 'easy-yt-dlp';
-import { env } from '@/utils/env.js';
-import { DOWNLOADS_DIR, MAX_UPLOAD_SIZE } from '@/utils/consts.js';
-import { MyFile } from '../upload/upload.type.js';
-import { parse } from 'path';
-import fs from 'fs-extra';
-import { HttpError } from '@/utils/errors/HttpError.js';
-import { doesUserHaveSpaceLeftForFile } from '@/routes/user/user.service.js';
-import logger from '@/utils/log.js';
-import { betterUnlink } from '@/utils/betterUnlink.js';
-import mime from 'mime-types';
 import { linkStatsCache } from '@/cache/caches.js';
+import { doesUserHaveSpaceLeftForFile } from '@/routes/user/user.service.js';
+import { betterUnlink } from '@/utils/betterUnlink.js';
+import { DOWNLOADS_DIR, MAX_UPLOAD_SIZE } from '@/utils/consts.js';
+import { env } from '@/utils/env.js';
+import logger from '@/utils/log.js';
+import { downloadVideo, getVideoStats } from 'easy-yt-dlp';
+import fs from 'fs-extra';
+import { HTTPException } from 'hono/http-exception';
+import mime from 'mime-types';
+import { nanoid } from 'nanoid';
+import { parse } from 'path';
+import { MyFile } from '../upload/upload.type.js';
 
 export const downloadFromLinkService = async (
   link: string,
@@ -38,13 +38,13 @@ export const downloadFromLinkService = async (
     };
 
     if (file.size > MAX_UPLOAD_SIZE) {
-      throw new HttpError(413);
+      throw new HTTPException(413, { message: 'File too big' });
     }
 
     const hasEnoughSpace = await doesUserHaveSpaceLeftForFile(userId, file);
 
     if (!hasEnoughSpace) {
-      throw new HttpError(413);
+      throw new HTTPException(413, { message: 'Not enough space left' });
     }
 
     return file;

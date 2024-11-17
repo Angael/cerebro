@@ -1,5 +1,3 @@
-import express from 'express';
-import { errorResponse } from '@/utils/errors/errorResponse.js';
 import logger from '@/utils/log.js';
 import { requireSession } from '@/middleware/requireSession.js';
 import { AdminUsers_Endpoint, AdminUserPreview_Endpoint, UserMe } from '@cerebro/shared';
@@ -11,25 +9,22 @@ import {
 } from '@/routes/admin/admin.service.js';
 import z from 'zod';
 import { limitsConfig } from '@/utils/limits.js';
+import { honoFactory } from '../honoFactory';
+import { HTTPException } from 'hono/http-exception';
+import { zValidator } from '@hono/zod-validator';
 
-const adminRoutes = express.Router({ mergeParams: true });
-adminRoutes.use('/admin', express.json());
-adminRoutes.use('/admin', async (req, res, next) => {
-  try {
-    logger.verbose('Accessing admin route %s', req.url);
-    const { user } = await requireSession(req);
+const adminRoutes = honoFactory()
+  .use('/admin', async (c, next) => {
+    logger.verbose('Accessing admin route %s', c.req.url);
+    const { user } = await requireSession(c);
     if (user.type !== 'ADMIN') {
-      res.sendStatus(401);
+      logger.warn('User %s tried to access admin route', user.id);
+      throw new HTTPException(403);
     } else {
-      next();
+      await next();
     }
-  } catch (e) {
-    errorResponse(res, e);
-  }
-});
-
-adminRoutes.get('/admin/all-users', async (req, res) => {
-  try {
+  })
+  .get('/admin/all-users', async (c) => {
     const [users, usersUsage, itemCounts] = await Promise.all([
       getAllUsers(),
       getAllUsersSpaceUsage(),
@@ -43,21 +38,12 @@ adminRoutes.get('/admin/all-users', async (req, res) => {
       return { ...user, usedSpace, maxSpace, itemCount };
     });
 
-    res.json(usersWithUsage satisfies AdminUsers_Endpoint);
-  } catch (e) {
-    errorResponse(res, e);
-  }
-});
-
-const userIdZod = z.object({ userId: z.string() });
-adminRoutes.get('/admin/user-preview', async (req, res) => {
-  try {
-    const { userId } = userIdZod.parse(req.query);
+    return c.json(usersWithUsage satisfies AdminUsers_Endpoint);
+  })
+  .get('/admin/user-preview', zValidator('query', z.object({ userId: z.string() })), async (c) => {
+    const { userId } = c.req.valid('query');
     const users = await getUserPreview(userId);
-    res.json(users satisfies AdminUserPreview_Endpoint);
-  } catch (e) {
-    errorResponse(res, e);
-  }
-});
+    return c.json(users satisfies AdminUserPreview_Endpoint);
+  });
 
 export default adminRoutes;
