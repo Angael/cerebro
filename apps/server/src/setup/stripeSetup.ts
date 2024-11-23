@@ -1,8 +1,8 @@
-import { stripe } from '../stripe.js';
+import { stripe } from '../my-stripe.js';
 import { STRIPE_ACCESS_PLAN_PRICE, STRIPE_ACCESS_PLAN_PRODUCT } from '@/utils/consts.js';
 import logger from '@/utils/log.js';
 
-export const stripeSetup = async () => {
+const stripeSetup = async () => {
   let product = await stripe.products.retrieve(STRIPE_ACCESS_PLAN_PRODUCT.id).catch((e) => null);
 
   if (!product) {
@@ -18,3 +18,5 @@ export const stripeSetup = async () => {
     logger.info('Product and price already exists, skipping creation');
   }
 };
+
+export default stripeSetup;

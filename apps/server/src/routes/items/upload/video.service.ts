@@ -3,9 +3,9 @@ import { S3Delete, S3SimpleUpload } from '@/aws/s3-helpers.js';
 import { makeS3Path, replaceFileWithHash } from '@/utils/makeS3Path.js';
 import { db } from '@cerebro/db';
 import { analyze, SimpleAnalysisStats } from '@vanih/dunes-node';
-import { HttpError } from '@/utils/errors/HttpError.js';
 import { MyFile, uploadPayload } from './upload.type.js';
 import { env } from '@/utils/env.js';
+import { HTTPException } from 'hono/http-exception';
 
 async function insertIntoDb(
   s3Key: string,
@@ -39,18 +39,14 @@ async function insertIntoDb(
 }
 
 export async function uploadVideo({ file, userId }: uploadPayload) {
-  console.log('analyze start');
   const videoData = await analyze(env.FFPROBE, file.path);
-  console.log('analyze end');
 
   const key = makeS3Path(userId, 'source', replaceFileWithHash(file.originalname));
-  console.log('key', key);
 
   await S3SimpleUpload({
     key,
     filePath: file.path,
   });
-  console.log('uploaded to s3');
 
   try {
     await insertIntoDb(key, videoData, file, userId);
@@ -58,6 +54,6 @@ export async function uploadVideo({ file, userId }: uploadPayload) {
   } catch (e: any) {
     logger.error('Failed to insert video into DB. Error: %o', e.message);
     await S3Delete(file.path);
-    throw new HttpError(500);
+    throw new HTTPException(500, { message: 'Failed to insert video into DB' });
   }
 }

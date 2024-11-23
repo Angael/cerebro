@@ -2,9 +2,9 @@ import sharp from 'sharp';
 import logger from '@/utils/log.js';
 import { S3Delete, S3SimpleUpload } from '@/aws/s3-helpers.js';
 import { makeS3Path, replaceFileWithHash } from '@/utils/makeS3Path.js';
-import { HttpError } from '@/utils/errors/HttpError.js';
 import { MyFile, uploadPayload } from './upload.type.js';
 import { db } from '@cerebro/db';
+import { HTTPException } from 'hono/http-exception';
 
 type Analysis = {
   width: number;
@@ -69,6 +69,6 @@ export async function uploadImage({ file, userId }: uploadPayload) {
   } catch (e) {
     logger.error('Failed to insert image into DB, %O', e);
     S3Delete(file.path);
-    throw new HttpError(500);
+    throw new HTTPException(500, { message: 'Failed to insert image into DB' });
   }
 }

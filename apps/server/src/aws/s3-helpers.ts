@@ -41,17 +41,19 @@ export async function S3CreateBucket(bucket: string) {
   // make public
 }
 
-export function S3SimpleUpload({
+export async function S3SimpleUpload({
   key,
   filePath,
 }: {
   key: string;
   filePath: string;
 }): Promise<void> {
+  const file = Bun.file(filePath);
+
   const params: PutObjectCommandInput = {
     Bucket: env.CF_BUCKET_NAME,
     Key: key,
-    Body: fs.createReadStream(filePath),
+    Body: Buffer.from(await file.arrayBuffer()),
     ACL: 'public-read',
     ContentType: getContentType(filePath),
   };

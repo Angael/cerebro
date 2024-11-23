@@ -1,11 +1,11 @@
-export const MB = 1000 * 1000;
-export const GB = 1000 * 1000 * 1000;
+export const MB = 1000_000 as const;
+export const GB = 1000_000_000 as const;
 
 export const MD_CELL_SIZE = 300;
 export const XS_CELL_SIZE = 32;
 
-/** Maximum size in MB */
 export const MAX_UPLOAD_SIZE = 30 * MB;
+
 export const TEMP_DIR = '_temp';
 export const UPLOADS_DIR = '_temp/file-uploads';
 export const DOWNLOADS_DIR = '_temp/downloads';

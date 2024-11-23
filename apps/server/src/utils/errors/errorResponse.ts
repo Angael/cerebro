@@ -1,16 +1,20 @@
-import { Response } from 'express';
-import { HttpError } from './HttpError.js';
-import logger from '../log.js';
+import { MyContext } from '@/routes/honoFactory.js';
 import { ZodError } from 'zod';
+import logger from '../log.js';
+import { HTTPException } from 'hono/http-exception';
 
-export const errorResponse = (res: Response, e: any) => {
-  if (e instanceof HttpError) {
-    res.status(e.status).send(e.message);
+export const errorResponse = (c: MyContext, e: any) => {
+  if (e instanceof HTTPException) {
+    logger.error('HTTPException: %s %s', e.status, e.message || 'None');
+
+    return e.getResponse();
   } else if (e instanceof ZodError) {
-    logger.error('Error: %O', e.issues); // Should we log validation issues?
-    res.status(400).json(e.issues);
+    logger.error('Zod Error: %s', e.toString());
+
+    return c.json({ error: e.message, issues: e.issues }, 400);
   } else {
-    logger.error('Error: %s', e.message);
-    res.sendStatus(500);
+    logger.error('Unknown Error: %s', e.toString());
+
+    return c.json({ error: 'Internal server error' }, 500);
   }
 };

@@ -10,15 +10,16 @@
     "dev:web": "turbo dev --filter web",
     "dev:stripe": "stripe login & stripe listen -e checkout.session.completed,customer.subscription.updated,customer.subscription.deleted --forward-to http://localhost:3000/webhooks/stripe",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "ngrok": "ngrok http 3000"
   },
   "devDependencies": {
-    "@types/node": "^20.12.2",
+    "@types/bun": "^1.1.13",
     "prettier": "^3.1.1",
     "turbo": "latest"
   },
   "engines": {
-    "node": ">=20"
+    "bun": "^1.1.34"
   },
   "dependencies": {
     "@cerebro/tsconfig": "workspace:*",
@@ -27,5 +28,10 @@
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
     "zod": "^3.22.4"
-  }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "bun@1.1.34"
 }

@@ -6,7 +6,7 @@ export const env = z
     NODE_ENV: z.union([z.literal('development'), z.literal('production')]),
     YT_DLP_PATH: z.string(),
     PORT: z.number(),
-    CORS_URL: z.string().optional(),
+    CORS_URL: z.string(),
     MOCK_UPLOADS: z.boolean(),
     CF_S3_ENDPOINT: z.string(),
     CF_KEY_ID: z.string(),
