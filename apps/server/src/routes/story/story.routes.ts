@@ -1,8 +1,4 @@
-import express, { Router } from 'express';
-import { GetStories_Endpoint, GetStory_Endpoint } from '@cerebro/shared';
-import logger from '@/utils/log.js';
-import { errorResponse } from '@/utils/errors/errorResponse.js';
-import z from 'zod';
+import { requireSession } from '@/middleware/requireSession.js';
 import {
   createStory,
   editStory,
@@ -10,105 +6,111 @@ import {
   getStoriesSummaries,
   getStory,
 } from '@/routes/story/story.service.js';
-import { requireSession } from '@/middleware/requireSession.js';
-import { HttpError } from '@/utils/errors/HttpError.js';
+import logger from '@/utils/log.js';
 import { storyJsonZod } from '@cerebro/db';
+import { GetStories_Endpoint, GetStory_Endpoint } from '@cerebro/shared';
+import { zValidator } from '@hono/zod-validator';
+import { HTTPException } from 'hono/http-exception';
+import z from 'zod';
+import { honoFactory } from '../honoFactory';
 
-const storyRouter = express.Router({ mergeParams: true });
-storyRouter.use('/story', express.json());
+const storyRouter = honoFactory()
+  .get('/story/list-stories', async (c) => {
+    const stories = await getStoriesSummaries();
 
-storyRouter.get('/story/list-stories', async (req, res) => {
-  const stories = await getStoriesSummaries();
+    const mockResponse: GetStories_Endpoint = {
+      count: stories.length,
+      stories: stories,
+    };
 
-  const mockResponse: GetStories_Endpoint = {
-    count: stories.length,
-    stories: stories,
-  };
+    return c.json(mockResponse satisfies GetStories_Endpoint);
+  })
+  .get('/story/get/:id', zValidator('query', z.object({ id: z.string() })), async (c) => {
+    const id = c.req.valid('query').id;
+    try {
+      const story = await getStory(id);
 
-  res.json(mockResponse satisfies GetStories_Endpoint);
-});
-
-const idZod = z.string();
-storyRouter.get('/story/get/:id', async (req, res) => {
-  try {
-    const id = idZod.parse(req?.params?.id);
-    const story = await getStory(id);
-
-    res.json({ story } satisfies GetStory_Endpoint);
-  } catch (e) {
-    logger.error(`Failed to get story ${req?.params?.id}`);
-    errorResponse(res, e);
-  }
-});
-
-//new story post
-const createStoryZod = z.object({
-  title: z.string(),
-  description: z.string(),
-});
-storyRouter.post('/story/create', async (req, res) => {
-  const { user } = await requireSession(req);
-
-  try {
-    const { title, description } = createStoryZod.parse(req.body);
-
-    const id = await createStory(user.id, title, description);
-
-    res.json({ id });
-  } catch (e) {
-    logger.error('Failed to create story');
-    errorResponse(res, e);
-  }
-});
-
-const editStoryPayload = z.object({
-  title: z.string(),
-  description: z.string(),
-});
-storyRouter.post('/story/edit/:storyId', async (req, res) => {
-  const { user } = await requireSession(req);
-
-  try {
-    const storyId = idZod.parse(req?.params?.storyId);
-    const payload = editStoryPayload.parse(req.body);
-    const { user_id } = await getStory(storyId);
-
-    if (user_id !== user.id) {
-      throw new HttpError(403, 'You are not the owner of this story');
+      return c.json({ story } satisfies GetStory_Endpoint);
+    } catch (e) {
+      logger.error(`Failed to get story %s`, id);
+      throw e;
     }
+  })
+  .post(
+    '/story/create',
+    zValidator('json', z.object({ title: z.string(), description: z.string() })),
+    async (c) => {
+      const { user } = await requireSession(c);
+      const { title, description } = c.req.valid('json');
 
-    await editStory(storyId, payload);
+      try {
+        const id = await createStory(user.id, title, description);
 
-    res.sendStatus(204);
-  } catch (e) {
-    logger.error(`Failed to change story ${req?.params?.storyId}`);
-    errorResponse(res, e);
-  }
-});
+        return c.json({ id });
+      } catch (e) {
+        logger.error('Failed to create story');
+        throw e;
+      }
+    },
+  )
+  .post(
+    '/story/edit/:storyId',
+    zValidator('query', z.object({ storyId: z.string() })),
+    zValidator(
+      'json',
+      z.object({
+        title: z.string(),
+        description: z.string(),
+      }),
+    ),
+    async (c) => {
+      const { user } = await requireSession(c);
+      const storyId = c.req.valid('query').storyId;
+      const payload = c.req.valid('json');
 
-storyRouter.post('/story/edit-json/:storyId', async (req, res) => {
-  const { user } = await requireSession(req);
+      try {
+        const { user_id } = await getStory(storyId);
 
-  try {
-    const storyId = idZod.parse(req?.params?.storyId);
-    const { user_id } = await getStory(storyId);
+        if (user_id !== user.id) {
+          throw new HTTPException(403, { message: 'You are not the owner of this story' });
+        }
 
-    if (user_id !== user.id) {
-      throw new HttpError(403, 'You are not the owner of this story');
-    }
+        await editStory(storyId, payload);
 
-    const storyJson = storyJsonZod.parse(req.body.storyJson);
-    logger.verbose('Parsed storyJson');
+        return c.json(null, 204);
+      } catch (e) {
+        logger.error(`Failed to change story %s`, storyId);
+        throw e;
+      }
+    },
+  )
+  .post(
+    '/story/edit-json/:storyId',
+    zValidator('query', z.object({ storyId: z.string() })),
+    async (c) => {
+      const { user } = await requireSession(c);
+      const storyId = c.req.valid('query').storyId;
 
-    // TODO: validate starting point exists in chapters etc
+      try {
+        const { user_id } = await getStory(storyId);
 
-    await editStoryJson(storyId, storyJson);
+        if (user_id !== user.id) {
+          throw new HTTPException(403, { message: 'You are not the owner of this story' });
+        }
 
-    res.sendStatus(204);
-  } catch (e) {
-    logger.error(`Failed to change story ${req?.params?.storyId}`);
-    errorResponse(res, e);
-  }
-});
+        const storyJson = storyJsonZod.parse((await c.req.json()).storyJson);
+        logger.verbose('Parsed storyJson');
 
-export default storyRouter satisfies Router;
+        // TODO: validate starting point exists in chapters etc
+
+        await editStoryJson(storyId, storyJson);
+
+        return c.json(null, 204);
+      } catch (e) {
+        logger.error('Failed to change story %s', storyId);
+        throw e;
+      }
+    },
+  );
+
+export default storyRouter;
