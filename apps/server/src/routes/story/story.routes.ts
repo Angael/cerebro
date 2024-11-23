@@ -25,8 +25,8 @@ const storyRouter = honoFactory()
 
     return c.json(mockResponse satisfies GetStories_Endpoint);
   })
-  .get('/story/get/:id', zValidator('query', z.object({ id: z.string() })), async (c) => {
-    const id = c.req.valid('query').id;
+  .get('/story/get/:id', zValidator('param', z.object({ id: z.string() })), async (c) => {
+    const id = c.req.valid('param').id;
     try {
       const story = await getStory(id);
 
@@ -55,7 +55,7 @@ const storyRouter = honoFactory()
   )
   .post(
     '/story/edit/:storyId',
-    zValidator('query', z.object({ storyId: z.string() })),
+    zValidator('param', z.object({ storyId: z.string() })),
     zValidator(
       'json',
       z.object({
@@ -65,7 +65,7 @@ const storyRouter = honoFactory()
     ),
     async (c) => {
       const { user } = await requireSession(c);
-      const storyId = c.req.valid('query').storyId;
+      const storyId = c.req.valid('param').storyId;
       const payload = c.req.valid('json');
 
       try {
@@ -86,10 +86,10 @@ const storyRouter = honoFactory()
   )
   .post(
     '/story/edit-json/:storyId',
-    zValidator('query', z.object({ storyId: z.string() })),
+    zValidator('param', z.object({ storyId: z.string() })),
     async (c) => {
       const { user } = await requireSession(c);
-      const storyId = c.req.valid('query').storyId;
+      const storyId = c.req.valid('param').storyId;
 
       try {
         const { user_id } = await getStory(storyId);
