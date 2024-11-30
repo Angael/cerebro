@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useStory } from '@/utils/hooks/useStory';
 import { useStoryStore } from '@/app/story/edit/story.store';
-import { Button, LoadingOverlay, Stack, Textarea, TextInput, Title } from '@mantine/core';
+import { Button, Group, LoadingOverlay, Stack, Textarea, TextInput, Title } from '@mantine/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { notifications } from '@mantine/notifications';
@@ -16,6 +16,7 @@ import { StoryStats } from '@/app/story/edit/StoryStats';
 import StoryViewport from '@/lib/story/story-viewport/StoryViewport';
 import EditDialog from '@/lib/story/edit-dialog/EditDialog';
 import { useAutoSaveStory } from '@/app/story/edit/useAutoSaveStory';
+import StoryTree from '@/lib/story/story-tree/StoryTree';
 
 const StoryEditPage = () => {
   const [storyId] = useUrlParam('storyId');
@@ -116,12 +117,16 @@ const StoryEditPage = () => {
         <>
           <StoryNav storyJson={storyJson} />
 
-          {dialog && (
-            <>
-              <StoryViewport dialog={dialog} />
-              <EditDialog dialog={dialog} modifyDialog={modifyDialog} />
-            </>
-          )}
+          <Group align="flex-start">
+            <StoryTree storyJson={storyJson} />
+
+            {dialog && (
+              <div style={{ flex: 1 }}>
+                <StoryViewport dialog={dialog} />
+                <EditDialog dialog={dialog} modifyDialog={modifyDialog} />
+              </div>
+            )}
+          </Group>
         </>
       )}
     </Stack>
