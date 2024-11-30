@@ -43,4 +43,5 @@ export const db = new Kysely<Database>({
   dialect,
 });
 
+export * from './typesZod.js';
 export type * from './types.js';

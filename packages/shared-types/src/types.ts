@@ -1,7 +1,7 @@
-import { MediaType } from '@cerebro/db';
+import * as DbTypes from '@cerebro/db';
 
 export type VideoData = {
-  mediaType: MediaType;
+  mediaType: DbTypes.MediaType;
   src: string;
   width: number;
   height: number;
@@ -11,7 +11,7 @@ export type VideoData = {
 };
 
 export type ImageData = {
-  mediaType: MediaType;
+  mediaType: DbTypes.MediaType;
   src: string;
   width: number;
   height: number;
@@ -41,3 +41,13 @@ export type VideoItem = {
 export type FrontItem = ImageItem | VideoItem;
 
 export type AuthorQuery = 'my' | 'all' | 'other';
+
+export namespace Storyteller {
+  export type StoryEntity = DbTypes.StoryEntity;
+  export type StorySummary = Pick<StoryEntity, 'id' | 'title' | 'description'>;
+  export type StoryJson = DbTypes.StoryJson;
+  export type Chapter = DbTypes.Chapter;
+  export type Scene = DbTypes.Scene;
+  export type StoryDialog = DbTypes.StoryDialog;
+  export type StoryDialogChoice = DbTypes.StoryDialogChoice;
+}

@@ -1,4 +1,12 @@
-import type { Generated, Selectable } from 'kysely';
+import type { ColumnType, Generated, Selectable } from 'kysely';
+import { z } from 'zod';
+import {
+  chapterZod,
+  sceneZod,
+  storyDialogChoiceZod,
+  storyDialogZod,
+  storyJsonZod,
+} from './typesZod.js';
 
 export interface Database {
   user: UserTable;
@@ -9,6 +17,7 @@ export interface Database {
   thumbnail: ThumbnailTable;
   image: ImageTable;
   video: VideoTable;
+  story: StoryTable;
 }
 
 export type UserType = 'PREMIUM' | 'FREE' | 'ADMIN';
@@ -118,3 +127,22 @@ export type Video = Selectable<VideoTable>;
 // export type Person = Selectable<PersonTable>;
 // export type NewPerson = Insertable<PersonTable>;
 // export type PersonUpdate = Updateable<PersonTable>;
+
+export type StoryDialogChoice = z.infer<typeof storyDialogChoiceZod>;
+export type StoryDialog = z.infer<typeof storyDialogZod>;
+export type Scene = z.infer<typeof sceneZod>;
+export type Chapter = z.infer<typeof chapterZod>;
+export type StoryJson = z.infer<typeof storyJsonZod>;
+
+interface StoryTable {
+  id: string;
+  title: string;
+  description: string | null;
+  user_id: string;
+  story_json: ColumnType<StoryJson | null, string | undefined, string | undefined>;
+
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
+export type StoryEntity = Selectable<StoryTable>;

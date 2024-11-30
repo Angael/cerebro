@@ -11,8 +11,8 @@ import { QUERY_KEYS } from '@/utils/consts';
 
 const ItemPage = () => {
   const searchParams = useSearchParams();
-  const queryClient = useQueryClient();
   const itemId = searchParams.get('itemId')!;
+  const queryClient = useQueryClient();
 
   const { data } = useQuery({
     queryKey: [QUERY_KEYS.item, itemId],

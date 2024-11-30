@@ -8,6 +8,10 @@ type UrlParamValues = {
   viewMode: ViewMode;
   itemCount: `${number}`;
   author: AuthorQuery;
+  storyId: string;
+  chapterId: string | null;
+  sceneId: string | null;
+  dialogId: string | null;
 };
 
 type UrlParamKeys = keyof UrlParamValues;
@@ -17,13 +21,17 @@ const defaultValues: Record<UrlParamKeys, UrlParamValues[UrlParamKeys]> = {
   viewMode: 'dynamic-grid',
   itemCount: '40',
   author: 'all',
+  storyId: '',
+  chapterId: null,
+  sceneId: null,
+  dialogId: null,
 } as const;
 
 export const useUrlParam = <T extends UrlParamKeys>(param: T) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const value = (searchParams.get(param) as UrlParamValues[typeof param]) || defaultValues[param];
+  const value = (searchParams.get(param) || defaultValues[param]) as UrlParamValues[typeof param];
 
   const setParam = (newValue: UrlParamValues[typeof param] | null, replace = false) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -45,7 +53,11 @@ export const useUrlParam = <T extends UrlParamKeys>(param: T) => {
   const createQueryString = useCallback(
     (value: UrlParamValues[typeof param]) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set(param, value);
+      if (value) {
+        params.set(param, value);
+      } else {
+        params.delete(param);
+      }
 
       return params.toString();
     },
