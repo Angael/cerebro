@@ -8,4 +8,5 @@ export const QUERY_KEYS = {
   adminAllUsers: 'adminAllUsers',
   adminUserPreview: 'adminUserPreview',
   accountPlan: 'accountPlan',
+  todaysFood: 'todaysFood',
 };
