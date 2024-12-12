@@ -1,16 +1,14 @@
 'use client';
 import React from 'react';
-import { useShowDrawer } from '@/lib/navbar/drawer/useShowDrawer';
 import MyDrawerContents from '@/lib/navbar/drawer/MyDrawerContents';
+import css from './LayoutDrawer.module.css';
 
 const LayoutDrawer = () => {
-  const showDrawer = useShowDrawer();
-
-  if (!showDrawer) {
-    return null;
-  }
-
-  return <MyDrawerContents />;
+  return (
+    <div className={css.staticDrawerMediaQuery}>
+      <MyDrawerContents />
+    </div>
+  );
 };
 
 export default LayoutDrawer;
