@@ -10,6 +10,7 @@ import authRouter from '@/routes/auth/auth.routes.js';
 import userRouter from '@/routes/user/user.routes.js';
 import adminRoutes from '@/routes/admin/admin.routes.js';
 import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
+import foodRoutes from '@/routes/food/food.routes.js';
 
 export const app = honoFactory()
   .use(csrf({ origin: env.CORS_URL }))
@@ -20,4 +21,5 @@ export const app = honoFactory()
   .route('/', userRouter)
   .route('/', adminRoutes)
   .route('/', stripeRoutes)
+  .route('/', foodRoutes)
   .onError((e, c) => errorResponse(c, e));
