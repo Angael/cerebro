@@ -1,11 +1,9 @@
-import { QueryItems } from '@cerebro/shared';
 import z from 'zod';
 import { honoFactory } from '../honoFactory.js';
 
-import { optionalSession } from '@/middleware/optionalSession.js';
+import { requireSession } from '@/middleware/requireSession.js';
 import logger from '@/utils/log.js';
 import { zValidator } from '@hono/zod-validator';
-import { requireSession } from '@/middleware/requireSession.js';
 import { getFoodByBarcode, getTodayFoods } from './food.service.js';
 
 const foodRoutes = honoFactory();
@@ -24,22 +22,35 @@ foodRoutes.get('/food/today', async (c) => {
 });
 
 export interface QueryScannedCode {
-  name: string;
-  cal_per_100g: number;
-  full_weight: number | null;
-  preview_img: string | null;
+  product_name: string;
+  brands: string;
+  nutriments: {
+    energy: number;
+    'energy-kcal': number;
+    'energy-kcal_100g': number;
+    fat_100g: number;
+    carbohydrates_100g: number;
+    proteins_100g: number;
+  };
+  image_url: string;
+  product_quantity: number;
+  product_quantity_unit: string;
 }
 
-foodRoutes.get('/food/barcode/:code', zValidator('param', z.object({ code: z.string() })), (c) => {
-  const { code } = c.req.valid('param');
-  const result = getFoodByBarcode(code);
+foodRoutes.get(
+  '/food/barcode/:code',
+  zValidator('param', z.object({ code: z.string() })),
+  async (c) => {
+    const { code } = c.req.valid('param');
+    const result = await getFoodByBarcode(code);
 
-  if (result) {
-    // set cache header for 7 days
-    c.header('Cache-Control', 'public, max-age=604800');
-  }
+    if (result) {
+      // set cache header for 7 days
+      c.header('Cache-Control', 'public, max-age=604800');
+    }
 
-  return c.json(result satisfies QueryScannedCode);
-});
+    return c.json(result satisfies QueryScannedCode);
+  },
+);
 
 export default foodRoutes;

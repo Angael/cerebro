@@ -9,6 +9,7 @@
     "lint": "tsc && next lint"
   },
   "dependencies": {
+    "@cerebro/server": "workspace:*",
     "@cerebro/shared": "workspace:*",
     "@cerebro/tsconfig": "workspace:*",
     "@mantine/charts": "^7.8.0",

@@ -1,4 +1,6 @@
+import ky from 'ky';
 import { QueryFoodToday, QueryScannedCode } from './food.routes';
+import { openFoodApiCache } from '@/cache/caches';
 
 // mocked
 export function getTodayFoods(userId: string): QueryFoodToday {
@@ -6,11 +8,19 @@ export function getTodayFoods(userId: string): QueryFoodToday {
 }
 
 // mocked
-export const getFoodByBarcode = (code: string): QueryScannedCode => {
-  return {
-    name: 'test',
-    cal_per_100g: 100,
-    full_weight: 100,
-    preview_img: null,
-  };
+export const getFoodByBarcode = async (code: string): Promise<QueryScannedCode> => {
+  if (openFoodApiCache.has(code)) {
+    return openFoodApiCache.get(code)!;
+  }
+
+  const json = await ky
+    .get<QueryScannedCode>(`https://world.openfoodfacts.org/api/v3/product/${code}.json`, {
+      searchParams: {
+        fields: 'product_name,brands,nutriments,image_url,product_quantity,product_quantity_unit',
+      },
+    })
+    .json();
+
+  openFoodApiCache.set(code, json);
+  return json;
 };

@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@cerebro/server",
   "version": "0.8.0",
   "type": "module",
   "main": "src/main.ts",
@@ -23,6 +23,7 @@
     "fastq": "^1.15.0",
     "fs-extra": "^11.1.0",
     "hono": "^4.6.10",
+    "ky": "^1.7.3",
     "kysely": "^0.27.3",
     "lucia": "^3.1.1",
     "mime-types": "^2.1.35",
