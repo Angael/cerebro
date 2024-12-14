@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { useState } from 'react';
-import Scanner from './Scanner';
+import ScannerModal from './scanner/ScannerModal';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -61,7 +61,7 @@ const FoodPage = () => {
         </Stack>
       </Group>
 
-      <Scanner open={scannerOpened} onClose={() => setScannerOpened(false)} />
+      <ScannerModal open={scannerOpened} onClose={() => setScannerOpened(false)} />
     </Stack>
   );
 };

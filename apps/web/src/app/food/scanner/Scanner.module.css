@@ -1,0 +1,9 @@
+.cameraVideo {
+  height: 100%;
+  width: 100%;
+  outline: 2px solid red;
+
+  &.codeFound {
+    outline: 2px solid green;
+  }
+}
