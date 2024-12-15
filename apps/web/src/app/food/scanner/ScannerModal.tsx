@@ -1,7 +1,8 @@
-import { Modal } from '@mantine/core';
+import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
 import Scanner from './Scanner';
 import ScannedCode from './scanned-code/ScannedCode';
+import { env } from '@/utils/env';
 
 type Props = {
   open: boolean;
@@ -28,6 +29,8 @@ const ScannerModal = ({ open, onClose }: Props) => {
       {!code && <Scanner codeFoundCallback={codeFoundCallback} />}
 
       {code && <ScannedCode code={code} onAccept={() => {}} onReject={() => setCode(null)} />}
+
+      {!env.IS_PROD && <Button onClick={() => setCode('5900259128843')}>Scan lays chips</Button>}
     </Modal>
   );
 };

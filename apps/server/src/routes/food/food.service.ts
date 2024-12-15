@@ -14,13 +14,18 @@ export const getFoodByBarcode = async (code: string): Promise<QueryScannedCode> 
   }
 
   const json = await ky
-    .get<QueryScannedCode>(`https://world.openfoodfacts.org/api/v3/product/${code}.json`, {
-      searchParams: {
-        fields: 'product_name,brands,nutriments,image_url,product_quantity,product_quantity_unit',
+    .get<{ product: QueryScannedCode }>(
+      `https://world.openfoodfacts.org/api/v3/product/${code}.json`,
+      {
+        searchParams: {
+          fields: 'product_name,brands,nutriments,image_url,product_quantity,product_quantity_unit',
+        },
       },
-    })
+    )
     .json();
 
-  openFoodApiCache.set(code, json);
-  return json;
+  const product = json.product;
+
+  openFoodApiCache.set(code, product);
+  return product;
 };

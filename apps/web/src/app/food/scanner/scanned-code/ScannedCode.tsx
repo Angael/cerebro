@@ -1,9 +1,11 @@
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
-import { Button, Group, Stack } from '@mantine/core';
+import { Alert, Button, Group, Paper, Stack, Text } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.routes';
 import { Loader } from '@mantine/core';
+import { parseErrorResponse } from '@/utils/parseErrorResponse';
+import FoodProductSummary from './FoodProductSummary';
 
 type Props = {
   code: string;
@@ -21,7 +23,16 @@ const ScannedCode = ({ code, onAccept, onReject }: Props) => {
   return (
     <Stack gap="md">
       {codeQuery.isLoading && <Loader />}
-      <pre>{JSON.stringify(codeQuery.data, null, 2)}</pre>
+      {codeQuery.isError && (
+        <Alert color="red">Error: {parseErrorResponse(codeQuery.error)?.general}</Alert>
+      )}
+      {codeQuery.isSuccess && <FoodProductSummary foodProduct={codeQuery.data} />}
+
+      <details>
+        <summary>Show JSON</summary>
+        <pre>{JSON.stringify(codeQuery.data, null, 2)}</pre>
+      </details>
+
       <Group justify="flex-end">
         <Button variant="subtle" onClick={onReject}>
           Reject
