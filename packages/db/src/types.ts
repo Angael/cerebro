@@ -9,6 +9,11 @@ export interface Database {
   thumbnail: ThumbnailTable;
   image: ImageTable;
   video: VideoTable;
+
+  // Foods
+  food_product: FoodProductTable;
+  food_log: FoodLogTable;
+  food_goal: FoodGoalTable;
 }
 
 export type UserType = 'PREMIUM' | 'FREE' | 'ADMIN';
@@ -118,3 +123,56 @@ export type Video = Selectable<VideoTable>;
 // export type Person = Selectable<PersonTable>;
 // export type NewPerson = Insertable<PersonTable>;
 // export type PersonUpdate = Updateable<PersonTable>;
+
+// FOOD:
+interface FoodProductTable {
+  id: Generated<number>;
+  barcode: string;
+
+  user_id: string;
+
+  product_name: string;
+  brands: string;
+
+  kcal_100g: number;
+  fat_100g: number | null;
+  carb_100g: number | null;
+  proteins_100g: number | null;
+
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
+export type FoodProduct = Selectable<FoodProductTable>;
+
+interface FoodLogTable {
+  id: Generated<number>;
+  barcode: string;
+
+  user_id: string;
+  custom_food_id: number | null;
+
+  amount: number; // grams
+  kcal: number;
+  fat_g: number | null;
+  carb_g: number | null;
+  proteins_g: number | null;
+
+  date: Date;
+}
+
+export type FoodLog = Selectable<FoodLogTable>;
+
+interface FoodGoalTable {
+  id: Generated<number>;
+  user_id: string;
+
+  kcal: number | null;
+  fat_g: number | null;
+  carb_g: number | null;
+  proteins_g: number | null;
+
+  date: Date;
+}
+
+export type FoodGoal = Selectable<FoodGoalTable>;
