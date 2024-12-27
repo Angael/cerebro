@@ -58,15 +58,7 @@ bun dev:stripe
 
 ```bash
 bun i
-turbo build
-```
-
-To filter only one app run:
-
-```bash
-turbo build --filter web
-# or
-turbo build --filter server
+bun build
 ```
 
 ### Env
