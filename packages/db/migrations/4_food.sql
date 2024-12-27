@@ -17,6 +17,8 @@ CREATE TABLE food_log (
     barcode VARCHAR(255) NOT NULL,
     user_id VARCHAR(255) NOT NULL,
     custom_food_id INT,
+    product_name VARCHAR(255) NOT NULL,
+    brands VARCHAR(255),
     amount FLOAT NOT NULL,
     kcal FLOAT NOT NULL,
     fat_g FLOAT,

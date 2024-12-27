@@ -1,12 +1,18 @@
+import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.routes';
 import { List, ListItem } from '@mantine/core';
 
-type Props = {};
+type Props = {
+  foods: QueryFoodToday;
+};
 
-const FoodList = (props: Props) => {
+const FoodList = ({ foods }: Props) => {
   return (
     <List>
-      <ListItem>Test</ListItem>
-      <ListItem>Test</ListItem>
+      {foods.map((food) => (
+        <ListItem key={food.id}>
+          {food.product_name} {food.brands} {food.barcode} {food.amount}g/ml {food.kcal}kcal
+        </ListItem>
+      ))}
     </List>
   );
 };

@@ -7,13 +7,15 @@ import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
 import { useState } from 'react';
 import ScannerModal from './scanner/ScannerModal';
+import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.routes';
+import { Loader } from '@mantine/core';
 
 const FoodPage = () => {
   const user = useCurrentUser();
   const todaysFood = useQuery({
     enabled: !!user.data,
     queryKey: [QUERY_KEYS.todaysFood],
-    queryFn: () => API.get<any>('/food/today').then((r) => r.data),
+    queryFn: () => API.get<QueryFoodToday>('/food/today').then((r) => r.data),
   });
 
   const [scannerOpened, setScannerOpened] = useState(false);
@@ -38,8 +40,8 @@ const FoodPage = () => {
         <Stack gap="sm">
           <Divider />
           <Text>Entries:</Text>
-          <FoodList />
-          <pre>{JSON.stringify(todaysFood.data, null, 2)}</pre>
+          {todaysFood.data ? <FoodList foods={todaysFood.data} /> : <Loader />}
+
           <Button onClick={() => setScannerOpened(true)}>Log food</Button>
         </Stack>
       </Paper>

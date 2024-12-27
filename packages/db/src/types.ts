@@ -152,6 +152,8 @@ interface FoodLogTable {
   user_id: string;
   custom_food_id: number | null;
 
+  product_name: string;
+  brands: string | null;
   amount: number; // grams
   kcal: number;
   fat_g: number | null;

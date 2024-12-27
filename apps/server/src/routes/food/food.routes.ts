@@ -5,12 +5,11 @@ import { requireSession } from '@/middleware/requireSession.js';
 import logger from '@/utils/log.js';
 import { zValidator } from '@hono/zod-validator';
 import { getFoodByBarcode, getTodayFoods } from './food.service.js';
+import { FoodLog } from '@cerebro/db';
 
 const foodRoutes = honoFactory();
 
-export interface QueryFoodToday {
-  foods: string[];
-}
+export type QueryFoodToday = FoodLog[];
 
 foodRoutes.get('/food/today', async (c) => {
   const { user } = await requireSession(c);

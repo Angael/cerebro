@@ -1,10 +1,11 @@
 import ky from 'ky';
 import { QueryFoodToday, QueryScannedCode } from './food.routes';
 import { openFoodApiCache } from '@/cache/caches';
+import { db, FoodLog } from '@cerebro/db';
 
 // mocked
-export function getTodayFoods(userId: string): QueryFoodToday {
-  return { foods: ['test'] };
+export async function getTodayFoods(userId: string): Promise<FoodLog[]> {
+  return await db.selectFrom('food_log').selectAll().where('user_id', '=', userId).execute();
 }
 
 // mocked
