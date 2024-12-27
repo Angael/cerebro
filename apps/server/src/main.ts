@@ -1,4 +1,5 @@
 import './serverHooks.js';
+import { applyMigrations } from '@cerebro/db';
 import { app } from './routes/honoApp.js';
 import mediaProcessor from './auto-services/media-processor/mediaProcessor.js';
 
@@ -9,6 +10,7 @@ import logger from './utils/log.js';
 import { env } from './utils/env.js';
 
 await stripeSetup();
+await applyMigrations();
 
 mediaProcessor.start();
 videoCompressor.start();
