@@ -61,8 +61,6 @@ async function runMigrations(migrationsDir: string) {
       .filter((file) => file.endsWith('.sql'))
       .sort();
 
-    console.log('migrationFiles', migrationFiles);
-
     for (const file of migrationFiles) {
       if (!appliedSet.has(file)) {
         const migrationPath = path.join(migrationsDir, file);
