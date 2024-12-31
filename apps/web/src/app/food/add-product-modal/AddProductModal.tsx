@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Scanner from '../scanner/Scanner';
 import ScannedCode from '../scanner/scanned-code/ScannedCode';
 import AddProductModeBtn from './AddProductModeBtn';
+import FindProduct from './find-product/FindProduct';
 
 type Props = { open: boolean; onClose: () => void };
 
@@ -50,6 +51,8 @@ const AddProductModal = ({ open, onClose }: Props) => {
           )}
         </>
       )}
+
+      {mode === 'find-product' && <FindProduct />}
     </Modal>
   );
 };
