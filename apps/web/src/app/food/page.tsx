@@ -1,14 +1,14 @@
 'use client';
-import { Button, Divider, Group, Paper, Progress, Stack, Text, Title } from '@mantine/core';
-import FoodList from './FoodList';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEYS } from '@/utils/consts';
 import { API } from '@/utils/API';
-import { useState } from 'react';
-import ScannerModal from './scanner/ScannerModal';
+import { QUERY_KEYS } from '@/utils/consts';
+import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.routes';
-import { Loader } from '@mantine/core';
+import { Button, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import FoodList from './FoodList';
+import ScannerModal from './scanner/ScannerModal';
+import AddProductModal from './add-product-modal/AddProductModal';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -18,6 +18,7 @@ const FoodPage = () => {
     queryFn: () => API.get<QueryFoodToday>('/food/today').then((r) => r.data),
   });
 
+  const [addProductOpen, setAddProductOpen] = useState(false);
   const [scannerOpened, setScannerOpened] = useState(false);
 
   return (
@@ -36,16 +37,13 @@ const FoodPage = () => {
       </Group>
 
       <Paper p="md">
-        <Title order={2}>Today</Title>
         <Stack gap="sm">
-          <Divider />
-          <Text>Entries:</Text>
+          <Title order={2}>Today</Title>
           {todaysFood.data ? <FoodList foods={todaysFood.data} /> : <Loader />}
 
           <Group justify="flex-end">
             {/* TODO: different onClicks and modals */}
-            <Button onClick={() => setScannerOpened(true)}>Scan barcode</Button>
-            <Button onClick={() => setScannerOpened(true)}>Add product</Button>
+            <Button onClick={() => setAddProductOpen(true)}>Add product</Button>
             <Button onClick={() => setScannerOpened(true)}>Add calories</Button>
           </Group>
         </Stack>
@@ -68,6 +66,7 @@ const FoodPage = () => {
         </Stack>
       </Group>
 
+      <AddProductModal open={addProductOpen} onClose={() => setAddProductOpen(false)} />
       <ScannerModal open={scannerOpened} onClose={() => setScannerOpened(false)} />
     </Stack>
   );
