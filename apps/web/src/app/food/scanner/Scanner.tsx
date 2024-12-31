@@ -26,7 +26,7 @@ const Scanner = ({ codeFoundCallback }: Props) => {
   }
 
   return (
-    <Stack spacing="md">
+    <Stack gap="md">
       <Select
         label="Select camera"
         placeholder="Pick value"

@@ -1,5 +1,5 @@
 import ky from 'ky';
-import { QueryScannedCode } from './food.routes';
+import { QueryScannedCode } from './food.model';
 import { openFoodApiCache } from '@/cache/caches';
 import { db, FoodLog, FoodProduct } from '@cerebro/db';
 

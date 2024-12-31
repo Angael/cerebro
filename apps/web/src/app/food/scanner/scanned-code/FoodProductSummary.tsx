@@ -1,4 +1,4 @@
-import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.routes';
+import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
 import { Group, Paper, Progress, Stack, Text, Title } from '@mantine/core';
 import css from './FoodProductSummary.module.css';
 

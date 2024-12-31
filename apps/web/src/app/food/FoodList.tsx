@@ -1,4 +1,4 @@
-import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.routes';
+import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
 import { List, ListItem, Stack, Text } from '@mantine/core';
 
 type Props = {

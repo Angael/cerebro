@@ -2,7 +2,7 @@
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.routes';
+import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
 import { Button, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';

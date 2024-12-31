@@ -2,7 +2,7 @@ import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { Alert, Button, Group, Paper, Stack, Text } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.routes';
+import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
 import { Loader } from '@mantine/core';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import FoodProductSummary from './FoodProductSummary';

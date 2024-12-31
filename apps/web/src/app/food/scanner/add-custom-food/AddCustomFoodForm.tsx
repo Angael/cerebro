@@ -1,5 +1,5 @@
 import { API } from '@/utils/API';
-import { QueryMyProducts } from '@cerebro/server/src/routes/food/food.routes';
+import { QueryMyProducts } from '@cerebro/server/src/routes/food/food.model';
 import { Autocomplete, Group, LoadingOverlay, Stack, TextInput, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
