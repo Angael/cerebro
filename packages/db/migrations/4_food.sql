@@ -1,9 +1,9 @@
 CREATE TABLE food_product (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    barcode VARCHAR(255) NOT NULL,
+    barcode VARCHAR(255),
     user_id VARCHAR(255) NOT NULL,
     product_name VARCHAR(255) NOT NULL,
-    brands VARCHAR(255) NOT NULL,
+    brands VARCHAR(255),
     kcal_100g FLOAT NOT NULL,
     fat_100g FLOAT,
     carb_100g FLOAT,

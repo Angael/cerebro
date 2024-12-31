@@ -127,12 +127,12 @@ export type Video = Selectable<VideoTable>;
 // FOOD:
 interface FoodProductTable {
   id: Generated<number>;
-  barcode: string;
+  barcode: string | null;
 
   user_id: string;
 
   product_name: string;
-  brands: string;
+  brands: string | null;
 
   kcal_100g: number;
   fat_100g: number | null;
