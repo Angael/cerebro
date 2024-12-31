@@ -42,7 +42,12 @@ const FoodPage = () => {
           <Text>Entries:</Text>
           {todaysFood.data ? <FoodList foods={todaysFood.data} /> : <Loader />}
 
-          <Button onClick={() => setScannerOpened(true)}>Log food</Button>
+          <Group justify="flex-end">
+            {/* TODO: different onClicks and modals */}
+            <Button onClick={() => setScannerOpened(true)}>Scan barcode</Button>
+            <Button onClick={() => setScannerOpened(true)}>Add product</Button>
+            <Button onClick={() => setScannerOpened(true)}>Add calories</Button>
+          </Group>
         </Stack>
       </Paper>
 

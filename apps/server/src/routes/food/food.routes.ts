@@ -4,8 +4,8 @@ import { honoFactory } from '../honoFactory.js';
 import { requireSession } from '@/middleware/requireSession.js';
 import logger from '@/utils/log.js';
 import { zValidator } from '@hono/zod-validator';
-import { getFoodByBarcode, getTodayFoods } from './food.service.js';
-import { FoodLog } from '@cerebro/db';
+import { getFoodByBarcode, getMyProducts, getTodayFoods } from './food.service.js';
+import { FoodLog, FoodProduct } from '@cerebro/db';
 
 const foodRoutes = honoFactory();
 
@@ -18,6 +18,17 @@ foodRoutes.get('/food/today', async (c) => {
 
   logger.info('Getting food today for user %s', user?.id);
   return c.json(result satisfies QueryFoodToday);
+});
+
+export type QueryMyProducts = FoodProduct[];
+
+foodRoutes.get('/food/my-products', async (c) => {
+  const { user } = await requireSession(c);
+
+  const result = await getMyProducts(user?.id);
+
+  logger.info('Getting food today for user %s', user?.id);
+  return c.json(result satisfies QueryMyProducts);
 });
 
 export interface QueryScannedCode {

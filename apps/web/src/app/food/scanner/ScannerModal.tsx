@@ -1,8 +1,9 @@
-import { Button, Modal } from '@mantine/core';
+import { Autocomplete, Button, Modal, Tabs } from '@mantine/core';
 import { useState } from 'react';
 import Scanner from './Scanner';
 import ScannedCode from './scanned-code/ScannedCode';
 import { env } from '@/utils/env';
+import AddCustomFoodForm from './add-custom-food/AddCustomFoodForm';
 
 type Props = {
   open: boolean;
@@ -10,6 +11,8 @@ type Props = {
 };
 
 const ScannerModal = ({ open, onClose }: Props) => {
+  const [activeTab, setActiveTab] = useState<'scan' | 'add-product' | 'add-custom'>('scan');
+
   const [code, setCode] = useState<string | null>(null);
 
   const codeFoundCallback = (codes: string[]) => {
@@ -23,14 +26,27 @@ const ScannerModal = ({ open, onClose }: Props) => {
       opened={open}
       onClose={onClose}
       size="xl"
-      title={code ? `Product: ${code}` : 'Scan barcode'}
+      title={code ? `Product: ${code}` : 'Add product'}
       zIndex={201}
     >
-      {!code && <Scanner codeFoundCallback={codeFoundCallback} />}
+      <Tabs value={activeTab} onChange={setActiveTab as any}>
+        <Tabs.List>
+          <Tabs.Tab value="scan">Scanner</Tabs.Tab>
+          <Tabs.Tab value="add-product">Add product</Tabs.Tab>
+          <Tabs.Tab value="custom">Fast add</Tabs.Tab>
+        </Tabs.List>
 
-      {code && <ScannedCode code={code} onAccept={() => {}} onReject={() => setCode(null)} />}
-
-      {!env.IS_PROD && <Button onClick={() => setCode('5900259128843')}>Scan lays chips</Button>}
+        <Tabs.Panel value="scan">
+          {!code && <Scanner codeFoundCallback={codeFoundCallback} />}
+          {code && <ScannedCode code={code} onAccept={() => {}} onReject={() => setCode(null)} />}
+          {!env.IS_PROD && (
+            <Button onClick={() => setCode('5900259128843')}>Scan lays chips</Button>
+          )}
+        </Tabs.Panel>
+        <Tabs.Panel value="add-product">
+          <AddCustomFoodForm />
+        </Tabs.Panel>
+      </Tabs>
     </Modal>
   );
 };

@@ -1,11 +1,16 @@
 import ky from 'ky';
-import { QueryFoodToday, QueryScannedCode } from './food.routes';
+import { QueryScannedCode } from './food.routes';
 import { openFoodApiCache } from '@/cache/caches';
-import { db, FoodLog } from '@cerebro/db';
+import { db, FoodLog, FoodProduct } from '@cerebro/db';
 
-// mocked
 export async function getTodayFoods(userId: string): Promise<FoodLog[]> {
+  // todo add date filter
   return await db.selectFrom('food_log').selectAll().where('user_id', '=', userId).execute();
+}
+
+// getMyProducts
+export async function getMyProducts(userId: string): Promise<FoodProduct[]> {
+  return await db.selectFrom('food_product').selectAll().where('user_id', '=', userId).execute();
 }
 
 // mocked
