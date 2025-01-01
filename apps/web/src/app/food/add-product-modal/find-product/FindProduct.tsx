@@ -25,17 +25,21 @@ const FindProduct = (props: Props) => {
     queryFn: () => API.get<QueryMyProducts>('/food/my-products').then((r) => r.data),
   });
 
-  const autocompleteOptions = useMemo(() => {
-    const fuse = new Fuse(autocomplete.data ?? [], {
+  const fuse = useMemo(() => {
+    return new Fuse(autocomplete.data ?? [], {
       keys: ['product_name', 'brands'],
     });
+  }, [autocomplete.data]);
 
-    const result = fuse.search(name);
+  const autocompleteOptions = useMemo(() => {
+    if (name === '') {
+      return autocomplete.data ?? [];
+    }
 
-    console.log({ fuseResult: result });
+    const result = fuse.search(name).map((res) => res.item);
 
     return result;
-  }, [autocomplete.data, name]);
+  }, [fuse, name, autocomplete.data]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
@@ -58,17 +62,17 @@ const FindProduct = (props: Props) => {
       <Stack gap="xs">
         {autocompleteOptions.map((option) => (
           <Paper
-            key={option.item.id}
+            key={option.id}
             p="md"
             bg="dark.5"
-            onClick={() => onProductSelect(String(option.item.id))}
+            onClick={() => onProductSelect(String(option.id))}
           >
             <Group>
               <Stack flex={1} gap={0}>
-                <Title order={5}>{option.item.product_name}</Title>
-                <Text size="sm">{option.item.brands}</Text>
+                <Title order={5}>{option.product_name}</Title>
+                <Text size="sm">{option.brands}</Text>
               </Stack>
-              <Button onClick={() => onProductSelect(String(option.item.id))}>Select </Button>
+              <Button onClick={() => onProductSelect(String(option.id))}>Select </Button>
             </Group>
           </Paper>
         ))}
