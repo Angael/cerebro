@@ -1,5 +1,6 @@
+import FoodMacros from '@/lib/food-macros/FoodMacros';
 import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
-import { Group, Paper, Progress, Stack, Text, Title } from '@mantine/core';
+import { Paper, Stack, Text, Title } from '@mantine/core';
 import css from './FoodProductSummary.module.css';
 
 type Props = {
@@ -8,7 +9,9 @@ type Props = {
 
 const FoodProductSummary = ({ foodProduct }: Props) => {
   const { carbohydrates_100g, proteins_100g, fat_100g } = foodProduct.nutriments;
-  const others_100g = 100 - carbohydrates_100g - proteins_100g - fat_100g;
+
+  const hasNutriments =
+    carbohydrates_100g !== undefined && proteins_100g !== undefined && fat_100g !== undefined;
 
   return (
     <Paper bg="dark.9" p="md">
@@ -35,20 +38,9 @@ const FoodProductSummary = ({ foodProduct }: Props) => {
         </Stack>
       </div>
 
-      <Progress.Root size="xl" mt="sm">
-        <Progress.Section value={carbohydrates_100g} color="cyan">
-          <Progress.Label>Carbs</Progress.Label>
-        </Progress.Section>
-        <Progress.Section value={proteins_100g} color="pink">
-          <Progress.Label>Proteins</Progress.Label>
-        </Progress.Section>
-        <Progress.Section value={fat_100g} color="orange">
-          <Progress.Label>Fats</Progress.Label>
-        </Progress.Section>
-        <Progress.Section value={others_100g} color="gray">
-          <Progress.Label>Others</Progress.Label>
-        </Progress.Section>
-      </Progress.Root>
+      {hasNutriments && (
+        <FoodMacros carbs={carbohydrates_100g} proteins={proteins_100g} fats={fat_100g} mt="sm" />
+      )}
     </Paper>
   );
 };
