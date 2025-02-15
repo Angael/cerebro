@@ -1,10 +1,11 @@
-import { Alert, Select, Stack } from '@mantine/core';
+import { Alert, Button, Select, Stack } from '@mantine/core';
 import clsx from 'clsx';
 import { useState } from 'react';
 import css from './Scanner.module.css';
 import { useDevices } from './useDevices';
 import { useScanner } from './useScanner';
 import { useVideo } from './useVideo';
+import { env } from '@/utils/env';
 
 type Props = {
   codeFoundCallback: (code: string[]) => void;
@@ -13,33 +14,30 @@ type Props = {
 const Scanner = ({ codeFoundCallback }: Props) => {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
 
-  const { hasPermission, userMedia, devices, selectedDevice, selectDevice, stream } = useDevices();
+  const { hasPermission, userMedia, devices, selectedDeviceId, setNextDevice, stream } =
+    useDevices();
   useVideo(video, stream);
-  const codes = useScanner(!!stream && !!selectedDevice, video, codeFoundCallback);
+  const codes = useScanner(!!stream && !!selectedDeviceId, video, codeFoundCallback);
 
   if (!hasPermission) {
     return (
-      <Alert color="orange" title="Camera permission">
+      <Alert variant="light" color="orange" title="Camera permission">
         You need to allow camera access to scan barcodes
       </Alert>
     );
   }
 
-  return (
-    <Stack gap="md">
-      <Select
-        label="Select camera"
-        placeholder="Pick value"
-        value={selectedDevice}
-        data={devices.map((device) => ({
-          value: device.deviceId,
-          label: device.label,
-        }))}
-        onChange={(value) => selectDevice(value)}
-        disabled={!devices.length}
-      />
+  if (!devices.length) {
+    return (
+      <Alert variant="light" color="orange" title="Camera permission">
+        Your device does not have any cameras
+      </Alert>
+    );
+  }
 
-      {selectedDevice && (
+  return (
+    <div className={css.vidWrapper}>
+      {selectedDeviceId && (
         <video
           id="stream"
           ref={setVideo}
@@ -47,14 +45,22 @@ const Scanner = ({ codeFoundCallback }: Props) => {
         />
       )}
 
-      <details>
-        <summary>Debug Info</summary>
-        <pre>
-          {JSON.stringify({ userMedia }, null, 2)}
-          {JSON.stringify({ devices }, null, 2)}
-        </pre>
-      </details>
-    </Stack>
+      {devices.length > 1 && (
+        <Button className={css.changeCameraBtn} onClick={setNextDevice}>
+          Next camera
+        </Button>
+      )}
+
+      {!env.IS_PROD && (
+        <details className={css.debugDetails}>
+          <summary>Debug Info</summary>
+          <pre>
+            {JSON.stringify({ userMedia }, null, 2)}
+            {JSON.stringify({ devices }, null, 2)}
+          </pre>
+        </details>
+      )}
+    </div>
   );
 };
 

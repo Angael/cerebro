@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useSameCamera } from './useSameCamera';
 
 export const useDevices = () => {
   const [hasPermission, setHasPermission] = useState(false);
-  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedDeviceId, setNextDevice] = useSameCamera(devices);
   const [userMedia, setUserMedia] = useState<any>([]);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   // log all state
-  console.log({ hasPermission, selectedDevice, devices, userMedia, stream });
-
-  const selectDevice = (deviceId: string | null) => {
-    setSelectedDevice(deviceId);
-  };
+  console.log({ hasPermission, selectedDeviceId, devices, userMedia, stream });
 
   // Get camera permission
   useEffect(() => {
@@ -38,14 +35,14 @@ export const useDevices = () => {
 
   // Get stream
   useEffect(() => {
-    if (!selectedDevice || !hasPermission) {
+    if (!selectedDeviceId || !hasPermission) {
       return;
     }
 
     let _stream: MediaStream;
     navigator.mediaDevices
       .getUserMedia({
-        video: { deviceId: selectedDevice, width: 1920, height: 1080 },
+        video: { deviceId: selectedDeviceId, width: 1920, height: 1080 },
       })
       .then((stream) => {
         const videoTracks = Array.from(stream.getVideoTracks()).map((track) => {
@@ -65,7 +62,14 @@ export const useDevices = () => {
         });
       }
     };
-  }, [hasPermission, selectedDevice]);
+  }, [hasPermission, selectedDeviceId]);
 
-  return { hasPermission, userMedia, selectedDevice, devices, selectDevice, stream };
+  return {
+    hasPermission,
+    userMedia,
+    selectedDeviceId,
+    devices,
+    setNextDevice,
+    stream,
+  };
 };
