@@ -1,97 +1,117 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSameCamera } from './useSameCamera';
 
-export const useDevices = () => {
+const tryGetPreferredCamera = async (selectedDeviceId: string | null) => {
+  let stream = await navigator.mediaDevices
+    .getUserMedia({
+      audio: false,
+      video: { facingMode: 'environment', deviceId: selectedDeviceId || undefined },
+    })
+    .catch(() =>
+      navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: 'environment' },
+      }),
+    )
+    .catch(() =>
+      navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: true,
+      }),
+    );
+
+  return stream;
+};
+
+export const useDevices = (video: HTMLVideoElement | null) => {
+  const mediaStreamRef = useRef<MediaStream | null>(null);
   const [hasPermission, setHasPermission] = useState(false);
+  const [initialized, setInitialized] = useState(false);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDeviceId, setNextDevice] = useSameCamera(devices);
-  const [userMedia, setUserMedia] = useState<any>([]);
-  const [stream, setStream] = useState<MediaStream | null>(null);
 
   // log all state
-  console.log('useDevices');
+  console.log('useDevices', {
+    hasPermission,
+    initialized,
+    selectedDeviceId,
+    devices,
+    mediaStreamRef,
+  });
 
-  // Get camera permission
+  // Get camera permission and find all video devices
   useEffect(() => {
+    console.log('get camera permission and find all video devices');
+    let isMounted = true;
+
+    setInitialized(false);
     (async () => {
-      console.log('get camera permission');
       try {
-        await navigator.mediaDevices.getUserMedia({ video: true });
-        setHasPermission(true);
+        mediaStreamRef.current = await tryGetPreferredCamera(selectedDeviceId);
+
+        if (isMounted) {
+          setHasPermission(true);
+          navigator.mediaDevices.enumerateDevices().then((devices) => {
+            if (isMounted) {
+              setDevices(devices.filter((device) => device.kind === 'videoinput' && device.label));
+              setInitialized(true);
+            }
+          });
+        }
       } catch (error) {
         console.error('Permission denied:', error);
-        setHasPermission(false);
+        if (isMounted) {
+          setHasPermission(false);
+          setInitialized(true);
+        }
       }
     })();
-  }, []);
-
-  // Find all video devices
-  useEffect(() => {
-    console.log('find all video devices');
-    if (hasPermission) {
-      navigator.mediaDevices.enumerateDevices().then((devices) => {
-        setDevices(devices.filter((device) => device.kind === 'videoinput' && device.label));
-      });
-    }
-  }, [hasPermission]);
-
-  // Get stream
-  useEffect(() => {
-    console.log('get stream', { hasPermission, selectedDeviceId });
-    if (!selectedDeviceId || !hasPermission) {
-      return;
-    }
-
-    let isMounted = true;
-    let _stream: MediaStream;
-    navigator.mediaDevices
-      .getUserMedia({
-        video: { deviceId: selectedDeviceId, facingMode: 'environment' },
-      })
-      .then((stream) => {
-        if (!isMounted) {
-          console.log('Get stream is not mounted anymore');
-          return;
-        }
-
-        const videoTracks = Array.from(stream.getVideoTracks())
-          .map((track) => {
-            if (track.enabled) {
-              return track.getSettings();
-            } else {
-              return null;
-            }
-          })
-          .filter((track) => track !== null);
-        console.log(videoTracks);
-        setUserMedia(videoTracks);
-
-        _stream = stream;
-        setStream(stream);
-      })
-      .catch((error) => {
-        console.error('Error starting video stream:', error);
-        // Handle the error appropriately, e.g., by setting an error state or trying a different device.
-        // For example, you might want to reset the selectedDeviceId to null or try the next available device.
-        // setNextDevice(null);
-      });
 
     return () => {
       isMounted = false;
-      if (_stream) {
-        _stream.getTracks().forEach(function (track) {
+    };
+  }, [selectedDeviceId]);
+
+  // Get stream
+  useEffect(() => {
+    console.log('get stream', {
+      hasPermission,
+      selectedDeviceId,
+      mediaStreamRef: mediaStreamRef.current,
+      initialized,
+    });
+    if (!selectedDeviceId || !hasPermission || !mediaStreamRef.current || !initialized || !video) {
+      return;
+    }
+
+    const stream = mediaStreamRef.current;
+    video.srcObject = stream;
+    video.play();
+    // const videoTracks = Array.from(stream.getVideoTracks())
+    //   .map((track) => {
+    //     if (track.enabled) {
+    //       return track.getSettings();
+    //     } else {
+    //       return null;
+    //     }
+    //   })
+    //   .filter((track) => track !== null);
+    // console.log({ videoTracks });
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(function (track) {
           track.stop();
         });
       }
     };
-  }, [hasPermission, selectedDeviceId]);
+  }, [video, initialized, hasPermission, selectedDeviceId]);
 
   return {
     hasPermission,
-    userMedia,
+    initialized,
     selectedDeviceId,
     devices,
     setNextDevice,
-    stream,
   };
 };

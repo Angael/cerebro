@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const LOCAL_STORAGE_KEY = 'lastUsedCameraDeviceId';
 
 export const useSameCamera = (devices: MediaDeviceInfo[]) => {
-  const [selectedDeviceId, _setSelectedDeviceId] = useState<string | null>(null);
+  const [selectedDeviceId, _setSelectedDeviceId] = useState<string | null>(
+    localStorage.getItem(LOCAL_STORAGE_KEY) || null,
+  );
   const setSelectedDeviceId = (deviceId: string | null) => {
     _setSelectedDeviceId(deviceId);
     if (deviceId) {
@@ -11,19 +13,18 @@ export const useSameCamera = (devices: MediaDeviceInfo[]) => {
     }
   };
 
+  // Set the first device as default
   useEffect(() => {
     if (devices.length < 1) {
-      // No devices available, show error?
       return;
     }
 
-    const storedDeviceId = localStorage.getItem(LOCAL_STORAGE_KEY);
-    const storedDevice = storedDeviceId
-      ? devices.find((device) => device.deviceId === storedDeviceId)
-      : null;
-
-    setSelectedDeviceId(storedDevice?.deviceId || devices[0]!.deviceId);
-  }, [devices]);
+    // Check if the last used device is still available
+    const storedDevice = devices.find((device) => device.deviceId === selectedDeviceId);
+    if (!storedDevice) {
+      setSelectedDeviceId(devices[0]!.deviceId);
+    }
+  }, [selectedDeviceId, devices]);
 
   const setNextDevice = () => {
     if (devices.length < 1) {
