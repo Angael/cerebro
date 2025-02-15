@@ -17,7 +17,7 @@ const Scanner = ({ codeFoundCallback }: Props) => {
   const { hasPermission, userMedia, devices, selectedDeviceId, setNextDevice, stream } =
     useDevices();
   useVideo(video, stream);
-  const codes = useScanner(!!stream && !!selectedDeviceId, video, codeFoundCallback);
+  useScanner(!!stream && !!selectedDeviceId, video, codeFoundCallback);
 
   if (!hasPermission) {
     return (
@@ -37,13 +37,7 @@ const Scanner = ({ codeFoundCallback }: Props) => {
 
   return (
     <div className={css.vidWrapper}>
-      {selectedDeviceId && (
-        <video
-          id="stream"
-          ref={setVideo}
-          className={clsx(css.cameraVideo, codes.length > 0 && css.codeFound)}
-        />
-      )}
+      {selectedDeviceId && <video id="stream" ref={setVideo} className={clsx(css.cameraVideo)} />}
 
       {devices.length > 1 && (
         <Button className={css.changeCameraBtn} onClick={setNextDevice}>

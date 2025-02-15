@@ -1,6 +1,7 @@
 import { notifications } from '@mantine/notifications';
-import { BarcodeDetector, type DetectedBarcode } from 'barcode-detector/pure';
-import { useEffect, useState } from 'react';
+import { BarcodeDetector } from 'barcode-detector/pure';
+import { useEffect } from 'react';
+import css from './Scanner.module.css';
 
 const getBarcodeDetector = async (): Promise<BarcodeDetector> => {
   if ('BarcodeDetector' in window) {
@@ -19,9 +20,7 @@ export const useScanner = (
   canScan: boolean,
   videoElement: HTMLVideoElement | null,
   codeFoundCallback: (code: string[]) => void,
-) => {
-  const [codes, setCodes] = useState<DetectedBarcode[]>([]);
-
+) =>
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
 
@@ -30,17 +29,19 @@ export const useScanner = (
 
       interval = setInterval(async () => {
         if (!canScan || !videoElement) {
-          setCodes([]);
           return;
         }
 
         try {
           const barcodes = await barcodeDetector.detect(videoElement);
 
-          setCodes(barcodes);
-          codeFoundCallback(barcodes.map((barcode) => barcode.rawValue));
+          if (barcodes.length) {
+            videoElement.classList.add(css.codeFound);
+            codeFoundCallback(barcodes.map((barcode) => barcode.rawValue));
+          } else {
+            videoElement.classList.remove(css.codeFound);
+          }
         } catch (e) {
-          setCodes([]);
           notifications.show({
             title: 'Error',
             message: String(e),
@@ -58,6 +59,3 @@ export const useScanner = (
       clearInterval(interval);
     };
   }, [canScan, videoElement]);
-
-  return codes;
-};

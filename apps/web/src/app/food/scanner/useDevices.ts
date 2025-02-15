@@ -42,23 +42,42 @@ export const useDevices = () => {
       return;
     }
 
+    let isMounted = true;
     let _stream: MediaStream;
     navigator.mediaDevices
       .getUserMedia({
-        video: { deviceId: selectedDeviceId, width: 1920, height: 1080 },
+        video: { deviceId: selectedDeviceId, facingMode: 'environment' },
       })
       .then((stream) => {
-        const videoTracks = Array.from(stream.getVideoTracks()).map((track) => {
-          return track.getSettings();
-        });
+        if (!isMounted) {
+          console.log('Get stream is not mounted anymore');
+          return;
+        }
+
+        const videoTracks = Array.from(stream.getVideoTracks())
+          .map((track) => {
+            if (track.enabled) {
+              return track.getSettings();
+            } else {
+              return null;
+            }
+          })
+          .filter((track) => track !== null);
         console.log(videoTracks);
         setUserMedia(videoTracks);
 
         _stream = stream;
         setStream(stream);
+      })
+      .catch((error) => {
+        console.error('Error starting video stream:', error);
+        // Handle the error appropriately, e.g., by setting an error state or trying a different device.
+        // For example, you might want to reset the selectedDeviceId to null or try the next available device.
+        // setNextDevice(null);
       });
 
     return () => {
+      isMounted = false;
       if (_stream) {
         _stream.getTracks().forEach(function (track) {
           track.stop();
