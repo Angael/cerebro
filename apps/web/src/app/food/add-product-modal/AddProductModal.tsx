@@ -1,7 +1,7 @@
 import { env } from '@/utils/env';
 import { Button, Group, Modal } from '@mantine/core';
 import { mdiBarcode, mdiMagnify } from '@mdi/js';
-import { useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import Scanner from '../scanner/Scanner';
 import ScannedCode from '../scanner/scanned-code/ScannedCode';
 import AddProductModeBtn from './AddProductModeBtn';
@@ -13,11 +13,11 @@ const AddProductModal = ({ open, onClose }: Props) => {
   const [mode, setMode] = useState<'scan' | 'find-product' | null>(null);
 
   const [code, setCode] = useState<string | null>(null);
-  const codeFoundCallback = (codes: string[]) => {
+  const codeFoundCallback = useCallback((codes: string[]) => {
     if (codes.length > 0) {
       setCode(codes[0]);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -57,4 +57,4 @@ const AddProductModal = ({ open, onClose }: Props) => {
   );
 };
 
-export default AddProductModal;
+export default memo(AddProductModal);

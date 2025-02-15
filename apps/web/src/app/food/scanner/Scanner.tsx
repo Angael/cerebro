@@ -1,6 +1,6 @@
 import { Alert, Button, Select, Stack } from '@mantine/core';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import css from './Scanner.module.css';
 import { useDevices } from './useDevices';
 import { useScanner } from './useScanner';
@@ -64,4 +64,4 @@ const Scanner = ({ codeFoundCallback }: Props) => {
   );
 };
 
-export default Scanner;
+export default memo(Scanner);

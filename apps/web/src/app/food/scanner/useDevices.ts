@@ -9,11 +9,12 @@ export const useDevices = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   // log all state
-  console.log({ hasPermission, selectedDeviceId, devices, userMedia, stream });
+  console.log('useDevices');
 
   // Get camera permission
   useEffect(() => {
     (async () => {
+      console.log('get camera permission');
       try {
         await navigator.mediaDevices.getUserMedia({ video: true });
         setHasPermission(true);
@@ -26,6 +27,7 @@ export const useDevices = () => {
 
   // Find all video devices
   useEffect(() => {
+    console.log('find all video devices');
     if (hasPermission) {
       navigator.mediaDevices.enumerateDevices().then((devices) => {
         setDevices(devices.filter((device) => device.kind === 'videoinput' && device.label));
@@ -35,6 +37,7 @@ export const useDevices = () => {
 
   // Get stream
   useEffect(() => {
+    console.log('get stream', { hasPermission, selectedDeviceId });
     if (!selectedDeviceId || !hasPermission) {
       return;
     }

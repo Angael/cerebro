@@ -3,7 +3,13 @@ import { useState, useEffect } from 'react';
 const LOCAL_STORAGE_KEY = 'lastUsedCameraDeviceId';
 
 export const useSameCamera = (devices: MediaDeviceInfo[]) => {
-  const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
+  const [selectedDeviceId, _setSelectedDeviceId] = useState<string | null>(null);
+  const setSelectedDeviceId = (deviceId: string | null) => {
+    _setSelectedDeviceId(deviceId);
+    if (deviceId) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, deviceId);
+    }
+  };
 
   useEffect(() => {
     if (devices.length < 1) {
@@ -18,12 +24,6 @@ export const useSameCamera = (devices: MediaDeviceInfo[]) => {
 
     setSelectedDeviceId(storedDevice?.deviceId || devices[0]!.deviceId);
   }, [devices]);
-
-  useEffect(() => {
-    if (selectedDeviceId) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, selectedDeviceId);
-    }
-  }, [selectedDeviceId]);
 
   const setNextDevice = () => {
     if (devices.length < 1) {
