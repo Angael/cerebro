@@ -8,7 +8,7 @@ export type QueryFoodToday = FoodLog[];
 export type QueryMyProducts = FoodProduct[];
 
 export const zQueryScannedCode = z.object({
-  code: z.string(), // barcode
+  code: z.string(), // barcode, inserted by cerebro
   product_name: z.string(),
   brands: z.string().optional(),
   nutriments: z.object({
@@ -18,7 +18,7 @@ export const zQueryScannedCode = z.object({
     proteins_100g: z.number().optional(),
   }),
   image_url: z.string().optional(),
-  product_quantity: z.number().optional(),
+  product_quantity: z.string().optional(),
   product_quantity_unit: z.string().optional(),
 });
 export type QueryScannedCode = z.infer<typeof zQueryScannedCode>;

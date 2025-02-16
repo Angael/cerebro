@@ -2,10 +2,18 @@ import ky from 'ky';
 import { InsertedFoodLog, QueryScannedCode, zQueryScannedCode } from './food.model';
 import { openFoodApiCache } from '@/cache/caches';
 import { db, FoodLog, FoodProduct } from '@cerebro/db';
+import { HTTPException } from 'hono/http-exception';
+import logger from '@/utils/log';
+import { sql } from 'kysely';
 
 export async function getTodayFoods(userId: string): Promise<FoodLog[]> {
   // todo add date filter
-  return await db.selectFrom('food_log').selectAll().where('user_id', '=', userId).execute();
+  return await db
+    .selectFrom('food_log')
+    .selectAll()
+    .where('user_id', '=', userId)
+    .where(sql<any>`date = CURDATE()`)
+    .execute();
 }
 
 // getMyProducts
@@ -28,12 +36,23 @@ export const getFoodByBarcode = async (code: string): Promise<QueryScannedCode> 
         },
       },
     )
-    .json();
+    .json()
+    .catch((e) => {
+      logger.error('Failed to fetch openfoodfacts data, barcode: %s, %s', code, String(e));
+      throw new HTTPException(500, {
+        message: `Failed to retrieve product's data, barcode: ${code}`,
+      });
+    });
 
-  const product = zQueryScannedCode.parse(json.product);
+  try {
+    const product = zQueryScannedCode.parse({ ...json.product, code });
 
-  openFoodApiCache.set(code, product);
-  return product;
+    openFoodApiCache.set(code, product);
+    return product;
+  } catch (e) {
+    logger.error('Failed to parse openfoodfacts response', e);
+    throw new HTTPException(500, { message: "Failed to retrieve all product's data" });
+  }
 };
 
 // TODO: expand to support also custom foods

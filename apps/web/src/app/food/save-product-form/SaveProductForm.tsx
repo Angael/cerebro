@@ -42,7 +42,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
 
   const onPercentQuickAdd = (percent: number) => {
     if (!foodProduct.product_quantity) return;
-    const productQuantity = foodProduct.product_quantity * (percent / 100);
+    const productQuantity = Number(foodProduct.product_quantity) * (percent / 100);
     setInputValue(`${productQuantity}`);
   };
 

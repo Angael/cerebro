@@ -22,7 +22,7 @@ CREATE TABLE food_log (
     amount FLOAT NOT NULL,
     kcal FLOAT NOT NULL,
     kcal_100g FLOAT NOT NULL,
-    date DATE NOT NULL
+    date TIMESTAMP default CURRENT_TIMESTAMP not null
 );
 
 CREATE TABLE food_goal (
