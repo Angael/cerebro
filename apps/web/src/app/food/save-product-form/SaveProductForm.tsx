@@ -49,7 +49,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
     });
   };
 
-  const isOnlyNumbers = true;
+  const kcal = (foodProduct.nutriments['energy-kcal_100g'] / 100) * Number(inputValue);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -64,13 +64,23 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
             placeholder="100g"
             value={inputValue}
             onChange={(event) => setInputValue(event.target.value)}
-            rightSection={'g'}
-            error={!isOnlyNumbers}
+            rightSection="g"
+            style={{ flex: 1 }}
           />
           <Button variant="default" onClick={increment}>
             +
           </Button>
         </Group>
+
+        <Text
+          size="xl"
+          fw={900}
+          variant="gradient"
+          gradient={{ from: 'green', to: 'indigo', deg: 30 }}
+          mx="auto"
+        >
+          {Math.round(kcal)}kcal
+        </Text>
 
         <Text size="xs" mb={-16}>
           Quick add:
