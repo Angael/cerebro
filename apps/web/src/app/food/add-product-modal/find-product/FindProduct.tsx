@@ -34,7 +34,6 @@ const FindProduct = (props: Props) => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
-    console.log('onChange', value);
     setName(value);
   };
 
@@ -43,7 +42,7 @@ const FindProduct = (props: Props) => {
   };
 
   const onCreateProduct = () => {
-    console.log('Create product');
+    console.log(`Create product, ${name}`);
   };
 
   return (
