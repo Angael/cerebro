@@ -12,6 +12,23 @@ type Props = {
 const percentageButtons = ['10%', '25%', '50%', '75%', '100%'];
 const gramsButtons = ['10', '25', '50', '75', '100'];
 
+function getKcalColor(calories: number): string {
+  if (calories >= 0 && calories <= 50) {
+    return 'green';
+  } else if (calories >= 51 && calories <= 150) {
+    return 'lime';
+  } else if (calories >= 151 && calories <= 300) {
+    return 'yellow';
+  } else if (calories >= 301 && calories <= 500) {
+    return 'orange';
+  } else if (calories >= 501) {
+    return 'red';
+  } else {
+    // Handle cases where calories might be negative or not a number if needed.
+    return 'blue';
+  }
+}
+
 const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   const [inputValue, setInputValue] = useState('');
 
@@ -72,14 +89,8 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
           </Button>
         </Group>
 
-        <Text
-          size="xl"
-          fw={900}
-          variant="gradient"
-          gradient={{ from: 'green', to: 'indigo', deg: 30 }}
-          mx="auto"
-        >
-          {Math.round(kcal)}kcal
+        <Text size="xl" fw={900} c={getKcalColor(kcal)} mx="auto">
+          {Math.round(kcal)} kcal
         </Text>
 
         <Text size="xs" mb={-16}>
