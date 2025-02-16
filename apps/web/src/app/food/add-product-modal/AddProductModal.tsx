@@ -44,11 +44,10 @@ const AddProductModal = ({ open, onClose }: Props) => {
 
       {mode === 'scan' && (
         <>
-          {!code && <Scanner codeFoundCallback={codeFoundCallback} />}
-          {code && <ScannedCode code={code} onAccept={() => {}} onReject={() => setCode(null)} />}
-          {!env.IS_PROD && !code && (
-            <Button onClick={() => setCode('5900259128843')}>Scan lays chips</Button>
+          {!code && (
+            <Scanner codeFoundCallback={codeFoundCallback} onCancel={() => setMode(null)} />
           )}
+          {code && <ScannedCode code={code} onAccept={() => {}} onReject={() => setCode(null)} />}
         </>
       )}
 
