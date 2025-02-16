@@ -4,8 +4,13 @@ import { honoFactory } from '../honoFactory.js';
 import { requireSession } from '@/middleware/requireSession.js';
 import logger from '@/utils/log.js';
 import { zValidator } from '@hono/zod-validator';
-import { getFoodByBarcode, getMyProducts, getTodayFoods } from './food.service.js';
-import { QueryFoodToday, QueryMyProducts, QueryScannedCode } from './food.model.js';
+import {
+  QueryFoodToday,
+  QueryMyProducts,
+  QueryScannedCode,
+  zInsertedFoodLog,
+} from './food.model.js';
+import { getFoodByBarcode, getMyProducts, getTodayFoods, insertFoodLog } from './food.service.js';
 
 const foodRoutes = honoFactory();
 
@@ -42,5 +47,18 @@ foodRoutes.get(
     return c.json(result satisfies QueryScannedCode);
   },
 );
+
+foodRoutes.post('/food/consumed-product', zValidator('json', zInsertedFoodLog), async (c) => {
+  const { user } = await requireSession(c);
+  const payload = c.req.valid('json');
+
+  // TODO remove this
+  console.log(payload);
+
+  await insertFoodLog(user.id, payload);
+  logger.info('Inserted food log for user %s', user.id);
+
+  return c.json(null);
+});
 
 export default foodRoutes;

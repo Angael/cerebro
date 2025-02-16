@@ -1,5 +1,5 @@
 import ky from 'ky';
-import { QueryScannedCode } from './food.model';
+import { InsertedFoodLog, QueryScannedCode, zQueryScannedCode } from './food.model';
 import { openFoodApiCache } from '@/cache/caches';
 import { db, FoodLog, FoodProduct } from '@cerebro/db';
 
@@ -30,8 +30,30 @@ export const getFoodByBarcode = async (code: string): Promise<QueryScannedCode> 
     )
     .json();
 
-  const product = json.product;
+  const product = zQueryScannedCode.parse(json.product);
 
   openFoodApiCache.set(code, product);
   return product;
+};
+
+// TODO: expand to support also custom foods
+export const insertFoodLog = async (userId: string, payload: InsertedFoodLog) => {
+  const { foodProduct, amount, date } = payload;
+  const kcal = foodProduct.nutriments['energy-kcal_100g'] * (amount / 100);
+
+  return await db
+    .insertInto('food_log')
+    .values([
+      {
+        user_id: userId,
+        barcode: foodProduct.code,
+        kcal,
+        kcal_100g: foodProduct.nutriments['energy-kcal_100g'],
+        product_name: foodProduct.product_name,
+        brands: foodProduct.brands,
+        amount,
+        date: new Date(date),
+      },
+    ])
+    .execute();
 };
