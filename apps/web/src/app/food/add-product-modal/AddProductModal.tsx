@@ -1,5 +1,4 @@
-import { env } from '@/utils/env';
-import { Button, Group, Modal } from '@mantine/core';
+import { Group, Modal } from '@mantine/core';
 import { mdiBarcode, mdiMagnify } from '@mdi/js';
 import { memo, useCallback, useEffect, useState } from 'react';
 import Scanner from '../scanner/Scanner';

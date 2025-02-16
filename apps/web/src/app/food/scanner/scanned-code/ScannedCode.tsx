@@ -6,6 +6,8 @@ import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
 import { Loader } from '@mantine/core';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import FoodProductSummary from './FoodProductSummary';
+import { env } from '@/utils/env';
+import SaveProductModal from '../../save-product-form/SaveProductForm';
 
 type Props = {
   code: string;
@@ -26,12 +28,19 @@ const ScannedCode = ({ code, onAccept, onReject }: Props) => {
       {codeQuery.isError && (
         <Alert color="red">Error: {parseErrorResponse(codeQuery.error)?.general}</Alert>
       )}
-      {codeQuery.isSuccess && <FoodProductSummary foodProduct={codeQuery.data} />}
+      {codeQuery.isSuccess && (
+        <>
+          <FoodProductSummary foodProduct={codeQuery.data} />
+          <SaveProductModal foodProduct={codeQuery.data} />
+        </>
+      )}
 
-      <details>
-        <summary>Show JSON</summary>
-        <pre>{JSON.stringify(codeQuery.data, null, 2)}</pre>
-      </details>
+      {!env.IS_PROD && (
+        <details>
+          <summary>Show JSON</summary>
+          <pre>{JSON.stringify(codeQuery.data, null, 2)}</pre>
+        </details>
+      )}
 
       <Group justify="flex-end">
         <Button variant="subtle" onClick={onReject}>
