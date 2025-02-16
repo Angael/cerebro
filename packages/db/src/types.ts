@@ -147,18 +147,16 @@ export type FoodProduct = Selectable<FoodProductTable>;
 
 interface FoodLogTable {
   id: Generated<number>;
-  barcode: string;
+  barcode: string | null;
 
   user_id: string;
   custom_food_id: number | null;
 
-  product_name: string;
-  brands: string | null;
+  product_name: string; // To not fetch the product again
+  brands: string | null; // To not fetch the product again
   amount: number; // grams
   kcal: number;
-  fat_g: number | null;
-  carb_g: number | null;
-  proteins_g: number | null;
+  kcal_100g: number; // To not fetch the product again
 
   date: Date;
 }

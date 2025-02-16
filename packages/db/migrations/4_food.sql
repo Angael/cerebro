@@ -14,18 +14,15 @@ CREATE TABLE food_product (
 
 CREATE TABLE food_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    barcode VARCHAR(255) NOT NULL,
+    barcode VARCHAR(255),
     user_id VARCHAR(255) NOT NULL,
     custom_food_id INT,
     product_name VARCHAR(255) NOT NULL,
     brands VARCHAR(255),
     amount FLOAT NOT NULL,
     kcal FLOAT NOT NULL,
-    fat_g FLOAT,
-    carb_g FLOAT,
-    proteins_g FLOAT,
-    date DATE NOT NULL,
-    FOREIGN KEY (custom_food_id) REFERENCES food_product (id) ON DELETE SET NULL
+    kcal_100g FLOAT NOT NULL,
+    date DATE NOT NULL
 );
 
 CREATE TABLE food_goal (
