@@ -1,6 +1,8 @@
 import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
 import { Button, Group, Stack, Text, TextInput, Title } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 import { useState } from 'react';
+import css from './SaveProductForm.module.css';
 
 type Props = {
   foodProduct: QueryScannedCode;
@@ -9,7 +11,7 @@ type Props = {
 const percentageButtons = ['10%', '25%', '50%', '75%', '100%'];
 const gramsButtons = ['10', '25', '50', '75', '100'];
 
-const SaveProductModal = (props: Props) => {
+const SaveProductModal = ({ foodProduct }: Props) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleQuickAdd = (value: string) => {
@@ -17,36 +19,62 @@ const SaveProductModal = (props: Props) => {
   };
 
   const onPercentQuickAdd = (percent: number) => {
-    const productFullSize = props.foodProduct.product_quantity;
-    const productQuantity = productFullSize * (percent / 100);
+    const productQuantity = foodProduct.product_quantity * (percent / 100);
     setInputValue(`${productQuantity}`);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log('Submit value:', inputValue);
+    showNotification({
+      title: 'Product saved',
+      message: 'Product saved successfully',
+      color: 'blue',
+    });
     // Here you would handle the form submission, e.g., sending the data to an API
   };
+
+  const increment = () => {
+    setInputValue((prev) => {
+      const parsed = parseInt(prev || '0', 10);
+      return `${parsed + 1}`;
+    });
+  };
+
+  const decrement = () => {
+    setInputValue((prev) => {
+      const parsed = parseInt(prev || '0', 10);
+      return `${parsed - 1}`;
+    });
+  };
+
+  const isOnlyNumbers = true;
 
   return (
     <form onSubmit={handleSubmit}>
       <Stack>
         <Group wrap="nowrap" align="flex-end">
-          <Button>-1g</Button>
+          <Button variant="default" onClick={decrement}>
+            -
+          </Button>
           <TextInput
+            type="number"
             label="How much grams?"
             placeholder="100g"
             value={inputValue}
             onChange={(event) => setInputValue(event.target.value)}
             rightSection={'g'}
+            error={!isOnlyNumbers}
           />
-          <Button>+1g</Button>
+          <Button variant="default" onClick={increment}>
+            +
+          </Button>
         </Group>
 
         <Text size="xs" mb={-16}>
           Quick add:
         </Text>
-        <Group wrap="nowrap" justify="space-between">
+        <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
           {percentageButtons.map((percent) => (
             <Button
               key={percent}
@@ -60,7 +88,7 @@ const SaveProductModal = (props: Props) => {
           ))}
         </Group>
 
-        <Group wrap="nowrap" justify="space-between">
+        <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
           {gramsButtons.map((grams) => (
             <Button
               key={grams}
@@ -75,6 +103,7 @@ const SaveProductModal = (props: Props) => {
         </Group>
 
         <Button type="submit">Save</Button>
+        <Button variant="default">Cancel</Button>
       </Stack>
     </form>
   );

@@ -1,0 +1,5 @@
+@media (min-width: 480px) {
+  .quickAddGroup {
+    justify-content: flex-start;
+  }
+}
