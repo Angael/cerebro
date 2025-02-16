@@ -46,7 +46,7 @@ const AddProductModal = ({ open, onClose }: Props) => {
           {!code && (
             <Scanner codeFoundCallback={codeFoundCallback} onCancel={() => setMode(null)} />
           )}
-          {code && <ScannedCode code={code} onAccept={() => {}} onReject={() => setCode(null)} />}
+          {code && <ScannedCode code={code} onClose={() => setCode(null)} />}
         </>
       )}
 

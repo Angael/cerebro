@@ -11,11 +11,10 @@ import SaveProductModal from '../../save-product-form/SaveProductForm';
 
 type Props = {
   code: string;
-  onAccept: () => void;
-  onReject: () => void;
+  onClose: () => void;
 };
 
-const ScannedCode = ({ code, onAccept, onReject }: Props) => {
+const ScannedCode = ({ code, onClose }: Props) => {
   const codeQuery = useQuery<QueryScannedCode>({
     enabled: !!code,
     queryKey: [QUERY_KEYS.foodByBarcode, { barcode: code }],
@@ -26,12 +25,17 @@ const ScannedCode = ({ code, onAccept, onReject }: Props) => {
     <Stack gap="md">
       {codeQuery.isLoading && <Loader />}
       {codeQuery.isError && (
-        <Alert color="red">Error: {parseErrorResponse(codeQuery.error)?.general}</Alert>
+        <Stack>
+          <Alert color="red">Error: {parseErrorResponse(codeQuery.error)?.general}</Alert>
+          <Button onClick={onClose} variant="light">
+            Close
+          </Button>
+        </Stack>
       )}
       {codeQuery.isSuccess && (
         <>
           <FoodProductSummary foodProduct={codeQuery.data} />
-          <SaveProductModal foodProduct={codeQuery.data} />
+          <SaveProductModal foodProduct={codeQuery.data} onClose={onClose} />
         </>
       )}
 
@@ -41,13 +45,6 @@ const ScannedCode = ({ code, onAccept, onReject }: Props) => {
           <pre>{JSON.stringify(codeQuery.data, null, 2)}</pre>
         </details>
       )}
-
-      <Group justify="flex-end">
-        <Button variant="subtle" onClick={onReject}>
-          Reject
-        </Button>
-        <Button onClick={onAccept}>Accept</Button>
-      </Group>
     </Stack>
   );
 };

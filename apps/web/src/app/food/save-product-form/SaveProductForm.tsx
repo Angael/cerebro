@@ -6,12 +6,13 @@ import css from './SaveProductForm.module.css';
 
 type Props = {
   foodProduct: QueryScannedCode;
+  onClose: () => void;
 };
 
 const percentageButtons = ['10%', '25%', '50%', '75%', '100%'];
 const gramsButtons = ['10', '25', '50', '75', '100'];
 
-const SaveProductModal = ({ foodProduct }: Props) => {
+const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleQuickAdd = (value: string) => {
@@ -103,7 +104,9 @@ const SaveProductModal = ({ foodProduct }: Props) => {
         </Group>
 
         <Button type="submit">Save</Button>
-        <Button variant="default">Cancel</Button>
+        <Button variant="default" onClick={onClose}>
+          Cancel
+        </Button>
       </Stack>
     </form>
   );
