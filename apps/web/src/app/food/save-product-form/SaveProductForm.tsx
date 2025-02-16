@@ -41,6 +41,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   };
 
   const onPercentQuickAdd = (percent: number) => {
+    if (!foodProduct.product_quantity) return;
     const productQuantity = foodProduct.product_quantity * (percent / 100);
     setInputValue(`${productQuantity}`);
   };
@@ -123,19 +124,21 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
         <Text size="xs" mb={-16}>
           Quick add:
         </Text>
-        <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
-          {percentageButtons.map((percent) => (
-            <Button
-              key={percent}
-              size="xs"
-              color="orange"
-              variant="light"
-              onClick={() => onPercentQuickAdd(parseInt(percent, 10))}
-            >
-              {percent}
-            </Button>
-          ))}
-        </Group>
+        {foodProduct.product_quantity && (
+          <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
+            {percentageButtons.map((percent) => (
+              <Button
+                key={percent}
+                size="xs"
+                color="orange"
+                variant="light"
+                onClick={() => onPercentQuickAdd(parseInt(percent, 10))}
+              >
+                {percent}
+              </Button>
+            ))}
+          </Group>
+        )}
 
         <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
           {gramsButtons.map((grams) => (
