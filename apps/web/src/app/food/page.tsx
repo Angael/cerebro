@@ -5,7 +5,7 @@ import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
 import { Button, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import FoodList from './FoodList';
 import ScannerModal from './scanner/ScannerModal';
 import AddProductModal from './add-product-modal/AddProductModal';
@@ -21,13 +21,21 @@ const FoodPage = () => {
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [scannerOpened, setScannerOpened] = useState(false);
 
+  const kcalToday = useMemo(() => {
+    if (!todaysFood.data) return 0;
+    return todaysFood.data.reduce((acc, food) => acc + food.kcal, 0);
+  }, [todaysFood.data]);
+
+  // TODO: get this from server
+  const targetToday = 2100;
+
   return (
     <Stack>
       <Title>Food</Title>
       <Group>
         <Paper p="md" flex={1}>
-          <Text>Today: 2100 kcal</Text>
-          <Progress value={10} />
+          <Text>Today: {kcalToday} kcal</Text>
+          <Progress value={(kcalToday / targetToday) * 100} />
         </Paper>
 
         <Paper p="md" flex={1}>

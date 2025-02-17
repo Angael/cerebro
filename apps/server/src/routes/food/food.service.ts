@@ -12,7 +12,7 @@ export async function getTodayFoods(userId: string): Promise<FoodLog[]> {
     .selectFrom('food_log')
     .selectAll()
     .where('user_id', '=', userId)
-    .where(sql<any>`date = CURDATE()`)
+    .where(sql<any>`DATE(\`date\`) = CURDATE()`)
     .execute();
 }
 
