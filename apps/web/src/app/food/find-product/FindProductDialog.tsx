@@ -8,6 +8,7 @@ import CustomProductBtn from './CustomProductBtn';
 import Icon from '@mdi/react';
 import { mdiBarcode } from '@mdi/js';
 import { Modal, Text } from '@mantine/core';
+import { useIsMobile } from '@/utils/hooks/useIsMobile';
 
 type Props = {
   open: boolean;
@@ -55,8 +56,10 @@ const FindProductDialog = ({ open, onClose, onOpenScanner }: Props) => {
     console.log(`Create product, ${name}`);
   };
 
+  const isMobile = useIsMobile();
+
   return (
-    <Modal opened={open} onClose={onClose} size="xl" title="Find product">
+    <Modal opened={open} onClose={onClose} fullScreen={isMobile} size="xl" title="Find product">
       <Stack>
         <TextInput
           size="lg"

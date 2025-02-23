@@ -8,6 +8,7 @@ import { memo } from 'react';
 import SaveProductForm from '../save-product-form/SaveProductForm';
 import FoodProductSummary from '../scanner/scanned-code/FoodProductSummary';
 import { env } from '@/utils/env';
+import { useIsMobile } from '@/utils/hooks/useIsMobile';
 
 type Props = { code: string | null; open: boolean; onClose: () => void };
 
@@ -18,8 +19,17 @@ const AddProductModal = ({ code, open, onClose }: Props) => {
     queryFn: () => API.get<any>(`/food/barcode/${code}`).then((r) => r.data),
   });
 
+  const isMobile = useIsMobile();
+
   return (
-    <Modal opened={open} onClose={onClose} size="xl" title="Add product" zIndex={201}>
+    <Modal
+      opened={open}
+      onClose={onClose}
+      fullScreen={isMobile}
+      size="xl"
+      title="Add product"
+      zIndex={201}
+    >
       <Stack gap="md">
         {codeQuery.isLoading && <Loader />}
         {codeQuery.isError && (

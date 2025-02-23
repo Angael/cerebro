@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import Scanner from './Scanner';
 import css from './ScannerModal.module.css';
+import { useIsMobile } from '@/utils/hooks/useIsMobile';
 
 type Props = {
   open: boolean;
@@ -36,8 +37,10 @@ const ScannerModal = ({ open, onClose, onFound }: Props) => {
     }
   }, [open, code, codeQuery.isSuccess]);
 
+  const isMobile = useIsMobile();
+
   return (
-    <Modal opened={open} onClose={onClose} size="xl" title="Scan product">
+    <Modal opened={open} onClose={onClose} fullScreen={isMobile} size="xl" title="Scan product">
       <Box pos="relative">
         <Scanner codeFoundCallback={codeFoundCallback} />
         {codeQuery.isError && (
