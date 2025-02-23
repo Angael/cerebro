@@ -38,10 +38,10 @@ const FoodPage = () => {
           <Progress value={(kcalToday / targetToday) * 100} />
         </Paper>
 
-        <Paper p="md" flex={1}>
+        {/* <Paper p="md" flex={1}>
           Week: 12090/21000 kcal
           <Progress value={10} />
-        </Paper>
+        </Paper> */}
       </Group>
 
       <Paper p="md">
