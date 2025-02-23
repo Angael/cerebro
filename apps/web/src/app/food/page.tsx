@@ -4,11 +4,13 @@ import { QUERY_KEYS } from '@/utils/consts';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
 import { Button, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
+import { mdiBarcode, mdiFire, mdiMagnify } from '@mdi/js';
+import Icon from '@mdi/react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
+import AddProductModal from './add-product-modal/AddProductModal';
 import FoodList from './FoodList';
 import ScannerModal from './scanner/ScannerModal';
-import AddProductModal from './add-product-modal/AddProductModal';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -50,9 +52,25 @@ const FoodPage = () => {
           {todaysFood.data ? <FoodList foods={todaysFood.data} /> : <Loader />}
 
           <Group justify="flex-end">
-            {/* TODO: different onClicks and modals */}
-            <Button onClick={() => setAddProductOpen(true)}>Add product</Button>
-            <Button onClick={() => setScannerOpened(true)}>Add calories</Button>
+            <Button
+              onClick={() => setScannerOpened(true)}
+              leftSection={<Icon path={mdiBarcode} size={1} />}
+            >
+              Scan code
+            </Button>
+            <Button
+              onClick={() => setAddProductOpen(true)}
+              leftSection={<Icon path={mdiMagnify} size={1} />}
+            >
+              Find product
+            </Button>
+            <Button
+              disabled
+              onClick={() => setScannerOpened(true)}
+              leftSection={<Icon path={mdiFire} size={1} />}
+            >
+              Add calories
+            </Button>
           </Group>
         </Stack>
       </Paper>

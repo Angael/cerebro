@@ -7,7 +7,7 @@ import { Loader } from '@mantine/core';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import FoodProductSummary from './FoodProductSummary';
 import { env } from '@/utils/env';
-import SaveProductModal from '../../save-product-form/SaveProductForm';
+import SaveProductForm from '../../save-product-form/SaveProductForm';
 
 type Props = {
   code: string;
@@ -35,7 +35,7 @@ const ScannedCode = ({ code, onClose }: Props) => {
       {codeQuery.isSuccess && (
         <>
           <FoodProductSummary foodProduct={codeQuery.data} />
-          <SaveProductModal foodProduct={codeQuery.data} onClose={onClose} />
+          <SaveProductForm foodProduct={codeQuery.data} onClose={onClose} />
         </>
       )}
 
