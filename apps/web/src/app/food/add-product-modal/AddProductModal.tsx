@@ -1,56 +1,47 @@
-import { Group, Modal } from '@mantine/core';
-import { mdiBarcode, mdiMagnify } from '@mdi/js';
-import { memo, useCallback, useEffect, useState } from 'react';
-import Scanner from '../scanner/Scanner';
-import ScannedCode from '../scanner/scanned-code/ScannedCode';
-import AddProductModeBtn from './AddProductModeBtn';
-import FindProduct from './find-product/FindProduct';
+import { API } from '@/utils/API';
+import { QUERY_KEYS } from '@/utils/consts';
+import { parseErrorResponse } from '@/utils/parseErrorResponse';
+import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
+import { Alert, Loader, Modal, Stack } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
+import { memo } from 'react';
+import SaveProductForm from '../save-product-form/SaveProductForm';
+import FoodProductSummary from '../scanner/scanned-code/FoodProductSummary';
+import { env } from '@/utils/env';
 
-type Props = { open: boolean; onClose: () => void };
+type Props = { code: string | null; open: boolean; onClose: () => void };
 
-const AddProductModal = ({ open, onClose }: Props) => {
-  const [mode, setMode] = useState<'scan' | 'find-product' | null>(null);
-
-  const [code, setCode] = useState<string | null>(null);
-  const codeFoundCallback = useCallback((codes: string[]) => {
-    if (codes.length > 0) {
-      setCode(codes[0]);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (open) {
-      setMode(null);
-    }
-  }, [open]);
+const AddProductModal = ({ code, open, onClose }: Props) => {
+  const codeQuery = useQuery<QueryScannedCode>({
+    enabled: !!code,
+    queryKey: [QUERY_KEYS.foodByBarcode, { barcode: code }],
+    queryFn: () => API.get<any>(`/food/barcode/${code}`).then((r) => r.data),
+  });
 
   return (
     <Modal opened={open} onClose={onClose} size="xl" title="Add product" zIndex={201}>
-      {mode === null && (
-        <Group wrap="wrap">
-          <AddProductModeBtn
-            onClick={() => setMode('scan')}
-            label="Scan barcode"
-            icon={mdiBarcode}
-          />
-          <AddProductModeBtn
-            onClick={() => setMode('find-product')}
-            label="Find product"
-            icon={mdiMagnify}
-          />
-        </Group>
-      )}
+      <Stack gap="md">
+        {codeQuery.isLoading && <Loader />}
+        {codeQuery.isError && (
+          <Stack>
+            <Alert color="red">Error: {parseErrorResponse(codeQuery.error)?.general}</Alert>
+          </Stack>
+        )}
 
-      {mode === 'scan' && (
-        <>
-          {!code && (
-            <Scanner codeFoundCallback={codeFoundCallback} onCancel={() => setMode(null)} />
-          )}
-          {code && <ScannedCode code={code} onClose={() => setCode(null)} />}
-        </>
-      )}
+        {codeQuery.isSuccess && (
+          <>
+            <FoodProductSummary foodProduct={codeQuery.data} />
+            <SaveProductForm foodProduct={codeQuery.data} onClose={onClose} />
+          </>
+        )}
 
-      {mode === 'find-product' && <FindProduct />}
+        {!env.IS_PROD && (
+          <details>
+            <summary>Show JSON</summary>
+            <pre>{JSON.stringify(codeQuery.data, null, 2)}</pre>
+          </details>
+        )}
+      </Stack>
     </Modal>
   );
 };

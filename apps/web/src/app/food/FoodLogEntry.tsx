@@ -10,8 +10,8 @@ const FoodLogEntry = ({ food }: Props) => {
   return (
     <li className={css.unstyledLi}>
       <Group align="flex-start" justify="space-between">
-        <Stack gap={0} flex={3}>
-          <Title order={3}>{food.product_name}</Title>
+        <Stack component="header" gap={0} flex={3}>
+          <Text fw="normal">{food.product_name}</Text>
           <Text>{food.brands}</Text>
         </Stack>
         <Stack align="flex-end" gap={0} flex={1}>

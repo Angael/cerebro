@@ -1,23 +1,21 @@
-import { useUrlParam } from '@/utils/hooks/useUrlParam';
-import { Alert, Badge, Box, Modal } from '@mantine/core';
-import Scanner from './Scanner';
-import ScannedCode from './scanned-code/ScannedCode';
-import { QUERY_KEYS } from '@/utils/consts';
-import { useQuery } from '@tanstack/react-query';
-import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
 import { API } from '@/utils/API';
-import css from './ScannerModal.module.css';
+import { QUERY_KEYS } from '@/utils/consts';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
-import { useEffect } from 'react';
+import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
+import { Alert, Box, Modal } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import Scanner from './Scanner';
+import css from './ScannerModal.module.css';
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onFound: () => void;
+  onFound: (code: string) => void;
 };
 
 const ScannerModal = ({ open, onClose, onFound }: Props) => {
-  const [code, setCode] = useUrlParam('barcode');
+  const [code, setCode] = useState<string | null>(null);
 
   const codeQuery = useQuery<QueryScannedCode>({
     enabled: !!code,
@@ -32,10 +30,11 @@ const ScannerModal = ({ open, onClose, onFound }: Props) => {
   };
 
   useEffect(() => {
-    if (codeQuery.isSuccess) {
-      onFound();
+    if (open && code && codeQuery.isSuccess) {
+      onFound(code);
+      setCode(null);
     }
-  }, [codeQuery.isSuccess]);
+  }, [open, code, codeQuery.isSuccess]);
 
   return (
     <Modal opened={open} onClose={onClose} size="xl" title="Scan product">

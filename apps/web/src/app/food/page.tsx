@@ -3,8 +3,8 @@ import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
-import { Button, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
-import { mdiBarcode, mdiFire, mdiMagnify } from '@mdi/js';
+import { Button, Center, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
+import { mdiBarcode, mdiFire, mdiMagnify, mdiPlusCircle, mdiPlusCircleOutline } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
@@ -13,6 +13,8 @@ import FoodList from './FoodList';
 import ScannerModal from './scanner/ScannerModal';
 import { useSearchParams } from 'next/navigation';
 import css from './page.module.css';
+import { useUrlParam } from '@/utils/hooks/useUrlParam';
+import FindProductDialog from './find-product/FindProductDialog';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -22,6 +24,8 @@ const FoodPage = () => {
     queryFn: () => API.get<QueryFoodToday>('/food/today').then((r) => r.data),
   });
 
+  const [findOpen, setFindOpen] = useState(false);
+  const [code, setCode] = useState<string | null>(null);
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [scannerOpened, setScannerOpened] = useState(false);
 
@@ -54,29 +58,30 @@ const FoodPage = () => {
       <Paper p="md">
         <Stack gap="sm">
           <Title order={2}>Today</Title>
-          {todaysFood.data ? <FoodList foods={todaysFood.data} /> : <Loader />}
-
-          <Group justify="flex-end" className={css.foodActions}>
-            <Button
-              onClick={() => setScannerOpened(true)}
-              leftSection={<Icon path={mdiBarcode} size={1} />}
-            >
-              Scan code
-            </Button>
-            <Button
-              onClick={() => setAddProductOpen(true)}
-              leftSection={<Icon path={mdiMagnify} size={1} />}
-            >
-              Find product
-            </Button>
-            <Button
-              disabled
-              onClick={() => setScannerOpened(true)}
-              leftSection={<Icon path={mdiFire} size={1} />}
-            >
-              Add calories
-            </Button>
-          </Group>
+          {todaysFood.data ? (
+            <>
+              <FoodList foods={todaysFood.data} />
+              <Group justify="flex-end" className={css.foodActions}>
+                <Button
+                  onClick={() => setFindOpen(true)}
+                  leftSection={<Icon path={mdiPlusCircleOutline} size={1} />}
+                >
+                  Add product
+                </Button>
+                <Button
+                  disabled
+                  onClick={() => setScannerOpened(true)}
+                  leftSection={<Icon path={mdiFire} size={1} />}
+                >
+                  Add calories
+                </Button>
+              </Group>
+            </>
+          ) : (
+            <Center>
+              <Loader />
+            </Center>
+          )}
         </Stack>
       </Paper>
 
@@ -97,15 +102,25 @@ const FoodPage = () => {
         </Stack>
       </Group>
 
+      <FindProductDialog
+        open={findOpen}
+        onClose={() => setFindOpen(false)}
+        onOpenScanner={() => {
+          setCode('');
+          setFindOpen(false);
+          setScannerOpened(true);
+        }}
+      />
       <ScannerModal
         open={scannerOpened}
         onClose={() => setScannerOpened(false)}
-        onFound={() => {
+        onFound={(_code) => {
+          setCode(_code);
           setScannerOpened(false);
           setAddProductOpen(true);
         }}
       />
-      <AddProductModal open={addProductOpen} onClose={() => setAddProductOpen(false)} />
+      <AddProductModal code={code} open={addProductOpen} onClose={() => setAddProductOpen(false)} />
     </Stack>
   );
 };

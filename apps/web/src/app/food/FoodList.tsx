@@ -13,7 +13,6 @@ const FoodList = ({ foods }: Props) => {
   }
   return (
     <Stack>
-      <Text>Logged calories:</Text>
       <ul className={css.unstyledList}>
         {foods.map((food) => (
           <FoodLogEntry key={food.id} food={food} />
