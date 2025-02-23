@@ -11,6 +11,8 @@ import { useMemo, useState } from 'react';
 import AddProductModal from './add-product-modal/AddProductModal';
 import FoodList from './FoodList';
 import ScannerModal from './scanner/ScannerModal';
+import { useSearchParams } from 'next/navigation';
+import css from './page.module.css';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -30,6 +32,9 @@ const FoodPage = () => {
 
   // TODO: get this from server
   const targetToday = 2100;
+
+  const searchParams = useSearchParams();
+  console.log({ searchParams });
 
   return (
     <Stack>
@@ -51,7 +56,7 @@ const FoodPage = () => {
           <Title order={2}>Today</Title>
           {todaysFood.data ? <FoodList foods={todaysFood.data} /> : <Loader />}
 
-          <Group justify="flex-end">
+          <Group justify="flex-end" className={css.foodActions}>
             <Button
               onClick={() => setScannerOpened(true)}
               leftSection={<Icon path={mdiBarcode} size={1} />}
@@ -92,8 +97,15 @@ const FoodPage = () => {
         </Stack>
       </Group>
 
+      <ScannerModal
+        open={scannerOpened}
+        onClose={() => setScannerOpened(false)}
+        onFound={() => {
+          setScannerOpened(false);
+          setAddProductOpen(true);
+        }}
+      />
       <AddProductModal open={addProductOpen} onClose={() => setAddProductOpen(false)} />
-      <ScannerModal open={scannerOpened} onClose={() => setScannerOpened(false)} />
     </Stack>
   );
 };

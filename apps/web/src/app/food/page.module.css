@@ -1,0 +1,8 @@
+.foodActions {
+  align-items: flex-end;
+  flex-flow: row;
+
+  @media (max-width: 768px) {
+    flex-flow: column;
+  }
+}

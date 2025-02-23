@@ -6,12 +6,9 @@ import css from './Scanner.module.css';
 import { useDevices } from './useDevices';
 import { useScanner } from './useScanner';
 
-type Props = {
-  codeFoundCallback: (code: string[]) => void;
-  onCancel: () => void;
-};
+type Props = { codeFoundCallback: (code: string[]) => void };
 
-const Scanner = ({ codeFoundCallback, onCancel }: Props) => {
+const Scanner = ({ codeFoundCallback }: Props) => {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
 
   const { initialized, hasPermission, devices, selectedDeviceId, setNextDevice } =
@@ -48,14 +45,20 @@ const Scanner = ({ codeFoundCallback, onCancel }: Props) => {
         )}
 
         {devices.length > 1 && (
-          <Button
-            variant="default"
-            className={css.changeCameraBtn}
-            onClick={setNextDevice}
-            disabled={!initialized}
-          >
-            Next camera ({selectedDeviceIndex + 1}/{devices.length})
-          </Button>
+          <Group className={css.changeCameraBtn}>
+            {!env.IS_PROD && (
+              <Button
+                color="orange.9"
+                variant="filled"
+                onClick={() => codeFoundCallback(['5900259128843'])}
+              >
+                Debug chips
+              </Button>
+            )}
+            <Button variant="default" onClick={setNextDevice} disabled={!initialized}>
+              Next camera ({selectedDeviceIndex + 1}/{devices.length})
+            </Button>
+          </Group>
         )}
 
         {!env.IS_PROD && (
@@ -65,16 +68,6 @@ const Scanner = ({ codeFoundCallback, onCancel }: Props) => {
           </details>
         )}
       </div>
-      <Group justify="flex-end">
-        {!env.IS_PROD && (
-          <Button variant="outlined" onClick={() => codeFoundCallback(['5900259128843'])}>
-            Debug scan lays chips
-          </Button>
-        )}
-        <Button variant="subtle" onClick={onCancel}>
-          Cancel
-        </Button>
-      </Group>
     </Stack>
   );
 };

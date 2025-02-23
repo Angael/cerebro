@@ -1,10 +1,6 @@
-import { API } from '@/utils/API';
-import { QUERY_KEYS } from '@/utils/consts';
-import { parseErrorResponse } from '@/utils/parseErrorResponse';
-import { InsertedFoodLog, QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
-import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
+import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
+import { Button, Group, Stack, Text, TextInput, Title } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import css from './SaveProductForm.module.css';
 
@@ -41,43 +37,19 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   };
 
   const onPercentQuickAdd = (percent: number) => {
-    if (!foodProduct.product_quantity) return;
-    const productQuantity = Number(foodProduct.product_quantity) * (percent / 100);
+    const productQuantity = foodProduct.product_quantity * (percent / 100);
     setInputValue(`${productQuantity}`);
   };
 
-  const queryClient = useQueryClient();
-  const saveMutation = useMutation({
-    mutationFn: () =>
-      API.post(`/food/consumed-product`, {
-        foodProduct,
-        amount: Number(inputValue),
-        date: new Date().toISOString(),
-      } satisfies InsertedFoodLog),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.todaysFood],
-      });
-      showNotification({
-        title: 'Product saved',
-        message: 'Product saved successfully',
-        color: 'blue',
-      });
-    },
-    onError: (e) => {
-      showNotification({
-        color: 'red',
-        title: 'Failed to log product',
-        message: parseErrorResponse(e)?.general,
-      });
-    },
-  });
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (saveMutation.isPending) return;
-
-    saveMutation.mutate();
+    console.log('Submit value:', inputValue);
+    showNotification({
+      title: 'Product saved',
+      message: 'Product saved successfully',
+      color: 'blue',
+    });
+    // Here you would handle the form submission, e.g., sending the data to an API
   };
 
   const increment = () => {
@@ -99,7 +71,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   return (
     <form onSubmit={handleSubmit}>
       <Stack>
-        <Group wrap="nowrap" gap="xs" align="flex-end">
+        <Group wrap="nowrap" align="flex-end">
           <Button variant="default" onClick={decrement}>
             -
           </Button>
@@ -124,21 +96,19 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
         <Text size="xs" mb={-16}>
           Quick add:
         </Text>
-        {foodProduct.product_quantity && (
-          <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
-            {percentageButtons.map((percent) => (
-              <Button
-                key={percent}
-                size="xs"
-                color="orange"
-                variant="light"
-                onClick={() => onPercentQuickAdd(parseInt(percent, 10))}
-              >
-                {percent}
-              </Button>
-            ))}
-          </Group>
-        )}
+        <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
+          {percentageButtons.map((percent) => (
+            <Button
+              key={percent}
+              size="xs"
+              color="orange"
+              variant="light"
+              onClick={() => onPercentQuickAdd(parseInt(percent, 10))}
+            >
+              {percent}
+            </Button>
+          ))}
+        </Group>
 
         <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
           {gramsButtons.map((grams) => (
@@ -154,9 +124,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
           ))}
         </Group>
 
-        <Button type="submit" disabled={saveMutation.isPending} mt="md">
-          Save
-        </Button>
+        <Button type="submit">Save</Button>
         <Button variant="default" onClick={onClose}>
           Cancel
         </Button>

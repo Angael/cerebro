@@ -1,19 +1,29 @@
-import { Autocomplete, Button, Modal, Tabs } from '@mantine/core';
-import { useState } from 'react';
+import { useUrlParam } from '@/utils/hooks/useUrlParam';
+import { Alert, Badge, Box, Modal } from '@mantine/core';
 import Scanner from './Scanner';
 import ScannedCode from './scanned-code/ScannedCode';
-import { env } from '@/utils/env';
-import AddCustomFoodForm from './add-custom-food/AddCustomFoodForm';
+import { QUERY_KEYS } from '@/utils/consts';
+import { useQuery } from '@tanstack/react-query';
+import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
+import { API } from '@/utils/API';
+import css from './ScannerModal.module.css';
+import { parseErrorResponse } from '@/utils/parseErrorResponse';
+import { useEffect } from 'react';
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  onFound: () => void;
 };
 
-const ScannerModal = ({ open, onClose }: Props) => {
-  const [activeTab, setActiveTab] = useState<'scan' | 'add-product' | 'add-custom'>('scan');
+const ScannerModal = ({ open, onClose, onFound }: Props) => {
+  const [code, setCode] = useUrlParam('barcode');
 
-  const [code, setCode] = useState<string | null>(null);
+  const codeQuery = useQuery<QueryScannedCode>({
+    enabled: !!code,
+    queryKey: [QUERY_KEYS.foodByBarcode, { barcode: code }],
+    queryFn: () => API.get<any>(`/food/barcode/${code}`).then((r) => r.data),
+  });
 
   const codeFoundCallback = (codes: string[]) => {
     if (codes.length > 0) {
@@ -21,32 +31,24 @@ const ScannerModal = ({ open, onClose }: Props) => {
     }
   };
 
-  return (
-    <Modal
-      opened={open}
-      onClose={onClose}
-      size="xl"
-      title={code ? `Product: ${code}` : 'Add product'}
-      zIndex={201}
-    >
-      <Tabs value={activeTab} onChange={setActiveTab as any}>
-        <Tabs.List>
-          <Tabs.Tab value="scan">Scanner</Tabs.Tab>
-          <Tabs.Tab value="add-product">Add product</Tabs.Tab>
-          <Tabs.Tab value="custom">Fast add</Tabs.Tab>
-        </Tabs.List>
+  useEffect(() => {
+    if (codeQuery.isSuccess) {
+      onFound();
+    }
+  }, [codeQuery.isSuccess]);
 
-        <Tabs.Panel value="scan">
-          {!code && <Scanner codeFoundCallback={codeFoundCallback} />}
-          {code && <ScannedCode code={code} onAccept={() => {}} onReject={() => setCode(null)} />}
-          {!env.IS_PROD && (
-            <Button onClick={() => setCode('5900259128843')}>Scan lays chips</Button>
-          )}
-        </Tabs.Panel>
-        <Tabs.Panel value="add-product">
-          <AddCustomFoodForm />
-        </Tabs.Panel>
-      </Tabs>
+  return (
+    <Modal opened={open} onClose={onClose} size="xl" title="Scan product">
+      <Box pos="relative">
+        <Scanner codeFoundCallback={codeFoundCallback} />
+        {codeQuery.isError && (
+          <div className={css.notFoundAlert}>
+            <Alert color="red" variant="filled">
+              {parseErrorResponse(codeQuery.error)?.general}
+            </Alert>
+          </div>
+        )}
+      </Box>
     </Modal>
   );
 };

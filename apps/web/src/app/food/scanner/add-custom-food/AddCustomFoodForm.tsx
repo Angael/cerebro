@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react';
 
 type Props = {};
 
+/** @deprecated */
 const AddCustomFoodForm = (props: Props) => {
   const [name, setName] = useState('');
 
