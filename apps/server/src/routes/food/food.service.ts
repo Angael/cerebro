@@ -35,7 +35,6 @@ export async function getDaysFoods(userId: string, limit: number = 3) {
     .then((r) => r.rows);
 
   const yyyyMMdd = logsCountsDates.map((l) => format(l.calendarDate, 'yyyy-MM-dd'));
-  console.log({ yyyyMMdd, logsCountsDates });
 
   const logsOnThoseDays = await sql<any>`
 select id, brands, product_name,amount, kcal, kcal_100g, DATE(date) as dayDate 

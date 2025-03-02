@@ -4,18 +4,16 @@ import { QUERY_KEYS } from '@/utils/consts';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
 import { Button, Center, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
-import { mdiBarcode, mdiFire, mdiMagnify, mdiPlusCircle, mdiPlusCircleOutline } from '@mdi/js';
+import { mdiFire, mdiPlusCircleOutline } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import AddProductModal from './add-product-modal/AddProductModal';
-import FoodList from './FoodList';
-import ScannerModal from './scanner/ScannerModal';
-import { useSearchParams } from 'next/navigation';
-import css from './page.module.css';
-import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import FindProductDialog from './find-product/FindProductDialog';
+import FoodList from './FoodList';
 import History from './history/History';
+import css from './page.module.css';
+import ScannerModal from './scanner/ScannerModal';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -36,16 +34,15 @@ const FoodPage = () => {
   }, [todaysFood.data]);
 
   // TODO: get this from server
-  const targetToday = 2100;
-
-  const searchParams = useSearchParams();
-  console.log({ searchParams });
+  const targetToday = 2000;
 
   return (
     <Stack>
       <Group>
         <Paper p="md" flex={1}>
-          <Text>Today: {kcalToday} kcal</Text>
+          <Text>
+            Today: {kcalToday} kcal / {targetToday}
+          </Text>
           <Progress value={(kcalToday / targetToday) * 100} />
         </Paper>
       </Group>

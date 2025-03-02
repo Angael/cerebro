@@ -33,7 +33,6 @@ foodRoutes.get('/food/history', async (c) => {
   const { user } = await requireSession(c);
 
   const result = await getFoodsHistory(user?.id);
-  console.log(result);
 
   logger.info('Getting food history for user %s', user?.id);
   return c.json(result);
@@ -67,9 +66,6 @@ foodRoutes.get(
 foodRoutes.post('/food/consumed-product', zValidator('json', zInsertedFoodLog), async (c) => {
   const { user } = await requireSession(c);
   const payload = c.req.valid('json');
-
-  // TODO remove this
-  console.log(payload);
 
   await insertFoodLog(user.id, payload);
   logger.info('Inserted food log for user %s', user.id);
