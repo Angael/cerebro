@@ -5,7 +5,7 @@ import { FoodLogsContextProvider } from './FoodLogsContext';
 type Props = ComponentProps<'ul'>;
 
 const FoodLogsList = ({ className, ...props }: Props) => {
-  const [openFoodLogId, setOpenFoodLogId] = useState<string | null>(null);
+  const [openFoodLogId, setOpenFoodLogId] = useState<number | null>(null);
 
   return (
     <FoodLogsContextProvider value={{ openFoodLogId, setOpenFoodLogId }}>

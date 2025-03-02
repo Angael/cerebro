@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react';
 
 type FoodLogsContextType = {
-  openFoodLogId: number | string | null;
-  setOpenFoodLogId: (id: number | string | null) => void;
+  openFoodLogId: number | null;
+  setOpenFoodLogId: (id: number | null) => void;
 };
 
 const FoodLogsContext = createContext<FoodLogsContextType | undefined>(undefined);

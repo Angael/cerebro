@@ -1,9 +1,12 @@
+import { API } from '@/utils/API';
+import { QUERY_KEYS } from '@/utils/consts';
 import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
 import { Button, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
+import { mdiPencil } from '@mdi/js';
+import Icon from '@mdi/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
-import Icon from '@mdi/react';
-import { mdiPen, mdiPencil } from '@mdi/js';
 
 type Props = {
   food: QueryFoodToday[number];
@@ -12,6 +15,21 @@ type Props = {
 const FoodLogEntry = ({ food }: Props) => {
   const { openFoodLogId, setOpenFoodLogId } = useFoodLogsContext();
   const isOpen = openFoodLogId === food.id;
+
+  const queryClient = useQueryClient();
+  const deleteMut = useMutation({
+    mutationFn: () => {
+      // TODO: merge into one endpoint
+      queryClient.setQueryData([QUERY_KEYS.foodHistory], (data: any) =>
+        data.filter((f: any) => f.id !== food.id),
+      );
+      queryClient.setQueryData([QUERY_KEYS.todaysFood], (data: any) =>
+        data.filter((f: any) => f.id !== food.id),
+      );
+
+      return API.delete(`/food/log/${food.id}`);
+    },
+  });
 
   return (
     <li className={css.unstyledLi}>
@@ -48,7 +66,9 @@ const FoodLogEntry = ({ food }: Props) => {
           <Button variant="outline" leftSection={<Icon path={mdiPencil} size={1} />}>
             Edit
           </Button>
-          <Button color="red">Delete</Button>
+          <Button color="red" onClick={() => deleteMut.mutate()} loading={deleteMut.isPending}>
+            Delete
+          </Button>
         </Group>
       </Collapse>
     </li>

@@ -43,3 +43,6 @@ export const zFoodHistory = z.array(
   }),
 );
 export type QueryFoodHistory = z.infer<typeof zFoodHistory>;
+
+export const zDeleteFoodLog = z.object({ foodId: z.string() });
+export type DeleteFoodLog = z.infer<typeof zDeleteFoodLog>;

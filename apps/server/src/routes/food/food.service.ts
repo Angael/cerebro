@@ -103,3 +103,11 @@ export const insertFoodLog = async (userId: string, payload: InsertedFoodLog) =>
     ])
     .execute();
 };
+
+export const deleteFoodLog = async (userId: string, foodId: number) => {
+  return await db
+    .deleteFrom('food_log')
+    .where('user_id', '=', userId)
+    .where('id', '=', foodId)
+    .execute();
+};

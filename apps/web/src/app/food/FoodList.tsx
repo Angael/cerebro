@@ -11,6 +11,7 @@ const FoodList = ({ foods }: Props) => {
   if (foods.length === 0) {
     return <Text>No foods logged today</Text>;
   }
+
   return (
     <FoodLogsList>
       {foods.map((food) => (

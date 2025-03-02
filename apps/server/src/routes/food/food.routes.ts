@@ -8,6 +8,7 @@ import {
   QueryFoodToday,
   QueryMyProducts,
   QueryScannedCode,
+  zDeleteFoodLog,
   zInsertedFoodLog,
 } from './food.model.js';
 import {
@@ -16,6 +17,7 @@ import {
   getMyProducts,
   getFoodLogsInDay,
   insertFoodLog,
+  deleteFoodLog,
 } from './food.service.js';
 
 const foodRoutes = honoFactory();
@@ -69,6 +71,16 @@ foodRoutes.post('/food/consumed-product', zValidator('json', zInsertedFoodLog), 
 
   await insertFoodLog(user.id, payload);
   logger.info('Inserted food log for user %s', user.id);
+
+  return c.json(null);
+});
+
+foodRoutes.delete('/food/log/:foodId', zValidator('param', zDeleteFoodLog), async (c) => {
+  const { user } = await requireSession(c);
+  const { foodId } = c.req.valid('param');
+
+  await deleteFoodLog(user.id, Number(foodId));
+  logger.info('Deleted food log for user %s', user.id);
 
   return c.json(null);
 });
