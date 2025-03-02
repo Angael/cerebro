@@ -1,7 +1,10 @@
 .unstyledLi {
   all: unset;
   box-sizing: border-box;
+}
 
+.btn {
+  width: 100%;
   border-radius: var(--mantine-radius-md);
   padding: var(--mantine-spacing-xs) 0;
 
