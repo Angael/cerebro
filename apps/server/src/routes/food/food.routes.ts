@@ -10,17 +10,33 @@ import {
   QueryScannedCode,
   zInsertedFoodLog,
 } from './food.model.js';
-import { getFoodByBarcode, getMyProducts, getTodayFoods, insertFoodLog } from './food.service.js';
+import {
+  getDaysFoods as getFoodsHistory,
+  getFoodByBarcode,
+  getMyProducts,
+  getFoodLogsInDay,
+  insertFoodLog,
+} from './food.service.js';
 
 const foodRoutes = honoFactory();
 
 foodRoutes.get('/food/today', async (c) => {
   const { user } = await requireSession(c);
 
-  const result = await getTodayFoods(user?.id);
+  const result = await getFoodLogsInDay(user?.id);
 
   logger.info('Getting food today for user %s', user?.id);
   return c.json(result satisfies QueryFoodToday);
+});
+
+foodRoutes.get('/food/history', async (c) => {
+  const { user } = await requireSession(c);
+
+  const result = await getFoodsHistory(user?.id);
+  console.log(result);
+
+  logger.info('Getting food history for user %s', user?.id);
+  return c.json(result);
 });
 
 foodRoutes.get('/food/my-products', async (c) => {

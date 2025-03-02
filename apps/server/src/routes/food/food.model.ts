@@ -29,3 +29,17 @@ export const zInsertedFoodLog = z.object({
   date: z.string().datetime(),
 });
 export type InsertedFoodLog = z.infer<typeof zInsertedFoodLog>;
+
+// brands, product_name,amount, kcal, kcal_100g, DATE(date) as dayDate
+export const zFoodHistory = z.array(
+  z.object({
+    id: z.number(),
+    brands: z.string(),
+    product_name: z.string(),
+    amount: z.number(),
+    kcal: z.number(),
+    kcal_100g: z.number(),
+    dayDate: z.date().transform((d) => d.toISOString()),
+  }),
+);
+export type QueryFoodHistory = z.infer<typeof zFoodHistory>;

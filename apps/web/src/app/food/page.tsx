@@ -15,6 +15,7 @@ import { useSearchParams } from 'next/navigation';
 import css from './page.module.css';
 import { useUrlParam } from '@/utils/hooks/useUrlParam';
 import FindProductDialog from './find-product/FindProductDialog';
+import History from './history/History';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -42,7 +43,6 @@ const FoodPage = () => {
 
   return (
     <Stack>
-      <Title>Food</Title>
       <Group>
         <Paper p="md" flex={1}>
           <Text>Today: {kcalToday} kcal</Text>
@@ -84,22 +84,7 @@ const FoodPage = () => {
         </Stack>
       </Paper>
 
-      <Group align="flex-start">
-        <Stack>
-          <Title>Today</Title>
-          <Paper p="md">Breakfast: 500 kcal</Paper>
-          <Paper p="md">Lunch: 700 kcal</Paper>
-          <Paper p="md">Dinner: 900 kcal</Paper>
-        </Stack>
-
-        <Stack>
-          <Title>Week</Title>
-          <Paper p="md">Monday: 2100 kcal</Paper>
-          <Paper p="md">Tuesday: 1090 kcal</Paper>
-          <Paper p="md">Wednesday: 300 kcal</Paper>
-          <Paper p="md">Thursday: 400 kcal</Paper>
-        </Stack>
-      </Group>
+      <History />
 
       <FindProductDialog
         open={findOpen}

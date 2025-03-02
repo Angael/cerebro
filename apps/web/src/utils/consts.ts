@@ -10,4 +10,5 @@ export const QUERY_KEYS = {
   accountPlan: 'accountPlan',
   todaysFood: 'todaysFood',
   foodByBarcode: 'foodByBarcode',
+  foodHistory: 'foodHistory',
 };

@@ -1,8 +1,12 @@
-import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
+import { InsertedFoodLog, QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
 import { Button, Group, Stack, Text, TextInput, Title } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useState } from 'react';
 import css from './SaveProductForm.module.css';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { API } from '@/utils/API';
+import { QUERY_KEYS } from '@/utils/consts';
+import { parseErrorResponse } from '@/utils/parseErrorResponse';
 
 type Props = {
   foodProduct: QueryScannedCode;
@@ -55,15 +59,38 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
     setInputValue(`${productQuantity}`);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const queryClient = useQueryClient();
+  const saveMutation = useMutation({
+    mutationFn: () =>
+      API.post(`/food/consumed-product`, {
+        foodProduct,
+        amount: Number(inputValue),
+        date: new Date().toISOString(),
+      } satisfies InsertedFoodLog),
+    onSuccess: async () => {
+      await Promise.allSettled([
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.foodHistory] }),
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.todaysFood] }),
+      ]);
+      onClose();
+      showNotification({
+        title: 'Product saved',
+        message: 'Product saved successfully',
+        color: 'blue',
+      });
+    },
+    onError: (e) => {
+      showNotification({
+        color: 'red',
+        title: 'Failed to log product',
+        message: parseErrorResponse(e)?.general,
+      });
+    },
+  });
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Submit value:', inputValue);
-    showNotification({
-      title: 'Product saved',
-      message: 'Product saved successfully',
-      color: 'blue',
-    });
-    // Here you would handle the form submission, e.g., sending the data to an API
+    saveMutation.mutate();
   };
 
   const increment = () => {
@@ -143,7 +170,9 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
           ))}
         </Group>
 
-        <Button type="submit">Save</Button>
+        <Button type="submit" loading={saveMutation.isPending}>
+          Save
+        </Button>
         <Button variant="default" onClick={onClose}>
           Cancel
         </Button>
