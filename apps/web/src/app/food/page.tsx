@@ -48,17 +48,20 @@ const FoodPage = () => {
           <Text>Today: {kcalToday} kcal</Text>
           <Progress value={(kcalToday / targetToday) * 100} />
         </Paper>
-
-        {/* <Paper p="md" flex={1}>
-          Week: 12090/21000 kcal
-          <Progress value={10} />
-        </Paper> */}
       </Group>
 
       <Paper p="md">
         <Stack gap="sm">
           <Title order={2}>Today</Title>
-          {todaysFood.data ? (
+
+          {!user.data && <Text>Please log in to see your food</Text>}
+
+          {todaysFood.isLoading && (
+            <Center>
+              <Loader />
+            </Center>
+          )}
+          {todaysFood.data && (
             <>
               <FoodList foods={todaysFood.data} />
               <Group justify="flex-end" className={css.foodActions}>
@@ -77,10 +80,6 @@ const FoodPage = () => {
                 </Button>
               </Group>
             </>
-          ) : (
-            <Center>
-              <Loader />
-            </Center>
           )}
         </Stack>
       </Paper>

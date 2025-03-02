@@ -29,6 +29,14 @@ function getKcalColor(calories: number): string {
   }
 }
 
+function getNrFromQuantity(quantity: string | undefined): number {
+  if (quantity === undefined) {
+    return 100;
+  }
+
+  return parseInt(quantity, 10) || 100;
+}
+
 const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   const [inputValue, setInputValue] = useState('');
 
@@ -37,7 +45,13 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   };
 
   const onPercentQuickAdd = (percent: number) => {
-    const productQuantity = foodProduct.product_quantity * (percent / 100);
+    const quantityNumber = getNrFromQuantity(foodProduct.product_quantity);
+
+    if (isNaN(quantityNumber)) {
+      return;
+    }
+
+    const productQuantity = quantityNumber * (percent / 100);
     setInputValue(`${productQuantity}`);
   };
 
@@ -66,6 +80,9 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
     });
   };
 
+  const allowPercentageQuickAdd =
+    foodProduct.product_quantity !== undefined &&
+    !isNaN(parseInt(foodProduct.product_quantity, 10));
   const kcal = (foodProduct.nutriments['energy-kcal_100g'] / 100) * Number(inputValue);
 
   return (
@@ -96,19 +113,21 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
         <Text size="xs" mb={-16}>
           Quick add:
         </Text>
-        <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
-          {percentageButtons.map((percent) => (
-            <Button
-              key={percent}
-              size="xs"
-              color="orange"
-              variant="light"
-              onClick={() => onPercentQuickAdd(parseInt(percent, 10))}
-            >
-              {percent}
-            </Button>
-          ))}
-        </Group>
+        {allowPercentageQuickAdd && (
+          <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
+            {percentageButtons.map((percent) => (
+              <Button
+                key={percent}
+                size="xs"
+                color="orange"
+                variant="light"
+                onClick={() => onPercentQuickAdd(parseInt(percent, 10))}
+              >
+                {percent}
+              </Button>
+            ))}
+          </Group>
+        )}
 
         <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
           {gramsButtons.map((grams) => (
