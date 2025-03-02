@@ -1,7 +1,7 @@
 import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
-import { List, ListItem, Stack, Text } from '@mantine/core';
-import css from './FoodList.module.css';
-import FoodLogEntry from './FoodLogEntry';
+import { Text } from '@mantine/core';
+import FoodLogEntry from './food-log-entry/FoodLogEntry';
+import FoodLogsList from './food-log-entry/FoodLogsList';
 
 type Props = {
   foods: QueryFoodToday;
@@ -12,13 +12,11 @@ const FoodList = ({ foods }: Props) => {
     return <Text>No foods logged today</Text>;
   }
   return (
-    <Stack>
-      <ul className={css.unstyledList}>
-        {foods.map((food) => (
-          <FoodLogEntry key={food.id} food={food} />
-        ))}
-      </ul>
-    </Stack>
+    <FoodLogsList>
+      {foods.map((food) => (
+        <FoodLogEntry key={food.id} food={food} />
+      ))}
+    </FoodLogsList>
   );
 };
 

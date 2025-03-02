@@ -1,0 +1,15 @@
+.unstyledLi {
+  all: unset;
+  box-sizing: border-box;
+
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-xs) 0;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+}

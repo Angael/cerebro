@@ -41,7 +41,7 @@ const FoodPage = () => {
       <Group>
         <Paper p="md" flex={1}>
           <Text>
-            Today: {kcalToday} kcal / {targetToday}
+            Today: {Math.ceil(kcalToday)} kcal / {targetToday}
           </Text>
           <Progress value={(kcalToday / targetToday) * 100} />
         </Paper>

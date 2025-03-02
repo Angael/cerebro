@@ -34,6 +34,7 @@ const History = (props: Props) => {
   return (
     <Stack>
       <Title order={2}>Previous logs</Title>
+
       {Object.entries(groupedFoods ?? {}).map(([date, logs]) => (
         <HistoryDay key={date} date={date} logs={logs} />
       ))}
