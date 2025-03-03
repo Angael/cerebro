@@ -49,6 +49,14 @@ export async function getMyProducts(userId: string): Promise<FoodProduct[]> {
   return await db.selectFrom('food_product').selectAll().where('user_id', '=', userId).execute();
 }
 
+const requestedFields = [
+  'product_name',
+  'brands',
+  'nutriments',
+  'image_url',
+  'product_quantity',
+  'product_quantity_unit',
+].join(',');
 export const getFoodByBarcode = async (code: string): Promise<QueryScannedCode> => {
   if (openFoodApiCache.has(code)) {
     return openFoodApiCache.get(code)!;
@@ -57,11 +65,7 @@ export const getFoodByBarcode = async (code: string): Promise<QueryScannedCode> 
   const json = await ky
     .get<{ product: QueryScannedCode }>(
       `https://world.openfoodfacts.org/api/v3/product/${code}.json`,
-      {
-        searchParams: {
-          fields: 'product_name,brands,nutriments,image_url,product_quantity,product_quantity_unit',
-        },
-      },
+      { searchParams: { fields: requestedFields } },
     )
     .json()
     .catch((e) => {
