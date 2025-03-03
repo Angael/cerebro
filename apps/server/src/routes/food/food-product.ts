@@ -27,7 +27,14 @@ export async function insertFoodProduct(
     product_quantity_unit: product.product_quantity_unit,
   };
 
-  await db.insertInto('food_product').values(inserted_product).execute();
+  logger.verbose('Inserting product %o', inserted_product);
+
+  try {
+    await db.insertInto('food_product').values(inserted_product).execute();
+  } catch (e) {
+    logger.error('Failed to insert product %o', inserted_product);
+    throw new HTTPException(500, { message: 'Failed to insert product' });
+  }
 }
 
 const requestedFields = [
@@ -87,10 +94,17 @@ export async function getFoodByBarcode(barcode: string, userId?: string): Promis
   try {
     await insertFoodProduct(product);
 
+    console.log('query', productFromDbQuery.compile());
+
     // Unnecessary work, but makes sure schema is correct, i am lazy
-    return await productFromDbQuery.executeTakeFirstOrThrow();
+    return await productFromDbQuery.executeTakeFirstOrThrow().catch((e) => {
+      throw new HTTPException(500, { message: "Failed to retrieve all product's data" });
+    });
   } catch (e) {
-    logger.error('Failed to insert/query product after getting it from openfoodfacts', e);
+    logger.error(
+      'Failed to insert/query product after getting it from openfoodfacts, %s',
+      String(e),
+    );
     throw new HTTPException(500, { message: "Failed to retrieve all product's data" });
   }
 }
