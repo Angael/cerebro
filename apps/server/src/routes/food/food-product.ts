@@ -60,11 +60,15 @@ export async function getFoodByBarcode(barcode: string, userId?: string): Promis
     )
     .json()
     .catch((e) => {
+      let statusCode: number = 404;
       if (e instanceof HTTPError) {
-        logger.error('OpenFoodFacts ky HTTPError for barcode %s, %o', barcode, e);
+        logger.error('OpenFoodFacts HTTPError for barcode: %s, error: %s', barcode, e.message);
+        statusCode = e.response.status;
+      } else {
+        logger.error('Failed to fetch openfoodfacts data, barcode: %s, %s', barcode, String(e));
       }
-      logger.error('Failed to fetch openfoodfacts data, barcode: %s, %s', barcode, String(e));
-      throw new HTTPException(404, {
+
+      throw new HTTPException(statusCode as any, {
         message: `Failed to retrieve product's data, barcode: ${barcode}`,
       });
     });
