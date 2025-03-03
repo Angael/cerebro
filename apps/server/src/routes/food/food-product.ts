@@ -73,12 +73,14 @@ export async function getFoodByBarcode(barcode: string, userId?: string): Promis
       });
     });
 
+  logger.verbose('scanned product %o', json.product);
+
   const { data: product, error } = await tryCatch(
     zQueryScannedCode.parseAsync({ ...json.product, code: barcode }),
   );
 
   if (error) {
-    logger.error('Failed to return product by barcode, openfoodfacts error , %s', error);
+    logger.error('Failed to return product by barcode, openfoodfacts error , %s', error.message);
     throw new HTTPException(500, { message: "Failed to retrieve all product's data" });
   }
 
