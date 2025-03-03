@@ -5,7 +5,7 @@ import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import { FoodProduct } from '@cerebro/db';
 import { Alert, Box, Modal } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Scanner from './Scanner';
 import css from './ScannerModal.module.css';
 
@@ -22,7 +22,9 @@ const ScannerModal = ({ open, onClose, onFound }: Props) => {
     enabled: !!code,
     queryKey: [QUERY_KEYS.foodByBarcode, { barcode: code }],
     queryFn: () => API.get<FoodProduct>(`/food/barcode/${code}`).then((r) => r.data),
+    refetchOnWindowFocus: true,
   });
+  console.log(codeQuery.status);
 
   const codeFoundCallback = (codes: string[]) => {
     if (codes.length > 0) {
@@ -30,12 +32,22 @@ const ScannerModal = ({ open, onClose, onFound }: Props) => {
     }
   };
 
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (open && code && codeQuery.isSuccess) {
       onFound(code);
       setCode(null);
     }
-  }, [open, code, codeQuery.isSuccess]);
+
+    if (open && code && codeQuery.status === 'error') {
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        setCode(null);
+      }, 3000);
+    }
+  }, [open, code, codeQuery.status]);
 
   const isMobile = useIsMobile();
 
