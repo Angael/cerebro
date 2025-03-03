@@ -3,22 +3,17 @@ import { honoFactory } from '../honoFactory.js';
 
 import { requireSession } from '@/middleware/requireSession.js';
 import logger from '@/utils/log.js';
+import { FoodProduct } from '@cerebro/db';
 import { zValidator } from '@hono/zod-validator';
 import {
-  QueryFoodToday,
-  QueryMyProducts,
-  QueryScannedCode,
-  zDeleteFoodLog,
-  zInsertedFoodLog,
-} from './food.model.js';
-import {
-  getDaysFoods as getFoodsHistory,
-  getFoodByBarcode,
-  getMyProducts,
-  getFoodLogsInDay,
-  insertFoodLog,
   deleteFoodLog,
-} from './food.service.js';
+  getFoodLogsInDay,
+  getDaysFoods as getFoodsHistory,
+  getMyProducts,
+  insertFoodLog,
+} from './food-log.js';
+import { getFoodByBarcode } from './food-product.js';
+import { QueryFoodToday, QueryMyProducts, zDeleteFoodLog, zInsertedFoodLog } from './food.model.js';
 
 const foodRoutes = honoFactory();
 
@@ -53,15 +48,16 @@ foodRoutes.get(
   '/food/barcode/:code',
   zValidator('param', z.object({ code: z.string() })),
   async (c) => {
+    const { user } = await requireSession(c);
     const { code } = c.req.valid('param');
-    const result = await getFoodByBarcode(code);
+    const result = await getFoodByBarcode(code, user.id);
 
     if (result) {
       // set cache header for 7 days
       c.header('Cache-Control', 'public, max-age=604800');
     }
 
-    return c.json(result satisfies QueryScannedCode);
+    return c.json(result satisfies FoodProduct);
   },
 );
 

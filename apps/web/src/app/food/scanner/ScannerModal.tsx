@@ -1,13 +1,13 @@
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
+import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
-import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
+import { FoodProduct } from '@cerebro/db';
 import { Alert, Box, Modal } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import Scanner from './Scanner';
 import css from './ScannerModal.module.css';
-import { useIsMobile } from '@/utils/hooks/useIsMobile';
 
 type Props = {
   open: boolean;
@@ -18,10 +18,10 @@ type Props = {
 const ScannerModal = ({ open, onClose, onFound }: Props) => {
   const [code, setCode] = useState<string | null>(null);
 
-  const codeQuery = useQuery<QueryScannedCode>({
+  const codeQuery = useQuery({
     enabled: !!code,
     queryKey: [QUERY_KEYS.foodByBarcode, { barcode: code }],
-    queryFn: () => API.get<any>(`/food/barcode/${code}`).then((r) => r.data),
+    queryFn: () => API.get<FoodProduct>(`/food/barcode/${code}`).then((r) => r.data),
   });
 
   const codeFoundCallback = (codes: string[]) => {

@@ -124,15 +124,18 @@ export type Video = Selectable<VideoTable>;
 // export type NewPerson = Insertable<PersonTable>;
 // export type PersonUpdate = Updateable<PersonTable>;
 
-// FOOD:
+// Duplicated each scan from openfoodfacts, so it's easier to get last n added products, and makes it faster
 interface FoodProductTable {
   id: Generated<number>;
   barcode: string | null;
 
-  user_id: string;
+  user_id: string | null;
 
   product_name: string;
   brands: string | null;
+  image_url: string | null;
+  product_quantity: number | null;
+  product_quantity_unit: string | null;
 
   kcal_100g: number;
   fat_100g: number | null;

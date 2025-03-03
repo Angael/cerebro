@@ -1,22 +1,29 @@
 import FoodMacros from '@/lib/food-macros/FoodMacros';
-import { QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
+import { FoodProduct } from '@cerebro/db';
 import { Paper, Stack, Text, Title } from '@mantine/core';
 import css from './FoodProductSummary.module.css';
 
 type Props = {
-  foodProduct: QueryScannedCode;
+  foodProduct: FoodProduct;
 };
 
 const FoodProductSummary = ({ foodProduct }: Props) => {
-  const { carbohydrates_100g, proteins_100g, fat_100g } = foodProduct.nutriments;
+  const {
+    kcal_100g,
+    carb_100g,
+    proteins_100g,
+    fat_100g,
+    image_url,
+    product_quantity,
+    product_quantity_unit,
+  } = foodProduct;
 
-  const hasNutriments =
-    carbohydrates_100g !== undefined && proteins_100g !== undefined && fat_100g !== undefined;
+  const hasNutriments = carb_100g !== null && proteins_100g !== null && fat_100g !== null;
 
   return (
     <Paper bg="dark.9" p="md">
       <div className={css.imgAndDescFlex}>
-        <img className={css.foodImg} src={foodProduct.image_url} alt="" />
+        {image_url && <img className={css.foodImg} src={image_url} alt="" />}
         <Stack gap="xs">
           <div>
             <Text c="gray" size="sm">
@@ -25,13 +32,12 @@ const FoodProductSummary = ({ foodProduct }: Props) => {
             <Title order={3}>{foodProduct.product_name}</Title>
           </div>
           <div>
-            {foodProduct.nutriments['energy-kcal_100g'] && (
-              <Text size="sm">{foodProduct.nutriments['energy-kcal_100g']} kcal / 100g</Text>
-            )}
-            {foodProduct.product_quantity && (
+            <Text size="sm">{kcal_100g} kcal / 100g</Text>
+
+            {product_quantity && (
               <Text size="sm">
-                Size: {foodProduct.product_quantity}
-                {foodProduct.product_quantity_unit}
+                Size: {product_quantity}
+                {product_quantity_unit}
               </Text>
             )}
           </div>
@@ -39,7 +45,7 @@ const FoodProductSummary = ({ foodProduct }: Props) => {
       </div>
 
       {hasNutriments && (
-        <FoodMacros carbs={carbohydrates_100g} proteins={proteins_100g} fats={fat_100g} mt="sm" />
+        <FoodMacros carbs={carb_100g} proteins={proteins_100g} fats={fat_100g} mt="sm" />
       )}
     </Paper>
   );

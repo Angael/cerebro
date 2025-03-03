@@ -1,15 +1,16 @@
-import { InsertedFoodLog, QueryScannedCode } from '@cerebro/server/src/routes/food/food.model';
-import { Button, Group, Stack, Text, TextInput, Title } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
-import { useState } from 'react';
-import css from './SaveProductForm.module.css';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
+import { FoodProduct } from '@cerebro/db';
+import { InsertedFoodLog } from '@cerebro/server/src/routes/food/food.model';
+import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import css from './SaveProductForm.module.css';
 
 type Props = {
-  foodProduct: QueryScannedCode;
+  foodProduct: FoodProduct;
   onClose: () => void;
 };
 
@@ -33,12 +34,12 @@ function getKcalColor(calories: number): string {
   }
 }
 
-function getNrFromQuantity(quantity: string | undefined): number {
-  if (quantity === undefined) {
+function getNrFromQuantity(quantity: number | null): number {
+  if (quantity === null) {
     return 100;
   }
 
-  return parseInt(quantity, 10) || 100;
+  return quantity || 100;
 }
 
 const SaveProductModal = ({ foodProduct, onClose }: Props) => {
@@ -63,7 +64,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   const saveMutation = useMutation({
     mutationFn: () =>
       API.post(`/food/consumed-product`, {
-        foodProduct,
+        foodProductId: foodProduct.id,
         amount: Number(inputValue),
         date: new Date().toISOString(),
       } satisfies InsertedFoodLog),
@@ -107,10 +108,9 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
     });
   };
 
-  const allowPercentageQuickAdd =
-    foodProduct.product_quantity !== undefined &&
-    !isNaN(parseInt(foodProduct.product_quantity, 10));
-  const kcal = (foodProduct.nutriments['energy-kcal_100g'] / 100) * Number(inputValue);
+  const allowPercentageQuickAdd = !!foodProduct.product_quantity;
+
+  const kcal = (foodProduct.kcal_100g / 100) * Number(inputValue);
 
   return (
     <form onSubmit={handleSubmit}>

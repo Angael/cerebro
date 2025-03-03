@@ -24,13 +24,12 @@ export const zQueryScannedCode = z.object({
 export type QueryScannedCode = z.infer<typeof zQueryScannedCode>;
 
 export const zInsertedFoodLog = z.object({
-  foodProduct: zQueryScannedCode,
+  foodProductId: z.number(),
   amount: z.number(),
   date: z.string().datetime(),
 });
 export type InsertedFoodLog = z.infer<typeof zInsertedFoodLog>;
 
-// brands, product_name,amount, kcal, kcal_100g, DATE(date) as dayDate
 export const zFoodHistory = z.array(
   z.object({
     id: z.number(),
