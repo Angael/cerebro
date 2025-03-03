@@ -62,8 +62,8 @@ const FoodLogEntry = ({ food }: Props) => {
       </UnstyledButton>
       <Collapse in={isOpen}>
         <Group pb="xs">
-          <Button>Add today</Button>
-          <Button variant="outline" leftSection={<Icon path={mdiPencil} size={1} />}>
+          <Button disabled>Add today</Button>
+          <Button disabled variant="outline" leftSection={<Icon path={mdiPencil} size={1} />}>
             Edit
           </Button>
           <Button color="red" onClick={() => deleteMut.mutate()} loading={deleteMut.isPending}>
