@@ -54,8 +54,6 @@ export async function getFoodByBarcode(barcode: string, userId?: string): Promis
     // If user_id is null, it's a global product
     .where((eb) => eb.or([eb('user_id', '=', userId || null), eb('user_id', 'is', null)]));
 
-  console.log('find sql query', productFromDbQuery.compile().sql);
-
   const productFromDb = await productFromDbQuery.executeTakeFirst().catch(() => null);
 
   if (productFromDb) {
