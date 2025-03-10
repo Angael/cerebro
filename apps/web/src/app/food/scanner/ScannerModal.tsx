@@ -24,7 +24,6 @@ const ScannerModal = ({ open, onClose, onFound }: Props) => {
     queryFn: () => API.get<FoodProduct>(`/food/barcode/${code}`).then((r) => r.data),
     refetchOnWindowFocus: true,
   });
-  console.log(codeQuery.status);
 
   const codeFoundCallback = (codes: string[]) => {
     if (codes.length > 0) {
