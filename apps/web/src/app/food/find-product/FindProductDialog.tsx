@@ -1,30 +1,28 @@
 import { API } from '@/utils/API';
-import { QueryMyProducts } from '@cerebro/server/src/routes/food/food.model';
-import { ActionIcon, Button, Group, Stack, TextInput } from '@mantine/core';
+import { useIsMobile } from '@/utils/hooks/useIsMobile';
+import { FoodProduct } from '@cerebro/db';
+import { ActionIcon, Button, Modal, Stack, TextInput } from '@mantine/core';
+import { mdiBarcode } from '@mdi/js';
+import Icon from '@mdi/react';
 import { useQuery } from '@tanstack/react-query';
 import Fuse from 'fuse.js';
 import { useMemo, useState } from 'react';
 import CustomProductBtn from './CustomProductBtn';
-import Icon from '@mdi/react';
-import { mdiBarcode } from '@mdi/js';
-import { Modal, Text } from '@mantine/core';
-import { useIsMobile } from '@/utils/hooks/useIsMobile';
 
 type Props = {
   open: boolean;
   onClose: () => void;
   onOpenScanner: () => void;
-  // TODO
-  // onChooseProduct: (id: string) => void;
+  onChooseProduct: (foodProduct: FoodProduct) => void;
 };
 
-const FindProductDialog = ({ open, onClose, onOpenScanner }: Props) => {
+const FindProductDialog = ({ open, onClose, onOpenScanner, onChooseProduct }: Props) => {
   const [name, setName] = useState('');
 
   const autocomplete = useQuery({
     enabled: open,
     queryKey: ['autocomplete'],
-    queryFn: () => API.get<QueryMyProducts>('/food/my-products').then((r) => r.data),
+    queryFn: () => API.get<FoodProduct[]>('/food/my-products').then((r) => r.data),
   });
 
   const fuse = useMemo(() => {
@@ -33,7 +31,7 @@ const FindProductDialog = ({ open, onClose, onOpenScanner }: Props) => {
     });
   }, [autocomplete.data]);
 
-  const autocompleteOptions = useMemo(() => {
+  const foodProducts = useMemo(() => {
     if (name === '') {
       return autocomplete.data ?? [];
     }
@@ -46,10 +44,6 @@ const FindProductDialog = ({ open, onClose, onOpenScanner }: Props) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
     setName(value);
-  };
-
-  const onProductSelect = (id: string) => {
-    console.log('Product selected', id);
   };
 
   const onCreateProduct = () => {
@@ -76,8 +70,12 @@ const FindProductDialog = ({ open, onClose, onOpenScanner }: Props) => {
         />
 
         <Stack gap="xs">
-          {autocompleteOptions.map((option) => (
-            <CustomProductBtn key={option.id} option={option} onProductSelect={onProductSelect} />
+          {foodProducts.map((foodProduct) => (
+            <CustomProductBtn
+              key={foodProduct.id}
+              foodProduct={foodProduct}
+              onProductSelect={onChooseProduct}
+            />
           ))}
           <Button onClick={onCreateProduct} style={{ margin: 'auto', marginTop: '32px' }}>
             Create new product

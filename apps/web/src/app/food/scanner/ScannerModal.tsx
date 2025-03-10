@@ -12,14 +12,14 @@ import css from './ScannerModal.module.css';
 type Props = {
   open: boolean;
   onClose: () => void;
-  onFound: (code: string) => void;
+  onFound: (foodProduct: FoodProduct) => void;
 };
 
 const ScannerModal = ({ open, onClose, onFound }: Props) => {
   const [code, setCode] = useState<string | null>(null);
 
   const codeQuery = useQuery({
-    enabled: !!code,
+    enabled: open && !!code,
     queryKey: [QUERY_KEYS.foodByBarcode, { barcode: code }],
     queryFn: () => API.get<FoodProduct>(`/food/barcode/${code}`).then((r) => r.data),
     refetchOnWindowFocus: true,
@@ -35,7 +35,7 @@ const ScannerModal = ({ open, onClose, onFound }: Props) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (open && code && codeQuery.isSuccess) {
-      onFound(code);
+      onFound(codeQuery.data);
       setCode(null);
     }
 

@@ -1,24 +1,14 @@
-import { API } from '@/utils/API';
-import { QUERY_KEYS } from '@/utils/consts';
 import { env } from '@/utils/env';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
-import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import { FoodProduct } from '@cerebro/db';
-import { Alert, Loader, Modal, Stack } from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
+import { Modal, Stack } from '@mantine/core';
 import { memo } from 'react';
 import SaveProductForm from '../save-product-form/SaveProductForm';
 import FoodProductSummary from '../scanner/scanned-code/FoodProductSummary';
 
-type Props = { code: string | null; open: boolean; onClose: () => void };
+type Props = { foodProduct: FoodProduct | null; open: boolean; onClose: () => void };
 
-const AddProductModal = ({ code, open, onClose }: Props) => {
-  const codeQuery = useQuery({
-    enabled: !!code,
-    queryKey: [QUERY_KEYS.foodByBarcode, { barcode: code }],
-    queryFn: () => API.get<FoodProduct>(`/food/barcode/${code}`).then((r) => r.data),
-  });
-
+const AddProductModal = ({ foodProduct, open, onClose }: Props) => {
   const isMobile = useIsMobile();
 
   return (
@@ -31,24 +21,17 @@ const AddProductModal = ({ code, open, onClose }: Props) => {
       zIndex={201}
     >
       <Stack gap="md">
-        {codeQuery.isLoading && <Loader />}
-        {codeQuery.isError && (
-          <Stack>
-            <Alert color="red">Error: {parseErrorResponse(codeQuery.error)?.general}</Alert>
-          </Stack>
-        )}
-
-        {codeQuery.isSuccess && (
+        {foodProduct && (
           <>
-            <FoodProductSummary foodProduct={codeQuery.data} />
-            <SaveProductForm foodProduct={codeQuery.data} onClose={onClose} />
+            <FoodProductSummary foodProduct={foodProduct} />
+            <SaveProductForm foodProduct={foodProduct} onClose={onClose} />
           </>
         )}
 
         {!env.IS_PROD && (
           <details>
             <summary>Show JSON</summary>
-            <pre>{JSON.stringify(codeQuery.data, null, 2)}</pre>
+            <pre>{JSON.stringify(foodProduct, null, 2)}</pre>
           </details>
         )}
       </Stack>

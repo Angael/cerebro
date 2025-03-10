@@ -14,6 +14,7 @@ import FoodList from './FoodList';
 import History from './history/History';
 import css from './page.module.css';
 import ScannerModal from './scanner/ScannerModal';
+import { FoodProduct } from '@cerebro/db';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -24,7 +25,7 @@ const FoodPage = () => {
   });
 
   const [findOpen, setFindOpen] = useState(false);
-  const [code, setCode] = useState<string | null>(null);
+  const [foodProduct, setFoodProduct] = useState<FoodProduct | null>(null);
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [scannerOpened, setScannerOpened] = useState(false);
 
@@ -87,21 +88,30 @@ const FoodPage = () => {
         open={findOpen}
         onClose={() => setFindOpen(false)}
         onOpenScanner={() => {
-          setCode('');
+          setFoodProduct(null);
           setFindOpen(false);
           setScannerOpened(true);
+        }}
+        onChooseProduct={(_foodProduct) => {
+          setFoodProduct(_foodProduct);
+          setFindOpen(false);
+          setAddProductOpen(true);
         }}
       />
       <ScannerModal
         open={scannerOpened}
         onClose={() => setScannerOpened(false)}
-        onFound={(_code) => {
-          setCode(_code);
+        onFound={(foodProduct) => {
+          setFoodProduct(foodProduct);
           setScannerOpened(false);
           setAddProductOpen(true);
         }}
       />
-      <AddProductModal code={code} open={addProductOpen} onClose={() => setAddProductOpen(false)} />
+      <AddProductModal
+        foodProduct={foodProduct}
+        open={addProductOpen}
+        onClose={() => setAddProductOpen(false)}
+      />
     </Stack>
   );
 };
