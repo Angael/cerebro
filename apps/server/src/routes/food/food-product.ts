@@ -5,6 +5,14 @@ import logger from '@/utils/log';
 import { HTTPException } from 'hono/http-exception';
 import { tryCatch } from '@/utils/errors/tryCatch';
 
+export async function getMyProducts(userId: string): Promise<FoodProduct[]> {
+  return await db
+    .selectFrom('food_product')
+    .selectAll()
+    .where((eb) => eb.or([eb('user_id', '=', userId), eb('user_id', 'is', null)]))
+    .execute();
+}
+
 export async function insertFoodProduct(
   product: QueryScannedCode,
   userId?: string | null,

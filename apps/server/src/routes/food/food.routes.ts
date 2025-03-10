@@ -9,10 +9,9 @@ import {
   deleteFoodLog,
   getFoodLogsInDay,
   getDaysFoods as getFoodsHistory,
-  getMyProducts,
   insertFoodLog,
 } from './food-log.js';
-import { getFoodByBarcode } from './food-product.js';
+import { getFoodByBarcode, getMyProducts } from './food-product.js';
 import { QueryFoodToday, QueryMyProducts, zDeleteFoodLog, zInsertedFoodLog } from './food.model.js';
 
 const foodRoutes = honoFactory();

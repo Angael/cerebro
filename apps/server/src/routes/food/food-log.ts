@@ -41,10 +41,6 @@ select id, brands, product_name,amount, kcal, kcal_100g, DATE(date) as dayDate
   return zFoodHistory.parse(logsOnThoseDays.rows);
 }
 
-export async function getMyProducts(userId: string): Promise<FoodProduct[]> {
-  return await db.selectFrom('food_product').selectAll().where('user_id', '=', userId).execute();
-}
-
 // TODO: expand to support also custom foods
 export const insertFoodLog = async (userId: string, payload: InsertedFoodLog) => {
   const { foodProductId, amount, date } = payload;
