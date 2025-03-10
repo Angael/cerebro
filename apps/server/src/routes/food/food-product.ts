@@ -52,7 +52,9 @@ export async function getFoodByBarcode(barcode: string, userId?: string): Promis
     .selectAll()
     .where('barcode', '=', barcode)
     // If user_id is null, it's a global product
-    .where((eb) => eb.or([eb('user_id', '=', userId || null), eb('user_id', '=', null)]));
+    .where((eb) => eb.or([eb('user_id', '=', userId || null), eb('user_id', 'is', null)]));
+
+  console.log('find sql query', productFromDbQuery.compile().sql);
 
   const productFromDb = await productFromDbQuery.executeTakeFirst().catch(() => null);
 
@@ -93,8 +95,6 @@ export async function getFoodByBarcode(barcode: string, userId?: string): Promis
 
   try {
     await insertFoodProduct(product);
-
-    console.log('query', productFromDbQuery.compile());
 
     // Unnecessary work, but makes sure schema is correct, i am lazy
     return await productFromDbQuery.executeTakeFirstOrThrow().catch((e) => {
