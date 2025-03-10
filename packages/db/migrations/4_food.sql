@@ -22,13 +22,16 @@ CREATE TABLE food_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
     barcode VARCHAR(255),
     user_id VARCHAR(255),
-    custom_food_id INT,
+    food_product_id INT,
     product_name VARCHAR(255) NOT NULL,
     brands VARCHAR(255),
     amount FLOAT NOT NULL,
     kcal FLOAT NOT NULL,
     kcal_100g FLOAT NOT NULL,
     date TIMESTAMP default CURRENT_TIMESTAMP not null
+
+    -- Foreign key
+    FOREIGN KEY (food_product_id) REFERENCES food_product(id)
 );
 
 CREATE TABLE food_goal (

@@ -153,7 +153,7 @@ interface FoodLogTable {
   barcode: string | null;
 
   user_id: string;
-  custom_food_id: number | null;
+  food_product_id: number | null;
 
   product_name: string; // To not fetch the product again
   brands: string | null; // To not fetch the product again
