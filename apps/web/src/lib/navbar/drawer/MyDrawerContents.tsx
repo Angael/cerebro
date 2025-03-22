@@ -8,6 +8,7 @@ import { API } from '@/utils/API';
 import { Icon } from '@mdi/react';
 import {
   mdiAccountCircleOutline,
+  mdiFoodApple,
   mdiHome,
   mdiLogout,
   mdiShieldCrownOutline,
@@ -30,7 +31,7 @@ const MyDrawerContents = ({ onClose }: Props) => {
   });
 
   return (
-    <Stack className={css.MyDrawerContents} gap="md">
+    <Stack className={css.MyDrawerContents} gap="md" w="340px">
       <Paper p="md">
         <RouteNavLink
           href="/browse"
@@ -48,6 +49,16 @@ const MyDrawerContents = ({ onClose }: Props) => {
             leftSection={<Icon path={mdiUpload} size="24px" />}
           />
         )}
+      </Paper>
+
+      <Paper p="md">
+        <RouteNavLink
+          href="/food"
+          label="Food"
+          description="Log what you ate"
+          onClick={onClose}
+          leftSection={<Icon path={mdiFoodApple} size="24px" />}
+        />
       </Paper>
 
       <Paper p="md">

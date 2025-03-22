@@ -6,8 +6,8 @@
     "db:start": "docker-compose start",
     "build": "turbo build",
     "dev": "turbo dev",
-    "dev:server": "turbo dev --filter server",
-    "dev:web": "turbo dev --filter web",
+    "dev:server": "turbo dev --filter @cerebro/server",
+    "dev:web": "turbo dev --filter @cerebro/web",
     "dev:stripe": "stripe login & stripe listen -e checkout.session.completed,customer.subscription.updated,customer.subscription.deleted --forward-to http://localhost:3000/webhooks/stripe",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -23,8 +23,10 @@
   },
   "dependencies": {
     "@cerebro/tsconfig": "workspace:*",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^7.2.1",
+    "fuse.js": "^7.0.0",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
     "zod": "^3.22.4"

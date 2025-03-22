@@ -5,9 +5,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { API } from '@/utils/API';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
-import { Paper, Stack, Title } from '@mantine/core';
+import { Paper, Stack, Title, Loader } from '@mantine/core';
 import AdminUserPreview from '@/app/admin/users/AdminUserPreview';
 import adminGuardedPage from '@/lib/admin/adminGuardedPage';
+import PageLoader from '@/lib/page-loader/PageLoader';
 
 const AdminUsersPage = () => {
   const searchParams = useSearchParams();
@@ -24,6 +25,10 @@ const AdminUsersPage = () => {
   };
 
   const sortedUsers = data ? [...data].sort((a, b) => b.usedSpace - a.usedSpace) : [];
+
+  if (!data) {
+    return <PageLoader />;
+  }
 
   return (
     <Stack gap="md">

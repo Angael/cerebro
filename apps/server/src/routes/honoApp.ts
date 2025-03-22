@@ -10,8 +10,12 @@ import authRouter from '@/routes/auth/auth.routes.js';
 import userRouter from '@/routes/user/user.routes.js';
 import adminRoutes from '@/routes/admin/admin.routes.js';
 import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
+import foodRoutes from '@/routes/food/food.routes.js';
+import serverStatsRoutes from '@/routes/server-stats/server-stats.routes.js';
+import { statsMiddleware } from './server-stats/server-stats.logic.js';
 
 export const app = honoFactory()
+  .use('*', statsMiddleware) // Apply to all routes
   .use(csrf({ origin: env.CORS_URL }))
   .use(cors({ origin: env.CORS_URL, credentials: true, maxAge: 600 }))
   .get('/', (c) => c.json({ version: 'v0.9' }))
@@ -20,4 +24,6 @@ export const app = honoFactory()
   .route('/', userRouter)
   .route('/', adminRoutes)
   .route('/', stripeRoutes)
+  .route('/', foodRoutes)
+  .route('/', serverStatsRoutes)
   .onError((e, c) => errorResponse(c, e));

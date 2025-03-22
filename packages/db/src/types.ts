@@ -9,6 +9,11 @@ export interface Database {
   thumbnail: ThumbnailTable;
   image: ImageTable;
   video: VideoTable;
+
+  // Foods
+  food_product: FoodProductTable;
+  food_log: FoodLogTable;
+  food_goal: FoodGoalTable;
 }
 
 export type UserType = 'PREMIUM' | 'FREE' | 'ADMIN';
@@ -118,3 +123,59 @@ export type Video = Selectable<VideoTable>;
 // export type Person = Selectable<PersonTable>;
 // export type NewPerson = Insertable<PersonTable>;
 // export type PersonUpdate = Updateable<PersonTable>;
+
+// Duplicated each scan from openfoodfacts, so it's easier to get last n added products, and makes it faster
+interface FoodProductTable {
+  id: Generated<number>;
+  barcode: string | null;
+
+  user_id: string | null;
+
+  product_name: string;
+  brands: string | null;
+  image_url: string | null;
+  product_quantity: number | null;
+  product_quantity_unit: string | null;
+
+  kcal_100g: number;
+  fat_100g: number | null;
+  carb_100g: number | null;
+  proteins_100g: number | null;
+
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
+export type FoodProduct = Selectable<FoodProductTable>;
+
+interface FoodLogTable {
+  id: Generated<number>;
+  barcode: string | null;
+
+  user_id: string;
+  food_product_id: number | null;
+
+  product_name: string; // To not fetch the product again
+  brands: string | null; // To not fetch the product again
+  amount: number; // grams
+  kcal: number;
+  kcal_100g: number; // To not fetch the product again
+
+  date: Date;
+}
+
+export type FoodLog = Selectable<FoodLogTable>;
+
+interface FoodGoalTable {
+  id: Generated<number>;
+  user_id: string;
+
+  kcal: number | null;
+  fat_g: number | null;
+  carb_g: number | null;
+  proteins_g: number | null;
+
+  date: Date;
+}
+
+export type FoodGoal = Selectable<FoodGoalTable>;

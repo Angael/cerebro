@@ -27,8 +27,8 @@ const Navbar = () => {
             size="sm"
           />
           <Drawer.Root className={css.Drawer} opened={opened} onClose={close}>
-            <Drawer.Overlay />
-            <Drawer.Content classNames={{ content: css.DrawerContent }}>
+            <Drawer.Overlay zIndex={2} />
+            <Drawer.Content style={{ zIndex: 2 }} classNames={{ content: css.DrawerContent }}>
               <Drawer.Body h="calc(100% - var(--navbar-height))">
                 <MyDrawerContents onClose={close} />
               </Drawer.Body>

@@ -6,6 +6,10 @@ export const QUERY_KEYS = {
   uploadLimits: 'uploadLimits',
   user: 'user',
   adminAllUsers: 'adminAllUsers',
+  adminServerStats: 'adminServerStats',
   adminUserPreview: 'adminUserPreview',
   accountPlan: 'accountPlan',
+  todaysFood: 'todaysFood',
+  foodByBarcode: 'foodByBarcode',
+  foodHistory: 'foodHistory',
 };

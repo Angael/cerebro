@@ -11,8 +11,8 @@ const layout = ({ children }: Props) => {
         <Anchor component={Link} href="/admin/users">
           Users
         </Anchor>
-        <Anchor component={Link} href="/admin/all-data">
-          All data
+        <Anchor component={Link} href="/admin/server-stats">
+          Server stats
         </Anchor>
       </Group>
       {children}

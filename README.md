@@ -58,15 +58,7 @@ bun dev:stripe
 
 ```bash
 bun i
-turbo build
-```
-
-To filter only one app run:
-
-```bash
-turbo build --filter web
-# or
-turbo build --filter server
+bun build
 ```
 
 ### Env
@@ -83,4 +75,6 @@ On push to main, Azure pipelines will build and deploy the apps to Azure App Ser
 
 Fast rollbacks are supported, as last 3 releases are kept.
 
-Database migrations need to be run manually, before the deployment.
+Database migrations are run by the server on startup.
+Is it perfect? No.
+Is it good enough? Yes.
