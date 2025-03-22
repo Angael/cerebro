@@ -81,11 +81,6 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.todaysFood] }),
       ]);
       onClose();
-      showNotification({
-        title: 'Product saved',
-        message: 'Product saved successfully',
-        color: 'blue',
-      });
     },
     onError: (e) => {
       showNotification({
