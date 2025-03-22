@@ -9,7 +9,13 @@ import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
 
 type Props = {
-  food: QueryFoodToday[number];
+  food: {
+    id: number;
+    brands: string | null;
+    product_name: string;
+    amount: number;
+    kcal: number;
+  };
 };
 
 const FoodLogEntry = ({ food }: Props) => {
