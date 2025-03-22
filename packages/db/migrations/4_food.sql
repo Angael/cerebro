@@ -28,7 +28,7 @@ CREATE TABLE food_log (
     amount FLOAT NOT NULL,
     kcal FLOAT NOT NULL,
     kcal_100g FLOAT NOT NULL,
-    date TIMESTAMP default CURRENT_TIMESTAMP not null
+    date TIMESTAMP default CURRENT_TIMESTAMP not null,
 
     -- Foreign key
     FOREIGN KEY (food_product_id) REFERENCES food_product(id)
