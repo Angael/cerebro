@@ -1,5 +1,6 @@
 import { Context, Next } from 'hono';
 import { EndpointStats, EndpointStatsResponse } from './server-stats.model';
+import logger from '@/utils/log';
 
 export const endpointStats: EndpointStats = {};
 
@@ -9,7 +10,7 @@ export async function statsMiddleware(c: Context, next: Next) {
   const end = performance.now();
   const responseTime = end - start;
 
-  const endpoint = c.req.routePath; // Or use c.req.routePath if you have defined routes with parameters.
+  const endpoint = c.req.routePath;
   const statusCode = c.res.status;
   const now = new Date();
   const dateString = now.toISOString().split('T')[0]!; // YYYY-MM-DD
@@ -126,6 +127,7 @@ export const getStats = (): EndpointStatsResponse => {
 
 // Deletes stats older than 7 days
 const deleteOldStats = () => {
+  logger.info('Deleting old stats');
   const now = new Date();
   const dateString = now.toISOString().split('T')[0]!; // YYYY-MM-DD
 
