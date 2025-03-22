@@ -12,7 +12,7 @@ export async function statsMiddleware(c: Context, next: Next) {
   const endpoint = c.req.routePath; // Or use c.req.routePath if you have defined routes with parameters.
   const statusCode = c.res.status;
   const now = new Date();
-  const dateString = now.toISOString().split('T')[0]; // YYYY-MM-DD
+  const dateString = now.toISOString().split('T')[0]!; // YYYY-MM-DD
 
   if (!endpointStats[endpoint]) {
     endpointStats[endpoint] = {
@@ -54,12 +54,12 @@ function calculatePercentile(data: number[], percentile: number): number {
   const index = (percentile / 100) * (sortedData.length - 1);
 
   if (Number.isInteger(index)) {
-    return sortedData[index];
+    return sortedData[index]!;
   } else {
     const lowerIndex = Math.floor(index);
     const upperIndex = Math.ceil(index);
     const fraction = index - lowerIndex;
-    return sortedData[lowerIndex] * (1 - fraction) + sortedData[upperIndex] * fraction;
+    return sortedData[lowerIndex]! * (1 - fraction) + sortedData[upperIndex]! * fraction;
   }
 }
 
@@ -73,8 +73,8 @@ function calculateMedian(data: number[]): number {
   const sortedData = data.slice().sort((a, b) => a - b);
   const mid = Math.floor(sortedData.length / 2);
   return sortedData.length % 2 !== 0
-    ? sortedData[mid]
-    : (sortedData[mid - 1] + sortedData[mid]) / 2;
+    ? sortedData[mid]!
+    : (sortedData[mid - 1]! + sortedData[mid]!) / 2;
 }
 
 export const getStats = (): EndpointStatsResponse => {
@@ -123,3 +123,22 @@ export const getStats = (): EndpointStatsResponse => {
 
   return statsResponse;
 };
+
+// Deletes stats older than 7 days
+const deleteOldStats = () => {
+  const now = new Date();
+  const dateString = now.toISOString().split('T')[0]!; // YYYY-MM-DD
+
+  for (const endpoint in endpointStats) {
+    if (endpoint in endpointStats) {
+      const endpointData = endpointStats[endpoint]!;
+      for (const date in endpointData.dailyStats) {
+        if (date in endpointData.dailyStats && date !== dateString) {
+          delete endpointData.dailyStats[date];
+        }
+      }
+    }
+  }
+};
+
+setInterval(deleteOldStats, 1000 * 60 * 60 * 24); // Every 24 hours
