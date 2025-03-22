@@ -14,7 +14,14 @@ type Props = {
   onClose: () => void;
 };
 
-const percentageButtons = ['10%', '25%', '50%', '75%', '100%'];
+const percentageButtons = [
+  { label: '1/4', multiplier: 0.25 },
+  { label: '1/2', multiplier: 0.5 },
+  { label: '1x', multiplier: 1 },
+  { label: '2x', multiplier: 2 },
+  { label: '3x', multiplier: 3 },
+] as const;
+
 const gramsButtons = ['10', '25', '50', '75', '100'];
 
 function getKcalColor(calories: number): string {
@@ -56,7 +63,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
       return;
     }
 
-    const productQuantity = quantityNumber * (percent / 100);
+    const productQuantity = quantityNumber * percent;
     setInputValue(`${productQuantity}`);
   };
 
@@ -144,13 +151,13 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
           <Group gap="xs" wrap="nowrap" justify="space-between" className={css.quickAddGroup}>
             {percentageButtons.map((percent) => (
               <Button
-                key={percent}
+                key={percent.label}
                 size="xs"
                 color="orange"
                 variant="light"
-                onClick={() => onPercentQuickAdd(parseInt(percent, 10))}
+                onClick={() => onPercentQuickAdd(percent.multiplier)}
               >
-                {percent}
+                {percent.label}
               </Button>
             ))}
           </Group>
