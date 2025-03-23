@@ -67,6 +67,7 @@ const MyDrawerContents = ({ onClose }: Props) => {
             href="/admin"
             label="Admin panel"
             leftSection={<Icon path={mdiShieldCrownOutline} size="24px" />}
+            onClick={onClose}
             description="Manage the site"
           />
         )}
