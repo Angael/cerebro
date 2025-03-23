@@ -14,7 +14,7 @@
     "ngrok": "ngrok http 3000"
   },
   "devDependencies": {
-    "@types/bun": "^1.1.13",
+    "@types/bun": "^1.2.5",
     "prettier": "^3.1.1",
     "turbo": "latest"
   },
