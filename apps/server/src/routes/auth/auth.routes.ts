@@ -45,7 +45,7 @@ const authRouter = honoFactory()
       const sessionCookie = lucia.createSessionCookie(session.id);
 
       setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-      return c.body('', 204);
+      return c.body(null, 204);
     },
   )
   .post(
@@ -80,7 +80,7 @@ const authRouter = honoFactory()
 
       setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-      return c.body('', 204);
+      return c.body(null, 204);
     },
   )
   .delete('/auth/signout', async (c) => {
@@ -96,7 +96,7 @@ const authRouter = honoFactory()
     const sessionCookie = lucia.createBlankSessionCookie();
     setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-    return c.body('', 204);
+    return c.body(null, 204);
   });
 
 export default authRouter;
