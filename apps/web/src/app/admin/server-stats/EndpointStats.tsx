@@ -1,6 +1,7 @@
 import { EndpointStatsResponse } from '@cerebro/server/src/routes/server-stats/server-stats.model';
 import { BarChart } from '@mantine/charts';
 import { Group, Paper, Stack, Text, Title } from '@mantine/core';
+import { useMemo } from 'react';
 
 type Props = {
   path: string;
@@ -33,6 +34,28 @@ const Stat = ({
   </Group>
 );
 
+const countResponsesWithStatus = (
+  statusCodes: EndpointStatsResponse[string]['dailyStats'][string]['statusCodes'],
+) => {
+  const counts = {
+    responses2xx: 0,
+    responses4xx: 0,
+    responses5xx: 0,
+  };
+
+  for (const [code, count] of Object.entries(statusCodes)) {
+    if (code.startsWith('2')) {
+      counts.responses2xx += count;
+    } else if (code.startsWith('4')) {
+      counts.responses4xx += count;
+    } else if (code.startsWith('5')) {
+      counts.responses5xx += count;
+    }
+  }
+
+  return counts;
+};
+
 const EndpointStats = ({ path, stats }: Props) => {
   const {
     requests,
@@ -44,10 +67,23 @@ const EndpointStats = ({ path, stats }: Props) => {
     dailyStats,
   } = stats;
 
-  const dailyStatsArray = Object.entries(dailyStats).map(([date, stats]) => ({
-    ...stats,
-    date,
-  }));
+  const dailyStatsArray = useMemo(
+    () =>
+      Object.entries(dailyStats).map(([date, stats]) => {
+        const { responses2xx, responses4xx, responses5xx } = countResponsesWithStatus(
+          stats.statusCodes,
+        );
+
+        return {
+          ...stats,
+          date,
+          responses2xx,
+          responses4xx,
+          responses5xx,
+        };
+      }),
+    [dailyStats],
+  );
 
   return (
     <Paper p="md">
@@ -55,9 +91,8 @@ const EndpointStats = ({ path, stats }: Props) => {
         {path}
       </Title>
       <Stack>
+        <Stat name="Requests" value={requests} color="gray.1" />
         <Group>
-          <Stat name="Requests" value={requests} color="gray.1" />
-
           {Object.entries(statusCodes).map(([code, count]) => (
             <Stat
               key={code}
@@ -68,19 +103,31 @@ const EndpointStats = ({ path, stats }: Props) => {
           ))}
         </Group>
         <Group>
-          <Stat name="Avg" value={avgResponseTime} unit="ms" />
           <Stat name="Median" value={medianResponseTime} unit="ms" />
+          <Stat name="Avg" value={avgResponseTime} unit="ms" />
           <Stat name="90th" value={ninetyPercentile} unit="ms" />
           <Stat name="99th" value={ninetyNinePercentile} unit="ms" />
         </Group>
         <BarChart
-          h={200}
+          h={150}
           data={dailyStatsArray}
           dataKey="date"
           series={[
-            { name: 'medianResponseTime', color: 'teal' },
-            { name: 'ninetyPercentile', color: 'indigo' },
-            { name: 'ninetyNinePercentile', color: 'grape' },
+            { name: 'medianResponseTime', color: 'grape.1' },
+            { name: 'ninetyPercentile', color: 'grape.5' },
+            { name: 'ninetyNinePercentile', color: 'grape.9' },
+          ]}
+          tickLine="y"
+        />
+        <BarChart
+          h={150}
+          data={dailyStatsArray}
+          dataKey="date"
+          series={[
+            { name: 'requests', color: 'grey' },
+            { name: 'responses2xx', color: 'green' },
+            { name: 'responses4xx', color: 'orange' },
+            { name: 'responses5xx', color: 'red' },
           ]}
           tickLine="y"
         />

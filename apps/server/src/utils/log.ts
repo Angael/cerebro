@@ -1,5 +1,6 @@
 import { format, createLogger, transports } from 'winston';
 import { env } from '@/utils/env.js';
+import * as path from 'path';
 
 const timeAndPrintf = format.combine(
   format.splat(),
@@ -14,7 +15,7 @@ export const logger = createLogger({
       format: format.combine(format.colorize(), timeAndPrintf),
     }),
     new transports.File({
-      filename: 'logs/info.log',
+      filename: path.join(env.LOGS_PATH, 'info.log'),
       level: 'info',
       format: timeAndPrintf,
       maxsize: 5242880, // 5MB
