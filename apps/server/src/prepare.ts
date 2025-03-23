@@ -7,6 +7,7 @@ import {
   UPLOADS_DIR,
 } from './utils/consts.js';
 import logger from '@/utils/log.js';
+import { env } from '@/utils/env';
 
 (async () => {
   await fs.emptyDir(TEMP_DIR).catch((e) => {});
@@ -15,6 +16,7 @@ import logger from '@/utils/log.js';
     fs.mkdir(DOWNLOADS_DIR, { recursive: true }),
     fs.mkdir(THUMBNAILS_DIR, { recursive: true }),
     fs.mkdir(OPTIMIZATION_DIR, { recursive: true }),
+    fs.mkdir(env.LOGS_PATH, { recursive: true }),
   ]);
 
   logger.info('Prepared directories');

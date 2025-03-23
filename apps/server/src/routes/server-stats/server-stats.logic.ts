@@ -1,8 +1,9 @@
 import { Context, Next } from 'hono';
 import { EndpointStats, EndpointStatsResponse } from './server-stats.model';
 import logger from '@/utils/log';
+import { loadStats, saveStats } from './stats-persistance';
 
-export const endpointStats: EndpointStats = {};
+export const endpointStats: EndpointStats = await loadStats();
 
 export async function statsMiddleware(c: Context, next: Next) {
   const start = performance.now();
@@ -55,27 +56,29 @@ function calculatePercentile(data: number[], percentile: number): number {
   const index = (percentile / 100) * (sortedData.length - 1);
 
   if (Number.isInteger(index)) {
-    return sortedData[index]!;
+    return Math.round(sortedData[index]!);
   } else {
     const lowerIndex = Math.floor(index);
     const upperIndex = Math.ceil(index);
     const fraction = index - lowerIndex;
-    return sortedData[lowerIndex]! * (1 - fraction) + sortedData[upperIndex]! * fraction;
+    return Math.round(
+      sortedData[lowerIndex]! * (1 - fraction) + sortedData[upperIndex]! * fraction,
+    );
   }
 }
 
 function calculateAverage(data: number[]): number {
   if (data.length === 0) return 0;
   const sum = data.reduce((acc, val) => acc + val, 0);
-  return sum / data.length;
+  return Math.round(sum / data.length);
 }
 
 function calculateMedian(data: number[]): number {
   const sortedData = data.slice().sort((a, b) => a - b);
   const mid = Math.floor(sortedData.length / 2);
-  return sortedData.length % 2 !== 0
-    ? sortedData[mid]!
-    : (sortedData[mid - 1]! + sortedData[mid]!) / 2;
+  return Math.round(
+    sortedData.length % 2 !== 0 ? sortedData[mid]! : (sortedData[mid - 1]! + sortedData[mid]!) / 2,
+  );
 }
 
 export const getStats = (): EndpointStatsResponse => {
@@ -141,6 +144,9 @@ const deleteOldStats = () => {
       }
     }
   }
+
+  saveStats(endpointStats);
 };
 
+setInterval(saveStats, 1000 * 60 * 10); // Every 10 minutes
 setInterval(deleteOldStats, 1000 * 60 * 60 * 24); // Every 24 hours

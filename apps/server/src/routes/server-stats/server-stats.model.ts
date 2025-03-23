@@ -1,5 +1,6 @@
-export interface EndpointStats {
-  [endpoint: string]: {
+export type EndpointStats = Record<
+  string,
+  {
     requests: number;
     statusCodes: { [code: number]: number };
     dailyStats: {
@@ -10,8 +11,8 @@ export interface EndpointStats {
       };
     };
     responseTimes: number[];
-  };
-}
+  }
+>;
 
 export interface EndpointStatsResponse {
   [endpoint: string]: {

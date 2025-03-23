@@ -17,6 +17,7 @@ export const env = z
     STRIPE_WEBHOOK_SECRET: z.string(),
     FFMPEG: z.string(),
     FFPROBE: z.string(),
+    LOGS_PATH: z.string(),
   })
   .parse({
     NODE_ENV: process.env.NODE_ENV,
@@ -34,4 +35,5 @@ export const env = z
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     FFMPEG: process.env.FFMPEG,
     FFPROBE: process.env.FFPROBE,
+    LOGS_PATH: process.env.LOGS_PATH,
   });
