@@ -24,7 +24,7 @@ export const logger = createLogger({
   ],
   exceptionHandlers: [
     new transports.File({
-      filename: 'logs/exceptions.log',
+      filename: path.join(env.LOGS_PATH, 'exceptions.log'),
       maxsize: 5242880, // 5MB
       maxFiles: 5,
     }),

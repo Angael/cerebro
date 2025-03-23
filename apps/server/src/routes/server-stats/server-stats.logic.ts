@@ -148,5 +148,5 @@ const deleteOldStats = () => {
   saveStats(endpointStats);
 };
 
-setInterval(saveStats, 1000 * 60 * 10); // Every 10 minutes
+setInterval(() => saveStats(endpointStats), 1000 * 60 * 10); // Every 10 minutes
 setInterval(deleteOldStats, 1000 * 60 * 60 * 24); // Every 24 hours
