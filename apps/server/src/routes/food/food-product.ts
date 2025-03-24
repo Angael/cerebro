@@ -84,7 +84,7 @@ export async function getFoodByBarcode(barcode: string, userId?: string): Promis
       }
 
       throw new HTTPException(statusCode as any, {
-        message: `Failed to retrieve product's data, barcode: ${barcode}`,
+        message: `Failed to retrieve product's data`,
       });
     });
 
