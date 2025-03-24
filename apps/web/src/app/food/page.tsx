@@ -15,6 +15,7 @@ import History from './history/History';
 import css from './page.module.css';
 import ScannerModal from './scanner/ScannerModal';
 import { FoodProduct } from '@cerebro/db';
+import CreateProductDialog from './create-product/CreateProductDialog';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -28,6 +29,15 @@ const FoodPage = () => {
   const [foodProduct, setFoodProduct] = useState<FoodProduct | null>(null);
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [scannerOpened, setScannerOpened] = useState(false);
+  const [createProductOpen, setCreateProductOpen] = useState<{
+    code: string | null;
+    name: string | null;
+    open: boolean;
+  }>({
+    code: null,
+    name: null,
+    open: false,
+  });
 
   const kcalToday = useMemo(() => {
     if (!todaysFood.data) return 0;
@@ -97,6 +107,10 @@ const FoodPage = () => {
           setFindOpen(false);
           setAddProductOpen(true);
         }}
+        onCreateProduct={(name) => {
+          setFindOpen(false);
+          setCreateProductOpen({ name, code: null, open: true });
+        }}
       />
       <ScannerModal
         open={scannerOpened}
@@ -106,11 +120,21 @@ const FoodPage = () => {
           setScannerOpened(false);
           setAddProductOpen(true);
         }}
+        onCreateProduct={(code) => {
+          setScannerOpened(false);
+          setCreateProductOpen({ code, name: null, open: true });
+        }}
       />
       <AddProductModal
         foodProduct={foodProduct}
         open={addProductOpen}
         onClose={() => setAddProductOpen(false)}
+      />
+      <CreateProductDialog
+        code={createProductOpen.code}
+        name={createProductOpen.name}
+        open={createProductOpen.open}
+        onClose={() => setCreateProductOpen({ code: null, name: null, open: false })}
       />
     </Stack>
   );

@@ -3,19 +3,20 @@ import { QUERY_KEYS } from '@/utils/consts';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import { FoodProduct } from '@cerebro/db';
-import { Alert, Box, Modal } from '@mantine/core';
+import { Box, Modal } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import Scanner from './Scanner';
-import css from './ScannerModal.module.css';
+import ScannerFeedback from './ScannerFeedback';
 
 type Props = {
   open: boolean;
   onClose: () => void;
   onFound: (foodProduct: FoodProduct) => void;
+  onCreateProduct: (code: string) => void;
 };
 
-const ScannerModal = ({ open, onClose, onFound }: Props) => {
+const ScannerModal = ({ open, onClose, onFound, onCreateProduct }: Props) => {
   const [code, setCode] = useState<string | null>(null);
 
   const codeQuery = useQuery({
@@ -44,7 +45,7 @@ const ScannerModal = ({ open, onClose, onFound }: Props) => {
       }
       timeoutRef.current = setTimeout(() => {
         setCode(null);
-      }, 3000);
+      }, 5000);
     }
   }, [open, code, codeQuery.status]);
 
@@ -54,14 +55,17 @@ const ScannerModal = ({ open, onClose, onFound }: Props) => {
     <Modal opened={open} onClose={onClose} fullScreen={isMobile} size="xl" title="Scan product">
       <Box pos="relative">
         <Scanner codeFoundCallback={codeFoundCallback} />
-        {codeQuery.isError && (
-          <div className={css.notFoundAlert}>
-            <Alert color="red" variant="filled">
-              {parseErrorResponse(codeQuery.error)?.general}
-            </Alert>
-          </div>
-        )}
       </Box>
+      <ScannerFeedback
+        code={code}
+        error={
+          !codeQuery.isFetching && codeQuery.isError && codeQuery.error
+            ? parseErrorResponse(codeQuery.error)?.general
+            : null
+        }
+        onClose={() => setCode(null)}
+        onCreateProduct={() => onCreateProduct(code!)}
+      />
     </Modal>
   );
 };

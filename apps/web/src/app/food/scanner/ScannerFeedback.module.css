@@ -1,0 +1,12 @@
+.scannerFeedback {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
