@@ -8,6 +8,10 @@ import { useScanner } from './useScanner';
 
 type Props = { codeFoundCallback: (code: string[]) => void };
 
+function randCode() {
+  return Math.floor((213700 + Math.random()) * 10000000000000).toString();
+}
+
 const Scanner = ({ codeFoundCallback }: Props) => {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
 
@@ -53,6 +57,15 @@ const Scanner = ({ codeFoundCallback }: Props) => {
                 onClick={() => codeFoundCallback(['5900259128843'])}
               >
                 Debug chips
+              </Button>
+            )}
+            {!env.IS_PROD && (
+              <Button
+                color="orange.9"
+                variant="filled"
+                onClick={() => codeFoundCallback([randCode()])}
+              >
+                Create
               </Button>
             )}
             <Button variant="default" onClick={setNextDevice} disabled={!initialized}>
