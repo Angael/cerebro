@@ -50,7 +50,10 @@ function getNrFromQuantity(quantity: number | null): number {
 }
 
 const SaveProductModal = ({ foodProduct, onClose }: Props) => {
-  const [inputValue, setInputValue] = useState('');
+  // By default 100% of the product
+  const [inputValue, setInputValue] = useState(
+    foodProduct.product_quantity ? `${Math.round(foodProduct.product_quantity) || ''}` : '',
+  );
 
   const handleQuickAdd = (value: string) => {
     setInputValue(value);

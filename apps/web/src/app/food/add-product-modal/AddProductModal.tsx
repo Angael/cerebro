@@ -1,4 +1,3 @@
-import { env } from '@/utils/env';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { FoodProduct } from '@cerebro/db';
 import { Modal, Stack } from '@mantine/core';
@@ -16,7 +15,7 @@ const AddProductModal = ({ foodProduct, open, onClose }: Props) => {
       opened={open}
       onClose={onClose}
       fullScreen={isMobile}
-      size="xl"
+      size="lg"
       title="Add product"
       zIndex={201}
     >
@@ -26,13 +25,6 @@ const AddProductModal = ({ foodProduct, open, onClose }: Props) => {
             <FoodProductSummary foodProduct={foodProduct} />
             <SaveProductForm foodProduct={foodProduct} onClose={onClose} />
           </>
-        )}
-
-        {!env.IS_PROD && (
-          <details>
-            <summary>Show JSON</summary>
-            <pre>{JSON.stringify(foodProduct, null, 2)}</pre>
-          </details>
         )}
       </Stack>
     </Modal>

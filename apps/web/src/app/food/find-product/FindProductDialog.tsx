@@ -53,10 +53,11 @@ const FindProductDialog = ({ open, onClose, onOpenScanner, onChooseProduct }: Pr
   const isMobile = useIsMobile();
 
   return (
-    <Modal opened={open} onClose={onClose} fullScreen={isMobile} size="xl" title="Find product">
+    <Modal opened={open} onClose={onClose} fullScreen={isMobile} size="lg" title="Find product">
       <Stack>
         <TextInput
-          size="lg"
+          data-autofocus
+          size="md"
           label="Product name"
           placeholder="Banana"
           value={name}
