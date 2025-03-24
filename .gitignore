@@ -41,3 +41,6 @@ yarn-error.log*
 # IDE
 /.idea
 certificates
+
+# Large jsonl files
+*.jsonl

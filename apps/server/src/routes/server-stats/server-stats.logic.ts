@@ -2,6 +2,8 @@ import { Context, Next } from 'hono';
 import { EndpointStats, EndpointStatsResponse } from './server-stats.model';
 import logger from '@/utils/log';
 import { loadStats, saveStats } from './stats-persistance';
+import { env } from '@/utils/env';
+import { subDays } from 'date-fns';
 
 export const endpointStats: EndpointStats = await loadStats();
 
@@ -132,13 +134,14 @@ export const getStats = (): EndpointStatsResponse => {
 const deleteOldStats = () => {
   logger.info('Deleting old stats');
   const now = new Date();
-  const dateString = now.toISOString().split('T')[0]!; // YYYY-MM-DD
+  const cutoffDate = subDays(now, 7);
+  const cutoffDateString = cutoffDate.toISOString().split('T')[0]!; // YYYY-MM-DD
 
   for (const endpoint in endpointStats) {
     if (endpoint in endpointStats) {
       const endpointData = endpointStats[endpoint]!;
       for (const date in endpointData.dailyStats) {
-        if (date in endpointData.dailyStats && date !== dateString) {
+        if (date < cutoffDateString) {
           delete endpointData.dailyStats[date];
         }
       }
@@ -148,5 +151,7 @@ const deleteOldStats = () => {
   saveStats(endpointStats);
 };
 
-setInterval(() => saveStats(endpointStats), 1000 * 60 * 10); // Every 10 minutes
-setInterval(deleteOldStats, 1000 * 60 * 60 * 24); // Every 24 hours
+const minute = 1000 * 60;
+const hour = minute * 60;
+setInterval(() => saveStats(endpointStats), env.isProd ? hour : minute * 10);
+setInterval(deleteOldStats, hour * 24); // Every 24 hours
