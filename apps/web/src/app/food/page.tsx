@@ -135,6 +135,11 @@ const FoodPage = () => {
         name={createProductOpen.name}
         open={createProductOpen.open}
         onClose={() => setCreateProductOpen({ code: null, name: null, open: false })}
+        onCreated={(foodProduct) => {
+          setFoodProduct(foodProduct);
+          setAddProductOpen(true);
+          setCreateProductOpen({ code: null, name: null, open: false });
+        }}
       />
     </Stack>
   );

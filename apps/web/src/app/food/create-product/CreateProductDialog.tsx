@@ -1,5 +1,9 @@
+import { API } from '@/utils/API';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
+import { FoodProduct } from '@cerebro/db';
+import { NewProduct } from '@cerebro/server/src/routes/food/food.model';
 import { Button, Modal, NumberInput, Stack, Text, TextInput } from '@mantine/core';
+import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -7,13 +11,24 @@ interface Props {
   name: string | null;
   open: boolean;
   onClose: () => void;
+  onCreated: (foodProduct: FoodProduct) => void;
 }
 
-const CreateProductDialog = ({ code, name: initName, open, onClose }: Props) => {
+const CreateProductDialog = ({ code, name: initName, open, onClose, onCreated }: Props) => {
   const isMobile = useIsMobile();
   const [name, setName] = useState('');
   const [kcal, setKcal] = useState('');
   const [size, setSize] = useState('');
+
+  const createMutation = useMutation({
+    mutationFn: () => {
+      const body: NewProduct = { code, name, kcal: Number(kcal), size: Number(size) };
+      return API.post('/food/product', body);
+    },
+    onSuccess: (result) => {
+      onCreated(result.data);
+    },
+  });
 
   useEffect(() => {
     if (open) {
@@ -23,7 +38,7 @@ const CreateProductDialog = ({ code, name: initName, open, onClose }: Props) => 
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('submit');
+    createMutation.mutate();
   };
 
   return (
@@ -59,7 +74,11 @@ const CreateProductDialog = ({ code, name: initName, open, onClose }: Props) => 
             value={size}
             onChange={(number) => setSize(String(number))}
           />
-          <Button type="submit" style={{ margin: 'auto', marginTop: '32px' }}>
+          <Button
+            type="submit"
+            loading={createMutation.isPending}
+            style={{ margin: 'auto', marginTop: '32px' }}
+          >
             Create new product
           </Button>
         </Stack>{' '}
