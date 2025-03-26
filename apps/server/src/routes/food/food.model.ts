@@ -33,7 +33,7 @@ export type InsertedFoodLog = z.infer<typeof zInsertedFoodLog>;
 export const zFoodHistory = z.array(
   z.object({
     id: z.number(),
-    brands: z.string(),
+    brands: z.string().nullable(),
     product_name: z.string(),
     amount: z.number(),
     kcal: z.number(),

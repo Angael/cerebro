@@ -5,12 +5,7 @@ import { requireSession } from '@/middleware/requireSession.js';
 import logger from '@/utils/log.js';
 import { FoodProduct } from '@cerebro/db';
 import { zValidator } from '@hono/zod-validator';
-import {
-  deleteFoodLog,
-  getFoodLogsInDay,
-  getDaysFoods as getFoodsHistory,
-  insertFoodLog,
-} from './food-log.js';
+import { deleteFoodLog, getFoodLogsInDay, getDaysFoods, insertFoodLog } from './food-log.js';
 import { createProduct, getFoodByBarcode, getMyProducts } from './food-product.js';
 import {
   QueryFoodToday,
@@ -34,7 +29,7 @@ foodRoutes.get('/food/today', async (c) => {
 foodRoutes.get('/food/history', async (c) => {
   const { user } = await requireSession(c);
 
-  const result = await getFoodsHistory(user?.id);
+  const result = await getDaysFoods(user?.id);
 
   logger.info('Getting food history for user %s', user?.id);
   return c.json(result);

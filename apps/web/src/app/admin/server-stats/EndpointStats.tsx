@@ -124,7 +124,6 @@ const EndpointStats = ({ path, stats }: Props) => {
           data={dailyStatsArray}
           dataKey="date"
           series={[
-            { name: 'requests', color: 'grey' },
             { name: 'responses2xx', color: 'green' },
             { name: 'responses4xx', color: 'orange' },
             { name: 'responses5xx', color: 'red' },
