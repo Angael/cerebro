@@ -13,6 +13,7 @@ import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
 import foodRoutes from '@/routes/food/food.routes.js';
 import serverStatsRoutes from '@/routes/server-stats/server-stats.routes.js';
 import { statsMiddleware } from './server-stats/server-stats.logic.js';
+import goalsRoutes from './goals/goals.routes.js';
 
 export const app = honoFactory()
   .use('*', statsMiddleware) // Apply to all routes
@@ -25,5 +26,6 @@ export const app = honoFactory()
   .route('/', adminRoutes)
   .route('/', stripeRoutes)
   .route('/', foodRoutes)
+  .route('/', goalsRoutes)
   .route('/', serverStatsRoutes)
   .onError((e, c) => errorResponse(c, e));

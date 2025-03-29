@@ -1,0 +1,1 @@
+ALTER TABLE food_goal ADD COLUMN weight_kg SMALLINT NULL;

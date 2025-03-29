@@ -174,6 +174,7 @@ interface FoodGoalTable {
   fat_g: number | null;
   carb_g: number | null;
   proteins_g: number | null;
+  weight_kg: number | null;
 
   date: Date;
 }
