@@ -16,6 +16,7 @@ import css from './page.module.css';
 import ScannerModal from './scanner/ScannerModal';
 import { FoodProduct } from '@cerebro/db';
 import CreateProductDialog from './create-product/CreateProductDialog';
+import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -44,19 +45,21 @@ const FoodPage = () => {
     return todaysFood.data.reduce((acc, food) => acc + food.kcal, 0);
   }, [todaysFood.data]);
 
-  // TODO: get this from server
-  const targetToday = 2000;
+  const currentGoals = useFoodGoals(user);
+  const targetToday = currentGoals.data?.kcal;
 
   return (
     <Stack>
-      <Group>
-        <Paper p="md" flex={1}>
-          <Text>
-            Today: {Math.ceil(kcalToday)} kcal / {targetToday}
-          </Text>
-          <Progress value={(kcalToday / targetToday) * 100} />
-        </Paper>
-      </Group>
+      {targetToday ? (
+        <Group>
+          <Paper p="md" flex={1}>
+            <Text>
+              Today: {Math.ceil(kcalToday)} kcal / {targetToday}
+            </Text>
+            <Progress value={(kcalToday / targetToday) * 100} />
+          </Paper>
+        </Group>
+      ) : null}
 
       <Paper p="md">
         <Stack gap="sm">

@@ -1,20 +1,21 @@
-import React from 'react';
-import { Flex, Paper, Stack } from '@mantine/core';
-import css from './MyDrawerContents.module.scss';
 import { RouteNavLink } from '@/lib/route-nav-link/RouteNavLink';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
-import { Icon } from '@mdi/react';
+import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
+import { Flex, Stack, Title } from '@mantine/core';
 import {
   mdiAccountCircleOutline,
+  mdiCounter,
   mdiFoodApple,
   mdiHome,
   mdiLogout,
+  mdiScale,
   mdiShieldCrownOutline,
   mdiUpload,
 } from '@mdi/js';
+import { Icon } from '@mdi/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import css from './MyDrawerContents.module.scss';
 
 type Props = {
   onClose?: () => void;
@@ -31,8 +32,8 @@ const MyDrawerContents = ({ onClose }: Props) => {
   });
 
   return (
-    <Stack className={css.MyDrawerContents} gap="md" w="340px">
-      <Paper p="md">
+    <Stack component="nav" className={css.MyDrawerContents} gap="lg" w="340px">
+      <Stack gap="0">
         <RouteNavLink
           href="/browse"
           label="Browse"
@@ -49,9 +50,12 @@ const MyDrawerContents = ({ onClose }: Props) => {
             leftSection={<Icon path={mdiUpload} size="24px" />}
           />
         )}
-      </Paper>
+      </Stack>
 
-      <Paper p="md">
+      <Stack gap="0">
+        <Title order={4} mb="sm">
+          Fitness
+        </Title>
         <RouteNavLink
           href="/food"
           label="Food"
@@ -59,9 +63,27 @@ const MyDrawerContents = ({ onClose }: Props) => {
           onClick={onClose}
           leftSection={<Icon path={mdiFoodApple} size="24px" />}
         />
-      </Paper>
+        <RouteNavLink
+          disabled
+          href="/weight"
+          label="Weight"
+          description="Update your weight"
+          onClick={onClose}
+          leftSection={<Icon path={mdiScale} size="24px" />}
+        />
+        <RouteNavLink
+          href="/goals"
+          label="Goals"
+          description="Change target weight or calories"
+          onClick={onClose}
+          leftSection={<Icon path={mdiCounter} size="24px" />}
+        />
+      </Stack>
 
-      <Paper p="md">
+      <Stack gap="0">
+        <Title order={4} mb="sm">
+          User
+        </Title>
         {user.data?.type === 'ADMIN' && (
           <RouteNavLink
             href="/admin"
@@ -94,7 +116,7 @@ const MyDrawerContents = ({ onClose }: Props) => {
             </button>
           )}
         </Flex>
-      </Paper>
+      </Stack>
     </Stack>
   );
 };
