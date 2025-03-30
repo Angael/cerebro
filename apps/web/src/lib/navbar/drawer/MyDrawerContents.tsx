@@ -64,7 +64,6 @@ const MyDrawerContents = ({ onClose }: Props) => {
           leftSection={<Icon path={mdiFoodApple} size="24px" />}
         />
         <RouteNavLink
-          disabled
           href="/weight"
           label="Weight"
           description="Update your weight"
