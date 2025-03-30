@@ -40,6 +40,7 @@ const FilesPreview = ({ files, onDelete, onAddFiles, disabled }: IProps) => {
       {files.map((file) => (
         <FilePreview file={file} key={file.id} onDelete={onDelete} />
       ))}
+      <input {...getInputProps()} />
     </section>
   );
 };

@@ -17,6 +17,7 @@ import ScannerModal from './scanner/ScannerModal';
 import { FoodProduct } from '@cerebro/db';
 import CreateProductDialog from './create-product/CreateProductDialog';
 import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
+import PleaseLogIn from '@/lib/please-log-in/PleaseLogIn';
 
 const FoodPage = () => {
   const user = useCurrentUser();
@@ -47,6 +48,10 @@ const FoodPage = () => {
 
   const currentGoals = useFoodGoals(user);
   const targetToday = currentGoals.data?.kcal;
+
+  if (!user.data) {
+    return <PleaseLogIn title="Log in to see food log" />;
+  }
 
   return (
     <Stack>

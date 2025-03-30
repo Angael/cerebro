@@ -1,20 +1,23 @@
 'use client';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
+import { useRequireAccount } from '@/utils/hooks/useRequireAccount';
 import { Alert, Center, Loader, Paper, Stack, Text, Title } from '@mantine/core';
 import GoalsForm from './GoalsForm';
+import PleaseLogIn from '@/lib/please-log-in/PleaseLogIn';
 
 const GoalsPage = () => {
-  const user = useCurrentUser();
+  const user = useRequireAccount();
   const currentGoals = useFoodGoals(user);
+
+  if (!user.data) {
+    return <PleaseLogIn title="Log in to see food goals" />;
+  }
 
   return (
     <Stack>
       <Title order={1}>Goals</Title>
       <Paper p="md">
         <Stack gap="sm">
-          {!user.data && <Text>Please log in to see your food</Text>}
-
           {currentGoals.isFetching && !currentGoals.data && (
             <Center>
               <Loader />
