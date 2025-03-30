@@ -58,6 +58,7 @@ export const insertFoodLog = async (userId: string, payload: InsertedFoodLog) =>
     .values([
       {
         user_id: userId,
+        food_product_id: foodProduct.id,
         barcode: foodProduct.barcode,
         kcal,
         kcal_100g: foodProduct.kcal_100g,

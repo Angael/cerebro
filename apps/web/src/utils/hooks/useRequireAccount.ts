@@ -11,4 +11,6 @@ export const useRequireAccount = () => {
       router.push('/signin');
     }
   }, [user.isSuccess, user.data]);
+
+  return user;
 };

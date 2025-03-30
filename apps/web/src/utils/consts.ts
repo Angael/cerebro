@@ -12,4 +12,5 @@ export const QUERY_KEYS = {
   todaysFood: 'todaysFood',
   foodByBarcode: 'foodByBarcode',
   foodHistory: 'foodHistory',
+  foodGoals: 'foodGoals',
 };

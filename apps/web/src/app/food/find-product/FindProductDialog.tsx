@@ -14,9 +14,16 @@ type Props = {
   onClose: () => void;
   onOpenScanner: () => void;
   onChooseProduct: (foodProduct: FoodProduct) => void;
+  onCreateProduct: (name: string) => void;
 };
 
-const FindProductDialog = ({ open, onClose, onOpenScanner, onChooseProduct }: Props) => {
+const FindProductDialog = ({
+  open,
+  onClose,
+  onOpenScanner,
+  onChooseProduct,
+  onCreateProduct,
+}: Props) => {
   const [name, setName] = useState('');
 
   const autocomplete = useQuery({
@@ -44,10 +51,6 @@ const FindProductDialog = ({ open, onClose, onOpenScanner, onChooseProduct }: Pr
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
     setName(value);
-  };
-
-  const onCreateProduct = () => {
-    console.log(`Create product, ${name}`);
   };
 
   const isMobile = useIsMobile();
@@ -78,7 +81,10 @@ const FindProductDialog = ({ open, onClose, onOpenScanner, onChooseProduct }: Pr
               onProductSelect={onChooseProduct}
             />
           ))}
-          <Button onClick={onCreateProduct} style={{ margin: 'auto', marginTop: '32px' }}>
+          <Button
+            onClick={() => onCreateProduct(name)}
+            style={{ margin: 'auto', marginTop: '32px' }}
+          >
             Create new product
           </Button>
         </Stack>
