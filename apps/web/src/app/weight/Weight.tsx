@@ -2,10 +2,11 @@ import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
 import { AreaChart } from '@mantine/charts';
 import '@mantine/charts/styles.css';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { fillMissingDates, useUserWeight } from './weightHelpers';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
-import { Group, Paper, Stack, Text } from '@mantine/core';
+import { Button, Group, Paper, Stack, Text } from '@mantine/core';
+import WeightDialog from './WeightDialog';
 
 type Props = {};
 
@@ -25,7 +26,14 @@ const Weight = (props: Props) => {
   const goals = useFoodGoals(user);
   const weight_kg = goals.data?.weight_kg ?? null;
 
+  const [open, setOpen] = useState(false);
   const userWeightQuery = useUserWeight(user);
+
+  const latestWeight = useMemo(() => {
+    if (!userWeightQuery.data) return null;
+    const latest = userWeightQuery.data[userWeightQuery.data.length - 1];
+    return latest.weight_kg;
+  }, [userWeightQuery.data]);
 
   const domain = useMemo(() => {
     const weights = userWeightQuery.data ? [...userWeightQuery.data.map((d) => d.weight_kg)] : [];
@@ -64,6 +72,17 @@ const Weight = (props: Props) => {
         withYAxis={isMobile ? false : true}
       />
 
+      <Button
+        onClick={() => setOpen(true)}
+        mt="md"
+        size="xs"
+        variant="outline"
+        color="cyan"
+        style={{ marginLeft: 'auto', display: 'block' }}
+      >
+        Add weight
+      </Button>
+
       <Stack mt="md">
         {userWeightQuery.data?.map((d) => (
           <Paper key={d.date} p="sm">
@@ -81,6 +100,8 @@ const Weight = (props: Props) => {
           </Paper>
         ))}
       </Stack>
+
+      <WeightDialog open={open} onClose={() => setOpen(false)} lastWeight={latestWeight} />
     </div>
   );
 };
