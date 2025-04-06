@@ -14,6 +14,7 @@ export interface Database {
   food_product: FoodProductTable;
   food_log: FoodLogTable;
   food_goal: FoodGoalTable;
+  user_weight: UserWeightTable;
 }
 
 export type UserType = 'PREMIUM' | 'FREE' | 'ADMIN';
@@ -180,3 +181,11 @@ interface FoodGoalTable {
 }
 
 export type FoodGoal = Selectable<FoodGoalTable>;
+
+interface UserWeightTable {
+  id: Generated<number>;
+  user_id: string;
+
+  weight_kg: number;
+  date: Date;
+}
