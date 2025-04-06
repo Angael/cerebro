@@ -12,6 +12,7 @@ import { GetUploadLimits } from '@cerebro/shared';
 import { HTTPException } from 'hono/http-exception';
 import { User } from 'lucia';
 import { MyFile } from '../items/upload/upload.type.js';
+import { WeightData } from './user.model.js';
 
 export const getSpaceUsedByUser = async (user_id: string): Promise<number> => {
   let used: number;
@@ -125,3 +126,49 @@ export async function createAccessPlanCheckout(user: User): Promise<{ url: strin
 
   return { url: session.url as string };
 }
+
+export const getUserWeight = async (userId: string) => {
+  const weight = await db
+    .selectFrom('user_weight')
+    .select(['date', 'weight_kg'])
+    .where('user_id', '=', userId)
+    .orderBy('date', 'desc')
+    .execute();
+
+  return weight;
+};
+
+export const setUserWeight = async (userId: string, payload: WeightData) => {
+  const { date, weight_kg } = payload;
+
+  const existingWeight = await db
+    .selectFrom('user_weight')
+    .selectAll()
+    .where('user_id', '=', userId)
+    .where('date', '=', new Date(date))
+    .executeTakeFirst();
+
+  console.log(
+    'test query',
+    db
+      .selectFrom('user_weight')
+      .selectAll()
+      .where('user_id', '=', userId)
+      .where('date', '=', new Date(date))
+      .compile(),
+  );
+
+  if (existingWeight) {
+    await db
+      .updateTable('user_weight')
+      .set({ weight_kg })
+      .where('user_id', '=', userId)
+      .where('date', '=', new Date(date))
+      .execute();
+  } else {
+    await db
+      .insertInto('user_weight')
+      .values({ user_id: userId, date: new Date(date), weight_kg })
+      .execute();
+  }
+};

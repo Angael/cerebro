@@ -4,9 +4,8 @@ import PageLoader from '@/lib/page-loader/PageLoader';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { EndpointStatsResponse } from '@cerebro/server/src/routes/server-stats/server-stats.model';
-import { BarChart } from '@mantine/charts';
 import '@mantine/charts/styles.css';
-import { List, Stack, Text, Title } from '@mantine/core';
+import { Stack, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import EndpointStats from './EndpointStats';
 
