@@ -132,10 +132,13 @@ export const getUserWeight = async (userId: string) => {
     .selectFrom('user_weight')
     .select(['date', 'weight_kg'])
     .where('user_id', '=', userId)
-    .orderBy('date', 'desc')
+    .orderBy('date', 'asc')
     .execute();
 
-  return weight;
+  return weight.map((w) => ({
+    date: w.date.toISOString().split('T')[0],
+    weight_kg: w.weight_kg,
+  }));
 };
 
 export const setUserWeight = async (userId: string, payload: WeightData) => {

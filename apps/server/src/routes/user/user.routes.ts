@@ -76,7 +76,7 @@ const userRoutes = honoFactory()
     const { user } = await requireSession(c);
 
     logger.verbose('Getting user weight for user %s', user.id);
-    return c.json(getUserWeight(user.id));
+    return c.json(await getUserWeight(user.id));
   })
   .post('/user/weight', zValidator('json', zWeightData), async (c) => {
     const { user } = await requireSession(c);

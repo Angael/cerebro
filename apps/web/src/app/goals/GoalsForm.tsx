@@ -1,8 +1,8 @@
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
-import { GoalsType } from '@cerebro/server/src/routes/goals/goals.model';
-import { Alert, Button, NumberInput, Stack } from '@mantine/core';
+import { GoalsType } from '@cerebro/server';
+import { Button, NumberInput, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications, showNotification } from '@mantine/notifications';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -54,12 +54,12 @@ const GoalsForm = ({ goals }: Props) => {
     },
 
     validate: {
-      // weight_kg: (value) =>
-      //   isNumberAndIsInRange(value, 30, 300) ? null : 'Weight must be a number between 30 and 300',
-      // kcal: (value) =>
-      //   isNumberAndIsInRange(value, 1000, 10000)
-      //     ? null
-      //     : 'Kcal must be a number between 1000 and 10000',
+      weight_kg: (value) =>
+        isNumberAndIsInRange(value, 30, 300) ? null : 'Weight must be a number between 30 and 300',
+      kcal: (value) =>
+        isNumberAndIsInRange(value, 1000, 10000)
+          ? null
+          : 'Kcal must be a number between 1000 and 10000',
     },
   });
 

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCurrentUser } from './useCurrentUser';
 import { QUERY_KEYS } from '../consts';
 import { API } from '../API';
-import { GoalsType } from '@cerebro/server/src/routes/goals/goals.model';
+import { GoalsType } from '@cerebro/server';
 
 export const useFoodGoals = (user: ReturnType<typeof useCurrentUser>) => {
   return useQuery({

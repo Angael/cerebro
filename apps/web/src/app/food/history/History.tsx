@@ -1,6 +1,6 @@
 import { API } from '@/utils/API';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-import { QueryFoodHistory } from '@cerebro/server/src/routes/food/food.model';
+import { QueryFoodHistory } from '@cerebro/server';
 import { Button, Stack, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';

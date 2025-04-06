@@ -2,7 +2,7 @@
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
+import { QueryFoodToday } from '@cerebro/server';
 import { Button, Center, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
 import { mdiFire, mdiPlusCircleOutline } from '@mdi/js';
 import Icon from '@mdi/react';

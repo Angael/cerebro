@@ -1,6 +1,6 @@
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
-import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
+import { QueryFoodToday } from '@cerebro/server';
 import { Button, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
 import { mdiPencil } from '@mdi/js';
 import Icon from '@mdi/react';

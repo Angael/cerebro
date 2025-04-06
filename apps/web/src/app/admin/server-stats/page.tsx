@@ -3,7 +3,7 @@ import adminGuardedPage from '@/lib/admin/adminGuardedPage';
 import PageLoader from '@/lib/page-loader/PageLoader';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
-import { EndpointStatsResponse } from '@cerebro/server/src/routes/server-stats/server-stats.model';
+import { EndpointStatsResponse } from '@cerebro/server';
 import '@mantine/charts/styles.css';
 import { Stack, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';

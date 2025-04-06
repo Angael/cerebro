@@ -1,4 +1,4 @@
-import { EndpointStatsResponse } from '@cerebro/server/src/routes/server-stats/server-stats.model';
+import { EndpointStatsResponse } from '@cerebro/server';
 import { BarChart } from '@mantine/charts';
 import { Group, Paper, Stack, Text, Title } from '@mantine/core';
 import { useMemo } from 'react';

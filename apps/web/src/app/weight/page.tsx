@@ -1,7 +1,8 @@
 'use client';
 import PleaseLogIn from '@/lib/please-log-in/PleaseLogIn';
 import { useRequireAccount } from '@/utils/hooks/useRequireAccount';
-import { Paper, Stack, Text, Title } from '@mantine/core';
+import { Stack, Title } from '@mantine/core';
+import Weight from './Weight';
 
 const WeightPage = () => {
   const user = useRequireAccount();
@@ -13,9 +14,7 @@ const WeightPage = () => {
   return (
     <Stack>
       <Title order={1}>Weight</Title>
-      <Paper p="md">
-        <Stack gap="sm">{!user.data && <Text>Please log in to see your food</Text>}</Stack>
-      </Paper>
+      <Weight />
     </Stack>
   );
 };

@@ -1,7 +1,7 @@
 import { API } from '@/utils/API';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { FoodProduct } from '@cerebro/db';
-import { NewProduct } from '@cerebro/server/src/routes/food/food.model';
+import { NewProduct } from '@cerebro/server';
 import { Button, Modal, NumberInput, Stack, Text, TextInput } from '@mantine/core';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
