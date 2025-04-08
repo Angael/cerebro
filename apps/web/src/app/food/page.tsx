@@ -1,7 +1,9 @@
 'use client';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
+import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
+import { useRequireAccount } from '@/utils/hooks/useRequireAccount';
+import { FoodProduct } from '@cerebro/db';
 import { QueryFoodToday } from '@cerebro/server';
 import { Button, Center, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
 import { mdiFire, mdiPlusCircleOutline } from '@mdi/js';
@@ -9,18 +11,15 @@ import Icon from '@mdi/react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import AddProductModal from './add-product-modal/AddProductModal';
+import CreateProductDialog from './create-product/CreateProductDialog';
 import FindProductDialog from './find-product/FindProductDialog';
 import FoodList from './FoodList';
 import History from './history/History';
 import css from './page.module.css';
 import ScannerModal from './scanner/ScannerModal';
-import { FoodProduct } from '@cerebro/db';
-import CreateProductDialog from './create-product/CreateProductDialog';
-import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
-import PleaseLogIn from '@/lib/please-log-in/PleaseLogIn';
 
 const FoodPage = () => {
-  const user = useCurrentUser();
+  const user = useRequireAccount();
   const todaysFood = useQuery({
     enabled: !!user.data,
     queryKey: [QUERY_KEYS.todaysFood],
@@ -48,10 +47,6 @@ const FoodPage = () => {
 
   const currentGoals = useFoodGoals(user);
   const targetToday = currentGoals.data?.kcal;
-
-  if (!user.data) {
-    return <PleaseLogIn title="Log in to see food log" />;
-  }
 
   return (
     <Stack>
