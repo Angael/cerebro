@@ -32,7 +32,7 @@ const Weight = (props: Props) => {
   const latestWeight = useMemo(() => {
     if (!userWeightQuery.data) return null;
     const latest = userWeightQuery.data[userWeightQuery.data.length - 1];
-    return latest.weight_kg;
+    return latest?.weight_kg ?? null;
   }, [userWeightQuery.data]);
 
   const domain = useMemo(() => {
