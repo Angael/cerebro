@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { testEnv } from './testEnv';
 
 test('Finds first item', async ({ page }) => {
-  await page.goto(`${testEnv.DOMAIN}/`);
+  await page.goto(`${testEnv.DOMAIN}/browse`);
 
   await expect(page).toHaveTitle(/Cerebro/);
   await expect(page.getByTestId('item').first()).toBeVisible();
