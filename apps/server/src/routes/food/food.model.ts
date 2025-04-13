@@ -38,7 +38,7 @@ export const zFoodHistory = z.array(
     amount: z.number(),
     kcal: z.number(),
     kcal_100g: z.number(),
-    dayDate: z.date().transform((d) => d.toISOString()),
+    dayDate: z.string().date(),
   }),
 );
 export type QueryFoodHistory = z.infer<typeof zFoodHistory>;

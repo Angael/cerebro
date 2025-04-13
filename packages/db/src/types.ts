@@ -177,7 +177,7 @@ interface FoodGoalTable {
   proteins_g: number | null;
   weight_kg: number | null;
 
-  date: Date;
+  date: string; // YYYY-MM-DD
 }
 
 export type FoodGoal = Selectable<FoodGoalTable>;
@@ -187,5 +187,5 @@ interface UserWeightTable {
   user_id: string;
 
   weight_kg: number;
-  date: Date;
+  date: Date; // YYYY-MM-DD
 }

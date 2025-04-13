@@ -21,7 +21,7 @@ const WeightDialog = ({ open, onClose, lastWeight }: Props) => {
   const saveMutation = useMutation({
     mutationFn: () => {
       const body: WeightData = {
-        date: new Date().toDateString().split('T')[0],
+        date: new Date().toISOString().split('T')[0],
         weight_kg: Number(weight),
       };
       return API.post('/user/weight', body);

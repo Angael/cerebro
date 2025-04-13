@@ -93,7 +93,7 @@ const Weight = (props: Props) => {
               <Text c="cyan">{d.weight_kg}kg</Text>
               {weight_kg && (
                 <Text c="gray.6" size="sm">
-                  (To goal: {Math.abs(weight_kg - d.weight_kg)} kg)
+                  (To goal: {Math.round(Math.abs(weight_kg - d.weight_kg) * 10) / 10} kg)
                 </Text>
               )}
             </Group>

@@ -135,10 +135,7 @@ export const getUserWeight = async (userId: string) => {
     .orderBy('date', 'asc')
     .execute();
 
-  return weight.map((w) => ({
-    date: w.date.toISOString().split('T')[0],
-    weight_kg: w.weight_kg,
-  }));
+  return weight;
 };
 
 export const setUserWeight = async (userId: string, payload: WeightData) => {
@@ -148,7 +145,7 @@ export const setUserWeight = async (userId: string, payload: WeightData) => {
     .selectFrom('user_weight')
     .selectAll()
     .where('user_id', '=', userId)
-    .where('date', '=', new Date(date))
+    .where('date', '=', date as any)
     .executeTakeFirst();
 
   console.log(
@@ -157,7 +154,7 @@ export const setUserWeight = async (userId: string, payload: WeightData) => {
       .selectFrom('user_weight')
       .selectAll()
       .where('user_id', '=', userId)
-      .where('date', '=', new Date(date))
+      .where('date', '=', date as any)
       .compile(),
   );
 
@@ -166,12 +163,12 @@ export const setUserWeight = async (userId: string, payload: WeightData) => {
       .updateTable('user_weight')
       .set({ weight_kg })
       .where('user_id', '=', userId)
-      .where('date', '=', new Date(date))
+      .where('date', '=', date as any)
       .execute();
   } else {
     await db
       .insertInto('user_weight')
-      .values({ user_id: userId, date: new Date(date), weight_kg })
+      .values({ user_id: userId, date: date as any, weight_kg })
       .execute();
   }
 };

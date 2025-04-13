@@ -17,12 +17,7 @@ export async function getGoals(userId: string, date?: string): Promise<GoalsType
     .orderBy('date', 'desc')
     .executeTakeFirst();
 
-  return goals
-    ? {
-        ...goals,
-        date: goals?.date.toISOString().split('T')[0]!,
-      }
-    : null;
+  return goals ?? null;
 }
 
 export const setCurrentGoals = async (userId: string, payload: GoalsType) => {
@@ -38,14 +33,7 @@ export const setCurrentGoals = async (userId: string, payload: GoalsType) => {
 
     return await trx
       .insertInto('food_goal')
-      .values([
-        {
-          user_id: userId,
-          kcal,
-          weight_kg,
-          date: new Date(date),
-        },
-      ])
+      .values([{ user_id: userId, kcal, weight_kg, date }])
       .execute();
   });
 };
