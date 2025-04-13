@@ -148,16 +148,6 @@ export const setUserWeight = async (userId: string, payload: WeightData) => {
     .where('date', '=', date as any)
     .executeTakeFirst();
 
-  console.log(
-    'test query',
-    db
-      .selectFrom('user_weight')
-      .selectAll()
-      .where('user_id', '=', userId)
-      .where('date', '=', date as any)
-      .compile(),
-  );
-
   if (existingWeight) {
     await db
       .updateTable('user_weight')

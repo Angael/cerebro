@@ -11,8 +11,6 @@ type Props = {
 };
 
 const ScannerFeedback = ({ code, error, onClose, onCreateProduct }: Props) => {
-  console.log({ error });
-
   return (
     <Transition
       mounted={!!code}
