@@ -9,6 +9,8 @@ export const dbPool = createPool({
   typeCast(field, next) {
     if (field.type === 'TINY' && field.length === 1) {
       return field.string() === '1';
+    } else if (field.type === 'DATE') {
+      return field.string();
     } else {
       return next();
     }

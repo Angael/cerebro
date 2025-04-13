@@ -33,7 +33,9 @@ const FoodProductSummary = ({ foodProduct }: Props) => {
               {smallText}
             </Text>
           )}
-          <Title order={3}>{bigText}</Title>
+          <Title order={3} size="lg">
+            {bigText}
+          </Title>
         </div>
         <div>
           <Text size="sm">{kcal_100g} kcal / 100g</Text>

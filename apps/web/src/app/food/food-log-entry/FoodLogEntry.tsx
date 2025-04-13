@@ -1,6 +1,6 @@
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
-import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
+import { QueryFoodToday } from '@cerebro/server';
 import { Button, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
 import { mdiPencil } from '@mdi/js';
 import Icon from '@mdi/react';
@@ -37,6 +37,9 @@ const FoodLogEntry = ({ food }: Props) => {
     },
   });
 
+  const bigText = food.product_name || food.brands;
+  const smallText = food.product_name ? food.brands : null;
+
   return (
     <li className={css.unstyledLi}>
       <UnstyledButton
@@ -51,18 +54,22 @@ const FoodLogEntry = ({ food }: Props) => {
       >
         <Group className={css.hoverAnimation} align="flex-start" justify="space-between">
           <Stack component="header" gap={0} flex={3}>
-            <Text size="md" fw="bold">
-              {food.product_name}
+            <Text size="sm" c="gray.3">
+              {bigText}
             </Text>
-            <Text size="sm">
-              {food.brands}{' '}
-              <Text span c="dark.2">
-                {food.amount}g
+            {smallText && (
+              <Text size="xs" c="gray.5">
+                {smallText}
               </Text>
-            </Text>
+            )}
           </Stack>
           <Stack align="flex-end" gap={0} flex={1}>
-            <Text size="md">{Math.ceil(food.kcal)} kcal</Text>
+            <Text size="sm">{Math.ceil(food.kcal)} kcal</Text>
+            {!!food.amount && (
+              <Text span c="dark.2" size="xs">
+                {food.amount}g
+              </Text>
+            )}
           </Stack>
         </Group>
       </UnstyledButton>

@@ -1,23 +1,25 @@
 'use client';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-import { QueryFoodToday } from '@cerebro/server/src/routes/food/food.model';
+import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
+import { useRequireAccount } from '@/utils/hooks/useRequireAccount';
+import { FoodProduct } from '@cerebro/db';
+import { QueryFoodToday } from '@cerebro/server';
 import { Button, Center, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
 import { mdiFire, mdiPlusCircleOutline } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import AddProductModal from './add-product-modal/AddProductModal';
+import CreateProductDialog from './create-product/CreateProductDialog';
 import FindProductDialog from './find-product/FindProductDialog';
 import FoodList from './FoodList';
 import History from './history/History';
 import css from './page.module.css';
 import ScannerModal from './scanner/ScannerModal';
-import { FoodProduct } from '@cerebro/db';
 
 const FoodPage = () => {
-  const user = useCurrentUser();
+  const user = useRequireAccount();
   const todaysFood = useQuery({
     enabled: !!user.data,
     queryKey: [QUERY_KEYS.todaysFood],
@@ -28,25 +30,36 @@ const FoodPage = () => {
   const [foodProduct, setFoodProduct] = useState<FoodProduct | null>(null);
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [scannerOpened, setScannerOpened] = useState(false);
+  const [createProductOpen, setCreateProductOpen] = useState<{
+    code: string | null;
+    name: string | null;
+    open: boolean;
+  }>({
+    code: null,
+    name: null,
+    open: false,
+  });
 
   const kcalToday = useMemo(() => {
     if (!todaysFood.data) return 0;
     return todaysFood.data.reduce((acc, food) => acc + food.kcal, 0);
   }, [todaysFood.data]);
 
-  // TODO: get this from server
-  const targetToday = 2000;
+  const currentGoals = useFoodGoals(user);
+  const targetToday = currentGoals.data?.kcal;
 
   return (
     <Stack>
-      <Group>
-        <Paper p="md" flex={1}>
-          <Text>
-            Today: {Math.ceil(kcalToday)} kcal / {targetToday}
-          </Text>
-          <Progress value={(kcalToday / targetToday) * 100} />
-        </Paper>
-      </Group>
+      {targetToday ? (
+        <Group>
+          <Paper p="md" flex={1}>
+            <Text>
+              Today: {Math.ceil(kcalToday)} kcal / {targetToday}
+            </Text>
+            <Progress value={(kcalToday / targetToday) * 100} />
+          </Paper>
+        </Group>
+      ) : null}
 
       <Paper p="md">
         <Stack gap="sm">
@@ -97,6 +110,10 @@ const FoodPage = () => {
           setFindOpen(false);
           setAddProductOpen(true);
         }}
+        onCreateProduct={(name) => {
+          setFindOpen(false);
+          setCreateProductOpen({ name, code: null, open: true });
+        }}
       />
       <ScannerModal
         open={scannerOpened}
@@ -106,11 +123,26 @@ const FoodPage = () => {
           setScannerOpened(false);
           setAddProductOpen(true);
         }}
+        onCreateProduct={(code) => {
+          setScannerOpened(false);
+          setCreateProductOpen({ code, name: null, open: true });
+        }}
       />
       <AddProductModal
         foodProduct={foodProduct}
         open={addProductOpen}
         onClose={() => setAddProductOpen(false)}
+      />
+      <CreateProductDialog
+        code={createProductOpen.code}
+        name={createProductOpen.name}
+        open={createProductOpen.open}
+        onClose={() => setCreateProductOpen({ code: null, name: null, open: false })}
+        onCreated={(foodProduct) => {
+          setFoodProduct(foodProduct);
+          setAddProductOpen(true);
+          setCreateProductOpen({ code: null, name: null, open: false });
+        }}
       />
     </Stack>
   );

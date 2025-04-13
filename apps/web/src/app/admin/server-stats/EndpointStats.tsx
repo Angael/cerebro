@@ -1,4 +1,4 @@
-import { EndpointStatsResponse } from '@cerebro/server/src/routes/server-stats/server-stats.model';
+import { EndpointStatsResponse } from '@cerebro/server';
 import { BarChart } from '@mantine/charts';
 import { Group, Paper, Stack, Text, Title } from '@mantine/core';
 import { useMemo } from 'react';
@@ -124,7 +124,6 @@ const EndpointStats = ({ path, stats }: Props) => {
           data={dailyStatsArray}
           dataKey="date"
           series={[
-            { name: 'requests', color: 'grey' },
             { name: 'responses2xx', color: 'green' },
             { name: 'responses4xx', color: 'orange' },
             { name: 'responses5xx', color: 'red' },

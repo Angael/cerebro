@@ -3,6 +3,12 @@
   "version": "0.8.0",
   "type": "module",
   "main": "src/main.ts",
+  "types": "./src/types.ts",
+  "exports": {
+    ".": {
+      "types": "./src/types.ts"
+    }
+  },
   "scripts": {
     "start": "NODE_ENV=production bun run src/main.ts",
     "dev": "NODE_ENV=development bun --watch run src/main.ts",

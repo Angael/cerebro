@@ -1,4 +1,4 @@
-import { QueryFoodHistory } from '@cerebro/server/src/routes/food/food.model';
+import { QueryFoodHistory } from '@cerebro/server';
 import { Group, Paper, Text, Title } from '@mantine/core';
 import FoodLogEntry from '../food-log-entry/FoodLogEntry';
 import FoodLogsList from '../food-log-entry/FoodLogsList';

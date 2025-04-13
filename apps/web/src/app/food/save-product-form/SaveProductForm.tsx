@@ -2,7 +2,7 @@ import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import { FoodProduct } from '@cerebro/db';
-import { InsertedFoodLog } from '@cerebro/server/src/routes/food/food.model';
+import { InsertedFoodLog } from '@cerebro/server';
 import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

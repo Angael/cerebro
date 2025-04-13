@@ -5,7 +5,15 @@ import { env } from '@/utils/env.js';
 import logger from '@/utils/log.js';
 import { UserMe, UserPlan_Endpoint } from '@cerebro/shared';
 import { HTTPException } from 'hono/http-exception';
-import { createAccessPlanCheckout, getLimitsForUser, getStripeCustomer } from './user.service.js';
+import {
+  createAccessPlanCheckout,
+  getLimitsForUser,
+  getStripeCustomer,
+  getUserWeight,
+  setUserWeight,
+} from './user.service.js';
+import { zValidator } from '@hono/zod-validator';
+import { zWeightData } from './user.model.js';
 
 const userRoutes = honoFactory()
   .get('/user/me', async (c) => {
@@ -63,6 +71,21 @@ const userRoutes = honoFactory()
     });
 
     return c.json({ url: portalSession.url });
+  })
+  .get('/user/weight', async (c) => {
+    const { user } = await requireSession(c);
+
+    logger.verbose('Getting user weight for user %s', user.id);
+    return c.json(await getUserWeight(user.id));
+  })
+  .post('/user/weight', zValidator('json', zWeightData), async (c) => {
+    const { user } = await requireSession(c);
+    const { weight_kg, date } = c.req.valid('json');
+
+    await setUserWeight(user.id, { weight_kg, date });
+
+    logger.verbose('Setting user weight for user %s', user.id);
+    return c.body(null);
   });
 
 export default userRoutes;
