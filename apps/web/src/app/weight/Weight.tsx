@@ -1,3 +1,4 @@
+'use client';
 import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
 import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
 import { AreaChart } from '@mantine/charts';
@@ -7,8 +8,11 @@ import { fillMissingDates, useUserWeight } from './weightHelpers';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { Button, Group, Paper, Stack, Text } from '@mantine/core';
 import WeightDialog from './WeightDialog';
+import { UiUserType } from '@/utils/next-server/getUser';
 
-type Props = {};
+type Props = {
+  user: UiUserType;
+};
 
 // Gets nearest 5s above and below the min and max values
 const getDomain = (min: number, max: number) => {
@@ -21,13 +25,12 @@ const getDomain = (min: number, max: number) => {
   return [lowerBound, upperBound];
 };
 
-const Weight = (props: Props) => {
-  const user = useCurrentUser();
-  const goals = useFoodGoals(user);
+const Weight = ({ user }: Props) => {
+  const goals = useFoodGoals();
   const weight_kg = goals.data?.weight_kg ?? null;
 
   const [open, setOpen] = useState(false);
-  const userWeightQuery = useUserWeight(user);
+  const userWeightQuery = useUserWeight();
 
   const latestWeight = useMemo(() => {
     if (!userWeightQuery.data) return null;

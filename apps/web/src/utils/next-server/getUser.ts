@@ -1,9 +1,16 @@
-import { db } from '@cerebro/db';
-import { cookies } from 'next/headers';
-import { env } from '../env';
+import { db, UserType } from '@cerebro/db';
 import { unstable_cacheLife as cacheLife } from 'next/cache';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-export const getUserDb = async (authSession: string | undefined) => {
+export type UiUserType = {
+  id: string;
+  email: string;
+  type: UserType;
+  expiresAt: Date;
+};
+
+export const getUserDb = async (authSession: string | undefined): Promise<null | UiUserType> => {
   'use cache';
   cacheLife('seconds');
 
@@ -30,10 +37,10 @@ export const getUserDb = async (authSession: string | undefined) => {
     return null;
   }
 
-  if (!env.IS_PROD) {
-    // simulate delay
-    await new Promise((resolve) => setTimeout(resolve, 200));
-  }
+  // if (!env.IS_PROD) {
+  //   // simulate delay
+  //   await new Promise((resolve) => setTimeout(resolve, 200));
+  // }
 
   return {
     id: user.user_id,
@@ -46,4 +53,14 @@ export const getUserDb = async (authSession: string | undefined) => {
 export const getUser = async () => {
   const _cookies = await cookies();
   return getUserDb(_cookies.get('auth_session')?.value);
+};
+
+export const requireUser = async () => {
+  const user = await getUser();
+
+  if (!user) {
+    redirect('/signin');
+  }
+
+  return user;
 };

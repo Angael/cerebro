@@ -1,15 +1,14 @@
-'use client';
-import { useRequireAccount } from '@/utils/hooks/useRequireAccount';
+import { requireUser } from '@/utils/next-server/getUser';
 import { Stack, Title } from '@mantine/core';
 import Weight from './Weight';
 
-const WeightPage = () => {
-  const user = useRequireAccount();
+const WeightPage = async () => {
+  const user = await requireUser();
 
   return (
     <Stack>
       <Title order={1}>Weight</Title>
-      <Weight />
+      <Weight user={user} />
     </Stack>
   );
 };
