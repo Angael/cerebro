@@ -9,6 +9,7 @@ Sentry.init({
   dsn: env.SENTRY_DSN,
   tracesSampleRate: 0.5,
   debug: false,
+  environment: env.IS_PROD ? 'production' : 'development',
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
