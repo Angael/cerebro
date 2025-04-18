@@ -1,10 +1,10 @@
 import { API } from '@/utils/API';
-import { QUERY_KEYS } from '@/utils/consts';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { WeightData } from '@cerebro/server';
 import '@mantine/charts/styles.css';
 import { Button, Modal, NumberInput, Stack } from '@mantine/core';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface Props {
@@ -14,10 +14,10 @@ interface Props {
 }
 
 const WeightDialog = ({ open, onClose, lastWeight }: Props) => {
+  const router = useRouter();
   const isMobile = useIsMobile();
   const [weight, setWeight] = useState(String(lastWeight || ''));
 
-  const queryClient = useQueryClient();
   const saveMutation = useMutation({
     mutationFn: () => {
       const body: WeightData = {
@@ -27,7 +27,8 @@ const WeightDialog = ({ open, onClose, lastWeight }: Props) => {
       return API.post('/user/weight', body);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.userWeight] });
+      router.refresh();
+      onClose();
     },
   });
 

@@ -1,10 +1,10 @@
 import { AreaChart } from '@mantine/charts';
-import { Skeleton, Stack } from '@mantine/core';
+import { Skeleton, Stack, Title } from '@mantine/core';
 
 export default function Loading() {
   return (
     <Stack>
-      <Skeleton width={140} height={40} />
+      <Title order={1}>Weight</Title>
 
       <Skeleton width="100%" height={200} />
     </Stack>

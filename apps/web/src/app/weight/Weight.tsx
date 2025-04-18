@@ -1,17 +1,18 @@
 'use client';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
+import { useIsMobile } from '@/utils/hooks/useIsMobile';
+import { UiUserType } from '@/utils/next-server/getUser';
+import { GoalsType, WeightData } from '@cerebro/server';
 import { AreaChart } from '@mantine/charts';
 import '@mantine/charts/styles.css';
-import { useMemo, useState } from 'react';
-import { fillMissingDates, useUserWeight } from './weightHelpers';
-import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { Button, Group, Paper, Stack, Text } from '@mantine/core';
+import { useMemo, useState } from 'react';
 import WeightDialog from './WeightDialog';
-import { UiUserType } from '@/utils/next-server/getUser';
+import { fillMissingDates } from './weightHelpers';
 
-type Props = {
+export type Props = {
   user: UiUserType;
+  weight: WeightData[];
+  goals: GoalsType | undefined;
 };
 
 // Gets nearest 5s above and below the min and max values
@@ -25,33 +26,31 @@ const getDomain = (min: number, max: number) => {
   return [lowerBound, upperBound];
 };
 
-const Weight = ({ user }: Props) => {
-  const goals = useFoodGoals();
-  const weight_kg = goals.data?.weight_kg ?? null;
+const Weight = ({ user, weight, goals }: Props) => {
+  const weight_kg = goals?.weight_kg ?? null;
 
   const [open, setOpen] = useState(false);
-  const userWeightQuery = useUserWeight();
 
   const latestWeight = useMemo(() => {
-    if (!userWeightQuery.data) return null;
-    const latest = userWeightQuery.data[userWeightQuery.data.length - 1];
+    if (!weight) return null;
+    const latest = weight[weight.length - 1];
     return latest?.weight_kg ?? null;
-  }, [userWeightQuery.data]);
+  }, [weight]);
 
   const domain = useMemo(() => {
-    const weights = userWeightQuery.data ? [...userWeightQuery.data.map((d) => d.weight_kg)] : [];
-    if (goals.data?.weight_kg) {
-      weights.push(goals.data.weight_kg);
+    const weights = weight ? [...weight.map((d) => d.weight_kg)] : [];
+    if (goals?.weight_kg) {
+      weights.push(goals.weight_kg);
     }
 
     return getDomain(Math.min(...weights) - 1, Math.max(...weights) + 1);
-  }, [userWeightQuery.data, goals.data]);
+  }, [weight, goals]);
 
   const datesWithFilledDates = useMemo(() => {
-    if (!userWeightQuery.data) return [];
-    const filledData = fillMissingDates(userWeightQuery.data);
+    if (!weight) return [];
+    const filledData = fillMissingDates(weight);
     return filledData.map((d) => ({ ...d, date: new Date(d.date).toLocaleDateString() }));
-  }, [userWeightQuery.data]);
+  }, [weight]);
 
   const isMobile = useIsMobile();
 
@@ -87,7 +86,7 @@ const Weight = ({ user }: Props) => {
       </Button>
 
       <Stack mt="md">
-        {userWeightQuery.data?.map((d) => (
+        {weight?.map((d) => (
           <Paper key={d.date} p="sm">
             <Group>
               <Text c="gray.6" size="sm">
