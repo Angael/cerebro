@@ -8,9 +8,7 @@
 }
 
 .Layout {
-  @include util.container;
   flex: 1;
-
   display: flex;
   flex-direction: row;
   gap: 16px;
@@ -21,4 +19,6 @@
     gap: 16px;
     flex: 1;
   }
+
+  @include util.container;
 }
