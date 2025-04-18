@@ -1,16 +1,16 @@
-import type { Metadata } from 'next';
 import '@/style/global.scss';
-import css from './layout.module.scss';
-import Navbar from '@/lib/navbar/Navbar';
+import type { Metadata } from 'next';
 import React from 'react';
+import css from './layout.module.scss';
 
 import { Providers } from '@/app/providers';
+import LayoutDrawer from '@/lib/navbar/drawer/LayoutDrawer';
+import NavbarParent from '@/lib/navbar/NavbarParent';
+import { theme } from '@/utils/mantineTheme';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
-import { theme } from '@/utils/mantineTheme';
 import { Notifications } from '@mantine/notifications';
-import LayoutDrawer from '@/lib/navbar/drawer/LayoutDrawer';
+import '@mantine/notifications/styles.css';
 
 export const metadata: Metadata = {
   title: 'Cerebro',
@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </head>
         <body className={css.body}>
           <MantineProvider theme={theme} defaultColorScheme="dark" forceColorScheme="dark">
-            <Navbar />
+            <NavbarParent />
             <div className={css.Layout}>
               <LayoutDrawer />
               <div className={css.LayoutStack}>{children}</div>
