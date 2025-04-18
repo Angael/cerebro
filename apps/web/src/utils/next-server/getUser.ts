@@ -10,11 +10,10 @@ export type UiUserType = {
   expiresAt: Date;
 };
 
+// Little cache, just to avoid hitting db multiple times in the same request
 export const getUserDb = async (authSession: string | undefined): Promise<null | UiUserType> => {
   'use cache';
   cacheLife('seconds');
-
-  console.log('getUserDb', authSession);
 
   if (!authSession) {
     return null;
