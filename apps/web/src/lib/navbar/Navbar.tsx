@@ -36,7 +36,7 @@ const Navbar = () => {
           </Drawer.Root>
 
           <Text size="1.5rem" fw={700} component="h1" style={{ marginRight: 'auto' }}>
-            <Link href="/" className={css.cerebroLogo}>
+            <Link href="/" className={css.cerebroLogo} onClick={close}>
               Cerebro
             </Link>
           </Text>
