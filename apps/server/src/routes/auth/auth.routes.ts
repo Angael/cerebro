@@ -7,8 +7,11 @@ import { honoFactory } from '../honoFactory';
 import { zValidator } from '@hono/zod-validator';
 import { setCookie, getCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
+import { env } from '@/utils/env';
 
 const badEmailOrPassword = { msg: 'Bad email or password' };
+
+const domain = env.AUTH_COOKIE_DOMAIN;
 
 const authRouter = honoFactory()
   .post(
@@ -44,7 +47,10 @@ const authRouter = honoFactory()
       const session = await lucia.createSession(userId, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
 
-      setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+      setCookie(c, sessionCookie.name, sessionCookie.value, {
+        ...sessionCookie.attributes,
+        domain,
+      });
       return c.body(null, 204);
     },
   )
@@ -78,7 +84,10 @@ const authRouter = honoFactory()
       const session = await lucia.createSession(user.id, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
 
-      setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+      setCookie(c, sessionCookie.name, sessionCookie.value, {
+        ...sessionCookie.attributes,
+        domain,
+      });
 
       return c.body(null, 204);
     },
@@ -94,7 +103,7 @@ const authRouter = honoFactory()
     await lucia.invalidateSession(auth_session);
 
     const sessionCookie = lucia.createBlankSessionCookie();
-    setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    setCookie(c, sessionCookie.name, sessionCookie.value, { ...sessionCookie.attributes, domain });
 
     return c.body(null, 204);
   });

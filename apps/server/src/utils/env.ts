@@ -18,6 +18,7 @@ export const env = z
     FFMPEG: z.string(),
     FFPROBE: z.string(),
     LOGS_PATH: z.string(),
+    AUTH_COOKIE_DOMAIN: z.string(),
   })
   .parse({
     NODE_ENV: process.env.NODE_ENV,
@@ -36,4 +37,5 @@ export const env = z
     FFMPEG: process.env.FFMPEG,
     FFPROBE: process.env.FFPROBE,
     LOGS_PATH: process.env.LOGS_PATH,
+    AUTH_COOKIE_DOMAIN: process.env.AUTH_COOKIE_DOMAIN,
   });
