@@ -1,0 +1,15 @@
+[Unit]
+Description=Cerebro Next Service
+After=network.target
+
+[Service]
+User=agentuser
+Group=agentuser
+WorkingDirectory=/app/cerebro/apps/web
+ExecStart=/home/agentuser/.bun/bin/bun run start
+Restart=always
+RestartSec=2
+Environment=NODE_ENV=production  # Add any environment variables you need
+
+[Install]
+WantedBy=multi-user.target
