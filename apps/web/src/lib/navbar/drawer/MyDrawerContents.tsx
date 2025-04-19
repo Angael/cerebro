@@ -14,7 +14,7 @@ import {
   mdiUpload,
 } from '@mdi/js';
 import { Icon } from '@mdi/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import css from './MyDrawerContents.module.scss';
 
@@ -26,10 +26,11 @@ type Props = {
 const MyDrawerContents = ({ user, onClose }: Props) => {
   const router = useRouter();
 
-  const queryClient = useQueryClient();
   const logout = useMutation({
     mutationFn: () => API.delete('/auth/signout').then((res) => res.data),
-    onSettled: () => queryClient.invalidateQueries(),
+    onSettled: () => {
+      window.location.reload();
+    },
   });
 
   return (
@@ -53,32 +54,34 @@ const MyDrawerContents = ({ user, onClose }: Props) => {
         )}
       </Stack>
 
-      <Stack gap="0">
-        <Title order={4} mb="sm">
-          Fitness
-        </Title>
-        <RouteNavLink
-          href="/food"
-          label="Food"
-          description="Log what you ate"
-          onClick={onClose}
-          leftSection={<Icon path={mdiFoodApple} size="24px" />}
-        />
-        <RouteNavLink
-          href="/weight"
-          label="Weight"
-          description="Update your weight"
-          onClick={onClose}
-          leftSection={<Icon path={mdiScale} size="24px" />}
-        />
-        <RouteNavLink
-          href="/goals"
-          label="Goals"
-          description="Change target weight or calories"
-          onClick={onClose}
-          leftSection={<Icon path={mdiCounter} size="24px" />}
-        />
-      </Stack>
+      {user && (
+        <Stack gap="0">
+          <Title order={4} mb="sm">
+            Fitness
+          </Title>
+          <RouteNavLink
+            href="/food"
+            label="Food"
+            description="Log what you ate"
+            onClick={onClose}
+            leftSection={<Icon path={mdiFoodApple} size="24px" />}
+          />
+          <RouteNavLink
+            href="/weight"
+            label="Weight"
+            description="Update your weight"
+            onClick={onClose}
+            leftSection={<Icon path={mdiScale} size="24px" />}
+          />
+          <RouteNavLink
+            href="/goals"
+            label="Goals"
+            description="Change target weight or calories"
+            onClick={onClose}
+            leftSection={<Icon path={mdiCounter} size="24px" />}
+          />
+        </Stack>
+      )}
 
       <Stack gap="0">
         <Title order={4} mb="sm">
@@ -109,6 +112,7 @@ const MyDrawerContents = ({ user, onClose }: Props) => {
               onClick={() => {
                 logout.mutate();
                 onClose?.();
+                router.refresh();
                 router.push('/signin');
               }}
             >

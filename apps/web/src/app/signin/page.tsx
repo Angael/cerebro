@@ -18,7 +18,7 @@ const Page = () => {
     mutationFn: () => API.post('/auth/signin', { email, password }),
     onSettled: () => queryClient.invalidateQueries(),
     onSuccess: () => {
-      router.push('/');
+      window.location.href = '/';
     },
   });
 
