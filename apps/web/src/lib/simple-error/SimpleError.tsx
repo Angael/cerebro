@@ -4,13 +4,13 @@ import { useEffect } from 'react';
 import css from './SimpleError.module.scss';
 import { Stack, Text, Title } from '@mantine/core';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
+import * as Sentry from '@sentry/nextjs';
 
 export default function SimpleError({ error }: { error: any }) {
   const errorMsg = parseErrorResponse(error);
 
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

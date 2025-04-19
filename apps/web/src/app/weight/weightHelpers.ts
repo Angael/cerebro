@@ -1,9 +1,3 @@
-import { API } from '@/utils/API';
-import { QUERY_KEYS } from '@/utils/consts';
-import { useQuery } from '@tanstack/react-query';
-import { WeightData } from '@cerebro/server';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
-
 export function fillMissingDates(data: { date: string; weight_kg: number }[]) {
   if (!data || data.length === 0) {
     return [];
@@ -31,16 +25,3 @@ export function fillMissingDates(data: { date: string; weight_kg: number }[]) {
 
   return filledData;
 }
-
-export const useUserWeight = (user: ReturnType<typeof useCurrentUser>) => {
-  const query = useQuery({
-    enabled: !!user.data,
-    queryKey: [QUERY_KEYS.userWeight],
-    queryFn: () => API.get<WeightData[]>('/user/weight').then((res) => res.data),
-    placeholderData: () => {
-      return [];
-    },
-  });
-
-  return query;
-};

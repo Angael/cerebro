@@ -17,6 +17,9 @@ const AdminGuard = ({ children }: Props) => {
   return children;
 };
 
+/**
+ * @deprecated dont use this in ssr
+ */
 // eslint-disable-next-line react/display-name
 const adminGuardedPage = (Page: React.FC) => () => (
   <AdminGuard>

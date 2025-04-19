@@ -1,6 +1,7 @@
+'use client';
 import { RouteNavLink } from '@/lib/route-nav-link/RouteNavLink';
 import { API } from '@/utils/API';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
+import { UiUserType } from '@/utils/next-server/getUser';
 import { Flex, Stack, Title } from '@mantine/core';
 import {
   mdiAccountCircleOutline,
@@ -18,11 +19,11 @@ import { useRouter } from 'next/navigation';
 import css from './MyDrawerContents.module.scss';
 
 type Props = {
+  user: UiUserType | null;
   onClose?: () => void;
 };
 
-const MyDrawerContents = ({ onClose }: Props) => {
-  const user = useCurrentUser();
+const MyDrawerContents = ({ user, onClose }: Props) => {
   const router = useRouter();
 
   const queryClient = useQueryClient();
@@ -41,7 +42,7 @@ const MyDrawerContents = ({ onClose }: Props) => {
           onClick={onClose}
           leftSection={<Icon path={mdiHome} size="24px" />}
         />
-        {user.data && (
+        {user && (
           <RouteNavLink
             href="/upload"
             label="Upload"
@@ -83,7 +84,7 @@ const MyDrawerContents = ({ onClose }: Props) => {
         <Title order={4} mb="sm">
           User
         </Title>
-        {user.data?.type === 'ADMIN' && (
+        {user?.type === 'ADMIN' && (
           <RouteNavLink
             href="/admin"
             label="Admin panel"
@@ -94,14 +95,14 @@ const MyDrawerContents = ({ onClose }: Props) => {
         )}
         <Flex gap="0" align="stretch">
           <RouteNavLink
-            href={user.data ? '/account' : '/signin'}
-            label={user.data ? user.data.email : 'My account'}
-            description={user.data ? 'View your account' : 'Login'}
+            href={user ? '/account' : '/signin'}
+            label={user ? user.email : 'My account'}
+            description={user ? 'View your account' : 'Login'}
             onClick={onClose}
             leftSection={<Icon path={mdiAccountCircleOutline} size="24px" />}
             style={{ flex: 1 }}
           />
-          {user.data && (
+          {user && (
             <button
               className={css.logoutBtn}
               type="button"

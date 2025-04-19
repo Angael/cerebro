@@ -187,5 +187,5 @@ interface UserWeightTable {
   user_id: string;
 
   weight_kg: number;
-  date: Date; // YYYY-MM-DD
+  date: string; // YYYY-MM-DD
 }

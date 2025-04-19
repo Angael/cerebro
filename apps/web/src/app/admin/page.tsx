@@ -1,10 +1,20 @@
-'use client';
-import React from 'react';
+import { getUser } from '@/utils/next-server/getUser';
 import { Title } from '@mantine/core';
-import adminGuardedPage from '@/lib/admin/adminGuardedPage';
+import { redirect } from 'next/navigation';
 
-const AdminPage = () => {
-  return <Title order={1}>Admin page</Title>;
+const AdminPage = async () => {
+  const user = await getUser();
+
+  if (!user) {
+    throw redirect('/error/401');
+  }
+
+  return (
+    <div>
+      <Title order={1}>Admin page</Title>
+      <pre>{JSON.stringify(user, null, 2)}</pre>
+    </div>
+  );
 };
 
-export default adminGuardedPage(AdminPage);
+export default AdminPage;

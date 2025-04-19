@@ -6,8 +6,9 @@ import { Burger, Drawer, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import MyDrawerContents from '@/lib/navbar/drawer/MyDrawerContents';
 import { useShowDrawer } from '@/lib/navbar/drawer/useShowDrawer';
+import { UiUserType } from '@/utils/next-server/getUser';
 
-const Navbar = () => {
+const Navbar = ({ user }: { user: UiUserType | null }) => {
   const [opened, { toggle, close }] = useDisclosure();
   const isMobile = useShowDrawer();
 
@@ -30,13 +31,13 @@ const Navbar = () => {
             <Drawer.Overlay zIndex={2} />
             <Drawer.Content style={{ zIndex: 2 }} classNames={{ content: css.DrawerContent }}>
               <Drawer.Body h="calc(100% - var(--navbar-height))">
-                <MyDrawerContents onClose={close} />
+                <MyDrawerContents onClose={close} user={user} />
               </Drawer.Body>
             </Drawer.Content>
           </Drawer.Root>
 
           <Text size="1.5rem" fw={700} component="h1" style={{ marginRight: 'auto' }}>
-            <Link href="/" className={css.cerebroLogo}>
+            <Link href="/" className={css.cerebroLogo} onClick={close}>
               Cerebro
             </Link>
           </Text>
