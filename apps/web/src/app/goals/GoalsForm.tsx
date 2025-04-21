@@ -1,11 +1,11 @@
+'use client';
 import { API } from '@/utils/API';
-import { QUERY_KEYS } from '@/utils/consts';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import { GoalsType } from '@cerebro/server';
 import { Button, NumberInput, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications, showNotification } from '@mantine/notifications';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 function isNumberAndIsInRange(value: number | null, min: number, max: number) {
   if (value === null) return false;
@@ -15,10 +15,15 @@ function isNumberAndIsInRange(value: number | null, min: number, max: number) {
 }
 
 interface Props {
-  goals: GoalsType | null;
+  goals:
+    | {
+        kcal: number | null;
+        weight_kg: number | null;
+        date: string;
+      }
+    | undefined;
 }
 const GoalsForm = ({ goals }: Props) => {
-  const queryClient = useQueryClient();
   const saveGoals = useMutation({
     mutationFn: (values: Omit<GoalsType, 'date'>) => {
       const payload = {
@@ -34,7 +39,6 @@ const GoalsForm = ({ goals }: Props) => {
         message: 'Goals saved successfully',
         color: 'green',
       });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.foodGoals] });
     },
     onError: (e) => {
       const parsedError = parseErrorResponse(e);
@@ -46,13 +50,13 @@ const GoalsForm = ({ goals }: Props) => {
       });
     },
   });
+
   const form = useForm({
     mode: 'uncontrolled',
     initialValues: {
       weight_kg: goals?.weight_kg ?? null,
       kcal: goals?.kcal ?? null,
     },
-
     validate: {
       weight_kg: (value) =>
         isNumberAndIsInRange(value, 30, 300) ? null : 'Weight must be a number between 30 and 300',
