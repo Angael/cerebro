@@ -1,0 +1,21 @@
+.featureCard {
+  position: relative;
+  overflow: clip;
+
+  > a {
+    margin-top: 12px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.iconBg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translate(-25%, 25%);
+
+  opacity: 0.05;
+}
