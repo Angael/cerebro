@@ -17,8 +17,13 @@ import FoodList from './FoodList';
 import History from './history/History';
 import css from './page.module.css';
 import ScannerModal from './scanner/ScannerModal';
+import { GoalsType } from '@/server/getGoals';
 
-const Food = () => {
+interface Props {
+  goals: GoalsType;
+}
+
+const Food = ({ goals }: Props) => {
   const user = useRequireAccount();
   const todaysFood = useQuery({
     queryKey: [QUERY_KEYS.todaysFood],
@@ -44,8 +49,7 @@ const Food = () => {
     return todaysFood.data.reduce((acc, food) => acc + food.kcal, 0);
   }, [todaysFood.data]);
 
-  const currentGoals = useFoodGoals();
-  const targetToday = currentGoals.data?.kcal;
+  const targetToday = goals?.kcal;
 
   return (
     <Stack>

@@ -3,6 +3,8 @@
 import { db } from '@cerebro/db';
 import { sql } from 'kysely';
 
+export type GoalsType = Awaited<ReturnType<typeof getGoals>>;
+
 export const getGoals = async (userId: string) => {
   return (
     db
