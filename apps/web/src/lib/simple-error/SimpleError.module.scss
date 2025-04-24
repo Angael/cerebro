@@ -2,13 +2,12 @@
   width: 100%;
 
   > summary {
-    color: var(--mantine-color-gray-6);
-    text-align: center;
-    cursor: pointer;
+    color: var(--mantine-color-gray-5);
   }
 
   .stack {
-    margin: 8px auto 0;
+    width: 100%;
+    margin: 0;
     padding: 16px;
     border-radius: 8px;
     background: var(--c-bg-paper);
