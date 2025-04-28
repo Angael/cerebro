@@ -1,10 +1,10 @@
-import { QueryFoodToday } from '@cerebro/server';
 import { Text } from '@mantine/core';
 import FoodLogEntry from './food-log-entry/FoodLogEntry';
 import FoodLogsList from './food-log-entry/FoodLogsList';
+import { FoodHistoryType } from '@/server/getFoodHistory';
 
 type Props = {
-  foods: QueryFoodToday;
+  foods: FoodHistoryType;
 };
 
 const FoodList = ({ foods }: Props) => {

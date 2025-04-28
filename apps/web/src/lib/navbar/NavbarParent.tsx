@@ -1,4 +1,4 @@
-import { getUser } from '@/utils/next-server/getUser';
+import { getUser } from '@/server/getUser';
 import Navbar from './Navbar';
 
 const NavbarParent = async () => {

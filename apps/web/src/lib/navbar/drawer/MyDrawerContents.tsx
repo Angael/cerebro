@@ -1,7 +1,7 @@
 'use client';
 import { RouteNavLink } from '@/lib/route-nav-link/RouteNavLink';
 import { API } from '@/utils/API';
-import { UiUserType } from '@/utils/next-server/getUser';
+import { UiUserType } from '@/server/getUser';
 import { Flex, Stack, Title } from '@mantine/core';
 import {
   mdiAccountCircleOutline,

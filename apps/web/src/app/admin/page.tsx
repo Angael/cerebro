@@ -1,4 +1,4 @@
-import { getUser } from '@/utils/next-server/getUser';
+import { getUser } from '@/server/getUser';
 import { Title } from '@mantine/core';
 import { redirect } from 'next/navigation';
 

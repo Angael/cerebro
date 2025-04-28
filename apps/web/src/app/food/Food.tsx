@@ -1,11 +1,9 @@
 'use client';
-import { API } from '@/utils/API';
+import { fetchFoodHistory, FoodHistoryType } from '@/server/getFoodHistory';
+import { GoalsType } from '@/server/getGoals';
 import { QUERY_KEYS } from '@/utils/consts';
-import { useFoodGoals } from '@/utils/hooks/useFoodGoals';
-import { useRequireAccount } from '@/utils/hooks/useRequireAccount';
 import { FoodProduct } from '@cerebro/db';
-import { QueryFoodToday } from '@cerebro/server';
-import { Button, Center, Group, Loader, Paper, Progress, Stack, Text, Title } from '@mantine/core';
+import { Button, Group, Paper, Progress, Stack, Text, Title } from '@mantine/core';
 import { mdiFire, mdiPlusCircleOutline } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useQuery } from '@tanstack/react-query';
@@ -17,18 +15,40 @@ import FoodList from './FoodList';
 import History from './history/History';
 import css from './page.module.css';
 import ScannerModal from './scanner/ScannerModal';
-import { GoalsType } from '@/server/getGoals';
+
+const splitFoodHistoryOnToday = (foodHistory: FoodHistoryType) => {
+  const todaysDate = new Date().toISOString().split('T')[0];
+
+  const todaysFood: FoodHistoryType = [];
+  const notTodaysFood: FoodHistoryType = [];
+
+  foodHistory.forEach((foodLog) => {
+    if (foodLog.dayDate === todaysDate) {
+      todaysFood.push(foodLog);
+    } else {
+      notTodaysFood.push(foodLog);
+    }
+  });
+
+  return [todaysFood, notTodaysFood] as const;
+};
 
 interface Props {
   goals: GoalsType;
+  foodHistoryInit: FoodHistoryType;
 }
 
-const Food = ({ goals }: Props) => {
-  const user = useRequireAccount();
-  const todaysFood = useQuery({
+const Food = ({ goals, foodHistoryInit }: Props) => {
+  const foodHistory = useQuery({
     queryKey: [QUERY_KEYS.todaysFood],
-    queryFn: () => API.get<QueryFoodToday>('/food/today').then((r) => r.data),
+    queryFn: fetchFoodHistory,
+    initialData: foodHistoryInit,
   });
+
+  const [todaysFood, notTodaysFood] = useMemo(
+    () => splitFoodHistoryOnToday(foodHistory.data),
+    [foodHistory.data],
+  );
 
   const [findOpen, setFindOpen] = useState(false);
   const [foodProduct, setFoodProduct] = useState<FoodProduct | null>(null);
@@ -45,9 +65,9 @@ const Food = ({ goals }: Props) => {
   });
 
   const kcalToday = useMemo(() => {
-    if (!todaysFood.data) return 0;
-    return todaysFood.data.reduce((acc, food) => acc + food.kcal, 0);
-  }, [todaysFood.data]);
+    if (!todaysFood) return 0;
+    return todaysFood.reduce((acc, food) => acc + food.kcal, 0);
+  }, [todaysFood]);
 
   const targetToday = goals?.kcal;
 
@@ -67,38 +87,27 @@ const Food = ({ goals }: Props) => {
       <Paper p="md">
         <Stack gap="sm">
           <Title order={2}>Today</Title>
+          <FoodList foods={todaysFood} />
 
-          {!user.data && <Text>Please log in to see your food</Text>}
-
-          {todaysFood.isLoading && (
-            <Center>
-              <Loader />
-            </Center>
-          )}
-          {todaysFood.data && (
-            <>
-              <FoodList foods={todaysFood.data} />
-              <Group justify="flex-end" className={css.foodActions}>
-                <Button
-                  onClick={() => setFindOpen(true)}
-                  leftSection={<Icon path={mdiPlusCircleOutline} size={1} />}
-                >
-                  Add product
-                </Button>
-                <Button
-                  disabled
-                  onClick={() => setScannerOpened(true)}
-                  leftSection={<Icon path={mdiFire} size={1} />}
-                >
-                  Add calories
-                </Button>
-              </Group>
-            </>
-          )}
+          <Group justify="flex-end" className={css.foodActions}>
+            <Button
+              onClick={() => setFindOpen(true)}
+              leftSection={<Icon path={mdiPlusCircleOutline} size={1} />}
+            >
+              Add product
+            </Button>
+            <Button
+              disabled
+              onClick={() => setScannerOpened(true)}
+              leftSection={<Icon path={mdiFire} size={1} />}
+            >
+              Add calories
+            </Button>
+          </Group>
         </Stack>
       </Paper>
 
-      <History />
+      <History foodHistory={foodHistory.data} />
 
       <FindProductDialog
         open={findOpen}

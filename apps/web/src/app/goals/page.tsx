@@ -1,4 +1,4 @@
-import { requireUser } from '@/utils/next-server/getUser';
+import { requireUser } from '@/server/getUser';
 import { getGoals } from '@/server/getGoals';
 import { Paper, Stack, Title } from '@mantine/core';
 import GoalsForm from './GoalsForm';

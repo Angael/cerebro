@@ -1,12 +1,14 @@
-import { requireUser } from '@/utils/next-server/getUser';
+import { requireUser } from '@/server/getUser';
 import Food from './Food';
 import { getGoals } from '@/server/getGoals';
+import { getFoodHistory } from '@/server/getFoodHistory';
 
 const FoodPage = async () => {
   const user = await requireUser();
-  const goals = await getGoals(user.id);
+  const goals = getGoals(user.id);
+  const foodHistory = getFoodHistory(user.id);
 
-  return <Food goals={goals} />;
+  return <Food goals={await goals} foodHistoryInit={await foodHistory} />;
 };
 
 export default FoodPage;

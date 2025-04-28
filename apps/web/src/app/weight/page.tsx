@@ -1,4 +1,4 @@
-import { requireUser } from '@/utils/next-server/getUser';
+import { requireUser } from '@/server/getUser';
 import { Stack, Title } from '@mantine/core';
 import Weight from './Weight';
 import { db } from '@cerebro/db';

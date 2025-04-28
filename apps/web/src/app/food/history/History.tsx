@@ -1,23 +1,15 @@
-import { API } from '@/utils/API';
-import { useCurrentUser } from '@/utils/hooks/useCurrentUser';
+import { FoodHistoryType } from '@/server/getFoodHistory';
 import { QueryFoodHistory } from '@cerebro/server';
 import { Button, Stack, Title } from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import HistoryDay from './HistoryDay';
-import { QUERY_KEYS } from '@/utils/consts';
 
-type Props = {};
+type Props = {
+  foodHistory: FoodHistoryType;
+};
 
-const History = (props: Props) => {
-  const user = useCurrentUser();
-  const foodHistory = useQuery({
-    enabled: !!user.data,
-    queryKey: [QUERY_KEYS.foodHistory],
-    queryFn: () => API.get<QueryFoodHistory>('/food/history').then((r) => r.data),
-  });
-
-  const groupedFoods = foodHistory.data?.reduceRight(
+const History = ({ foodHistory }: Props) => {
+  const groupedFoods = foodHistory?.reduceRight(
     (acc, food) => {
       const date = format(new Date(food.dayDate), 'yyyy-MM-dd');
       if (!acc[date]) {

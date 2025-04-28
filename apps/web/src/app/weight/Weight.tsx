@@ -1,6 +1,6 @@
 'use client';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
-import { UiUserType } from '@/utils/next-server/getUser';
+import { UiUserType } from '@/server/getUser';
 import { GoalsType, WeightData } from '@cerebro/server';
 import { AreaChart } from '@mantine/charts';
 import '@mantine/charts/styles.css';
