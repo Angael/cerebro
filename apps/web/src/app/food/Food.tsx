@@ -107,7 +107,7 @@ const Food = ({ goals, foodHistoryInit }: Props) => {
         </Stack>
       </Paper>
 
-      <History foodHistory={foodHistory.data} />
+      <History foodHistory={notTodaysFood} />
 
       <FindProductDialog
         open={findOpen}
