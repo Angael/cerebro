@@ -1,3 +1,4 @@
+import { Logger } from '@/utils/logger';
 import { tryCatch } from '@/utils/tryCatch';
 import { db, UserType } from '@cerebro/db';
 import * as Sentry from '@sentry/nextjs';
@@ -37,13 +38,12 @@ export const getUserDb = async (authSession: string | undefined): Promise<null |
   );
 
   if (error) {
-    // TODO replace with pino logger
-    console.log(error);
-    Sentry.captureException(error);
+    Logger.error('getUserDb', error);
     return null;
   }
 
   if (new Date(user.expires_at).getTime() < new Date().getTime()) {
+    Logger.verbose('getUserDb', 'Session expired', user.expires_at);
     return null;
   }
 

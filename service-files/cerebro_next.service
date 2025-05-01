@@ -9,7 +9,16 @@ WorkingDirectory=/app/cerebro/apps/web
 ExecStart=/home/agentuser/.bun/bin/bun run start
 Restart=always
 RestartSec=2
-Environment=NODE_ENV=production  # Add any environment variables you need
+Environment=NODE_ENV=production
+
+# Other
+SyslogIdentifier=cerebro_next
+
+# Security/Sandboxing
+# ProtectSystem=full
+# ProtectHome=yes
+# PrivateTmp=yes
+NoNewPrivileges=yes
 
 [Install]
 WantedBy=multi-user.target
