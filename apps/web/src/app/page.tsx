@@ -4,9 +4,6 @@ import Icon from '@mdi/react';
 import Link from 'next/link';
 import css from './page.module.css';
 
-// Static site
-export const dynamic = 'force-dynamic';
-
 const IndexPage = () => {
   return (
     <Stack>

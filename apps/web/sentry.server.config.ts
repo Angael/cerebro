@@ -8,6 +8,6 @@ import * as Sentry from '@sentry/nextjs';
 Sentry.init({
   dsn: env.SENTRY_DSN,
   tracesSampleRate: 0.5,
-  debug: false,
+  debug: true,
   environment: env.IS_PROD ? 'production' : 'development',
 });
