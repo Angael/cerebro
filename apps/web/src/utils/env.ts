@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const env = z
   .object({
     IS_PROD: z.boolean(),
-    API_URL: z.string(),
-    SENTRY_DSN: z.string(),
+    API_URL: z.string().nonempty(),
+    SENTRY_DSN: z.string().nonempty(),
   })
   .parse({
     IS_PROD: process.env.NODE_ENV === 'production',
