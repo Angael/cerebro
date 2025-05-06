@@ -1,10 +1,10 @@
 'use server';
 import { db } from '@cerebro/db';
-import { sql } from 'kysely';
+import { startSpan } from '@sentry/nextjs';
 import { format } from 'date-fns';
+import { sql } from 'kysely';
 import { z } from 'zod';
 import { requireUser } from './getUser';
-import { startSpan, getActiveSpan } from '@sentry/nextjs';
 
 export type FoodHistoryType = Awaited<ReturnType<typeof getFoodHistory>>;
 
@@ -23,13 +23,7 @@ const zFoodHistory = z.array(
 
 const limit = 7;
 export const getFoodHistory = async (userId: string) =>
-  startSpan({ name: 'SF_getFoodHistory' }, async (span) => {
-    const currentSpan = getActiveSpan();
-
-    if (currentSpan) {
-      currentSpan.setAttribute('my_userId', userId); // Set attribute on the span
-    }
-
+  startSpan({ name: 'SF_getFoodHistory', op: 'db' }, async (span) => {
     const logsCountsDates = await startSpan(
       { name: 'logsCountsDates', op: 'db' },
       async (_span) => {
