@@ -14,7 +14,7 @@ export type UiUserType = {
 };
 
 // Little cache, just to avoid hitting db multiple times in the same request
-export const getUserDb = async (authSession: string | undefined): Promise<null | UiUserType> => {
+const getUserDb = async (authSession: string | undefined): Promise<null | UiUserType> => {
   'use cache';
   cacheLife('seconds');
 
@@ -53,7 +53,9 @@ export const getUserDb = async (authSession: string | undefined): Promise<null |
 export const getUser = async () => {
   const _cookies = await cookies();
 
-  return getUserDb(_cookies.get('auth_session')?.value);
+  return Sentry.startSpan({ name: 'SF_getUser', op: 'db' }, () =>
+    getUserDb(_cookies.get('auth_session')?.value),
+  );
 };
 
 export const requireUser = async () => {

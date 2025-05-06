@@ -7,9 +7,17 @@ import { env } from './utils/env';
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
-  tracesSampleRate: 0.5,
+  tracesSampleRate: env.IS_PROD ? 0.5 : 0.1,
   debug: false,
   environment: env.IS_PROD ? 'production' : 'development',
+  beforeSendTransaction: (transaction) => {
+    // Filter out react render duration spans, cause they are into the 1000s range, and eat up span limit
+    if (transaction.spans) {
+      transaction.spans = transaction.spans.filter((span) => span.op !== 'measure');
+    }
+
+    return transaction;
+  },
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
