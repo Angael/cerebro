@@ -7,7 +7,7 @@ import { env } from './utils/env';
 
 Sentry.init({
   dsn: env.SENTRY_DSN,
-  tracesSampleRate: env.IS_PROD ? 1 : 0.1,
+  tracesSampleRate: env.IS_PROD ? 0.5 : 0.1,
   debug: false,
   environment: env.IS_PROD ? 'production' : 'development',
   beforeSendTransaction: (transaction) => {
