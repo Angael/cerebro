@@ -1,5 +1,3 @@
-import { startSpan } from '@sentry/nextjs';
-import { sql } from 'kysely';
 import { z } from 'zod';
 
 // Validate response, as query is not typed

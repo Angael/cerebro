@@ -1,4 +1,4 @@
-import { API } from '@/utils/API';
+import { getFoodByBarcode } from '@/server/getFoodByBarcode';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
@@ -8,7 +8,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import Scanner from './Scanner';
 import ScannerFeedback from './ScannerFeedback';
-import { getFoodByBarcode } from '@/server/getFoodByBarcode';
 
 type Props = {
   open: boolean;

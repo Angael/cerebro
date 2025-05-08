@@ -1,14 +1,13 @@
 'use client';
-import { API } from '@/utils/API';
+import { deleteFoodLog } from '@/server/deleteFoodLog';
 import { QUERY_KEYS } from '@/utils/consts';
+import { showErrorNotification } from '@/utils/notificationHelpers';
 import { Button, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
 import { mdiPencil } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
-import { deleteFoodLog } from '@/server/deleteFoodLog';
-import { showErrorNotification } from '@/utils/notificationHelpers';
 
 type Props = {
   food: {
