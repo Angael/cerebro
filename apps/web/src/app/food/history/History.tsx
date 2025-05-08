@@ -1,8 +1,9 @@
 import { FoodHistoryType } from '@/server/getFoodHistory';
-import { QueryFoodHistory } from '@cerebro/server';
+import { zFoodHistory } from '@/server/types/foodTypes';
 import { Button, Stack, Title } from '@mantine/core';
 import { format } from 'date-fns';
 import HistoryDay from './HistoryDay';
+import { z } from 'zod';
 
 type Props = {
   foodHistory: FoodHistoryType;
@@ -20,7 +21,7 @@ const History = ({ foodHistory }: Props) => {
 
       return acc;
     },
-    {} as Record<string, QueryFoodHistory>,
+    {} as Record<string, z.infer<typeof zFoodHistory>>,
   );
 
   return (

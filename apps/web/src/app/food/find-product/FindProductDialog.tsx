@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import Fuse from 'fuse.js';
 import { useMemo, useState } from 'react';
 import CustomProductBtn from './CustomProductBtn';
+import { fetchMyFoodProducts } from '@/server/getMyFoodProducts';
 
 type Props = {
   open: boolean;
@@ -29,7 +30,7 @@ const FindProductDialog = ({
   const autocomplete = useQuery({
     enabled: open,
     queryKey: ['autocomplete'],
-    queryFn: () => API.get<FoodProduct[]>('/food/my-products').then((r) => r.data),
+    queryFn: () => fetchMyFoodProducts(),
   });
 
   const fuse = useMemo(() => {

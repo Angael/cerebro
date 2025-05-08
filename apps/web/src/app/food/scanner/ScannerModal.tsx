@@ -1,4 +1,4 @@
-import { API } from '@/utils/API';
+import { getFoodByBarcode } from '@/server/getFoodByBarcode';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
@@ -22,7 +22,13 @@ const ScannerModal = ({ open, onClose, onFound, onCreateProduct }: Props) => {
   const codeQuery = useQuery({
     enabled: open && !!code,
     queryKey: [QUERY_KEYS.foodByBarcode, { barcode: code }],
-    queryFn: () => API.get<FoodProduct>(`/food/barcode/${code}`).then((r) => r.data),
+    queryFn: () =>
+      getFoodByBarcode(code!).then((response) => {
+        if ('error' in response) {
+          throw new Error(response.error);
+        }
+        return response;
+      }),
     refetchOnWindowFocus: true,
   });
 

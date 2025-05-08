@@ -1,6 +1,7 @@
-import { API } from '@/utils/API';
+'use client';
+import { deleteFoodLog } from '@/server/deleteFoodLog';
 import { QUERY_KEYS } from '@/utils/consts';
-import { QueryFoodToday } from '@cerebro/server';
+import { showErrorNotification } from '@/utils/notificationHelpers';
 import { Button, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
 import { mdiPencil } from '@mdi/js';
 import Icon from '@mdi/react';
@@ -25,15 +26,21 @@ const FoodLogEntry = ({ food }: Props) => {
   const queryClient = useQueryClient();
   const deleteMut = useMutation({
     mutationFn: () => {
-      // TODO: merge into one endpoint
-      queryClient.setQueryData([QUERY_KEYS.foodHistory], (data: any) =>
-        data.filter((f: any) => f.id !== food.id),
-      );
+      queryClient.setQueryData([QUERY_KEYS.foodHistory], (data: any) => {
+        data?.filter((f: any) => f.id !== food.id);
+      });
       queryClient.setQueryData([QUERY_KEYS.todaysFood], (data: any) =>
-        data.filter((f: any) => f.id !== food.id),
+        data?.filter((f: any) => f.id !== food.id),
       );
 
-      return API.delete(`/food/log/${food.id}`);
+      return deleteFoodLog(food.id);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.foodHistory] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.todaysFood] });
+    },
+    onError: (error) => {
+      showErrorNotification('Error deleting food log', 'Please try again later.');
     },
   });
 
