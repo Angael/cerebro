@@ -72,7 +72,7 @@ const getFood = async (userId: string, barcode: string) => {
     // If user_id is null, it's a global product
     .where((eb) => eb.or([eb('user_id', '=', userId || null), eb('user_id', 'is', null)]));
 
-  const productFromDb = await startSpan({ name: 'productFromDb' }, () =>
+  const productFromDb = await startSpan({ name: 'productFromDb', op: 'db' }, () =>
     productFromDbQuery.executeTakeFirst().catch(() => null),
   );
 
@@ -83,7 +83,9 @@ const getFood = async (userId: string, barcode: string) => {
   const url = new URL(`https://world.openfoodfacts.org/api/v3/product/${barcode}.json`);
   url.searchParams.append('fields', requestedFields); // Assuming requestedFields is a string or can be appended directly
 
-  const response = await startSpan({ name: 'fetch openfoodfacts' }, () => fetch(url.toString()));
+  const response = await startSpan({ name: 'fetch openfoodfacts', op: 'fetch' }, () =>
+    fetch(url.toString()),
+  );
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -104,7 +106,7 @@ const getFood = async (userId: string, barcode: string) => {
   }
 
   try {
-    await startSpan({ name: 'insertFoodProduct' }, () => insertFoodProduct(product));
+    await startSpan({ name: 'insertFoodProduct', op: 'db' }, () => insertFoodProduct(product));
   } catch (e) {
     if (e instanceof Error) {
       return { error: e.message };
@@ -113,7 +115,7 @@ const getFood = async (userId: string, barcode: string) => {
 
   try {
     // Unnecessary work, but makes sure schema is correct, i am lazy
-    return await startSpan({ name: 'returning found product' }, () =>
+    return await startSpan({ name: 'returning found product', op: 'db' }, () =>
       productFromDbQuery.executeTakeFirstOrThrow(),
     );
   } catch (e) {

@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import { requireUser } from './getUser';
 import { db } from '@cerebro/db';
+import { startSpan } from '@sentry/nextjs';
 
 const zNewProduct = z.object({
   code: z.string().nullable(),
@@ -23,12 +24,14 @@ export const postNewFoodProduct = async (newProduct: z.infer<typeof zNewProduct>
     product_quantity: size,
   };
 
-  const result = await db.insertInto('food_product').values(product).execute();
-  const insertedId = result[0]?.insertId;
+  return startSpan({ name: 'SF_postNewFoodProduct', op: 'db' }, async () => {
+    const result = await db.insertInto('food_product').values(product).execute();
+    const insertedId = result[0]?.insertId;
 
-  return await db
-    .selectFrom('food_product')
-    .selectAll()
-    .where('id', '=', Number(insertedId))
-    .executeTakeFirstOrThrow();
+    return await db
+      .selectFrom('food_product')
+      .selectAll()
+      .where('id', '=', Number(insertedId))
+      .executeTakeFirstOrThrow();
+  });
 };
