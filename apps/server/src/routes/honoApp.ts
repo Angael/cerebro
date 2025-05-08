@@ -3,17 +3,16 @@ import { csrf } from 'hono/csrf';
 
 import { env } from '../utils/env.js';
 
+import adminRoutes from '@/routes/admin/admin.routes.js';
+import authRouter from '@/routes/auth/auth.routes.js';
+import serverStatsRoutes from '@/routes/server-stats/server-stats.routes.js';
+import userRouter from '@/routes/user/user.routes.js';
+import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
 import { errorResponse } from '@/utils/errors/errorResponse.js';
+import goalsRoutes from './goals/goals.routes.js';
 import { honoFactory } from './honoFactory.js';
 import itemRouter from './items/item.routes.js';
-import authRouter from '@/routes/auth/auth.routes.js';
-import userRouter from '@/routes/user/user.routes.js';
-import adminRoutes from '@/routes/admin/admin.routes.js';
-import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
-import foodRoutes from '@/routes/food/food.routes.js';
-import serverStatsRoutes from '@/routes/server-stats/server-stats.routes.js';
 import { statsMiddleware } from './server-stats/server-stats.logic.js';
-import goalsRoutes from './goals/goals.routes.js';
 
 export const app = honoFactory()
   .use('*', statsMiddleware) // Apply to all routes
@@ -25,7 +24,6 @@ export const app = honoFactory()
   .route('/', userRouter)
   .route('/', adminRoutes)
   .route('/', stripeRoutes)
-  .route('/', foodRoutes)
   .route('/', goalsRoutes)
   .route('/', serverStatsRoutes)
   .onError((e, c) => errorResponse(c, e));

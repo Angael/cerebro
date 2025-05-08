@@ -1,9 +1,8 @@
+import { getGoals } from '@/server/getGoals';
 import { requireUser } from '@/server/getUser';
+import { db } from '@cerebro/db';
 import { Stack, Title } from '@mantine/core';
 import Weight from './Weight';
-import { db } from '@cerebro/db';
-import { sql } from 'kysely';
-import { getGoals } from '@/server/getGoals';
 
 const WeightPage = async () => {
   const user = await requireUser();

@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import Scanner from './Scanner';
 import ScannerFeedback from './ScannerFeedback';
+import { getFoodByBarcode } from '@/server/getFoodByBarcode';
 
 type Props = {
   open: boolean;
@@ -22,7 +23,13 @@ const ScannerModal = ({ open, onClose, onFound, onCreateProduct }: Props) => {
   const codeQuery = useQuery({
     enabled: open && !!code,
     queryKey: [QUERY_KEYS.foodByBarcode, { barcode: code }],
-    queryFn: () => API.get<FoodProduct>(`/food/barcode/${code}`).then((r) => r.data),
+    queryFn: () =>
+      getFoodByBarcode(code!).then((response) => {
+        if ('error' in response) {
+          throw new Error(response.error);
+        }
+        return response;
+      }),
     refetchOnWindowFocus: true,
   });
 

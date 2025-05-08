@@ -7,6 +7,8 @@ import Icon from '@mdi/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
+import { deleteFoodLog } from '@/server/deleteFoodLog';
+import { showErrorNotification } from '@/utils/notificationHelpers';
 
 type Props = {
   food: {
@@ -32,7 +34,14 @@ const FoodLogEntry = ({ food }: Props) => {
         data?.filter((f: any) => f.id !== food.id),
       );
 
-      return API.delete(`/food/log/${food.id}`);
+      return deleteFoodLog(food.id);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.foodHistory] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.todaysFood] });
+    },
+    onError: (error) => {
+      showErrorNotification('Error deleting food log', 'Please try again later.');
     },
   });
 

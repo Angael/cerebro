@@ -1,15 +1,11 @@
-import { API } from '@/utils/API';
+import { postConsumedProduct } from '@/server/postConsumedProduct';
 import { QUERY_KEYS } from '@/utils/consts';
-import { parseErrorResponse } from '@/utils/parseErrorResponse';
+import { showErrorNotification } from '@/utils/notificationHelpers';
 import { FoodProduct } from '@cerebro/db';
-import { InsertedFoodLog } from '@cerebro/server';
 import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import css from './SaveProductForm.module.css';
-import { postConsumedProduct } from '@/server/postConsumedProduct';
-import { showErrorNotification } from '@/utils/notificationHelpers';
 
 type Props = {
   foodProduct: FoodProduct;

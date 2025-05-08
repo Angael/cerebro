@@ -3,23 +3,10 @@ import { db } from '@cerebro/db';
 import { startSpan } from '@sentry/nextjs';
 import { format } from 'date-fns';
 import { sql } from 'kysely';
-import { z } from 'zod';
 import { requireUser } from './getUser';
+import { zFoodHistory } from './types/foodTypes';
 
 export type FoodHistoryType = Awaited<ReturnType<typeof getFoodHistory>>;
-
-// Validate response, as query is not typed
-const zFoodHistory = z.array(
-  z.object({
-    id: z.number(),
-    brands: z.string().nullable(),
-    product_name: z.string(),
-    amount: z.number(),
-    kcal: z.number(),
-    kcal_100g: z.number(),
-    dayDate: z.string().date(),
-  }),
-);
 
 const limit = 7;
 export const getFoodHistory = async (userId: string) =>
