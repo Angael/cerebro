@@ -1,10 +1,11 @@
-import { API } from '@/utils/API';
+import { postNewFoodProduct } from '@/server/postNewFoodProduct';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
+import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import { FoodProduct } from '@cerebro/db';
-import { NewProduct } from '@cerebro/server';
 import { Button, Modal, NumberInput, Stack, Text, TextInput } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Props {
   code: string | null;
@@ -21,12 +22,16 @@ const CreateProductDialog = ({ code, name: initName, open, onClose, onCreated }:
   const [size, setSize] = useState('');
 
   const createMutation = useMutation({
-    mutationFn: () => {
-      const body: NewProduct = { code, name, kcal: Number(kcal), size: Number(size) };
-      return API.post('/food/product', body);
-    },
+    mutationFn: () => postNewFoodProduct({ code, name, kcal: Number(kcal), size: Number(size) }),
     onSuccess: (result) => {
-      onCreated(result.data);
+      onCreated(result);
+    },
+    onError: () => {
+      notifications.show({
+        color: 'red',
+        title: 'Failed create product',
+        message: 'The product could not be created. Please try again.',
+      });
     },
   });
 
@@ -81,7 +86,7 @@ const CreateProductDialog = ({ code, name: initName, open, onClose, onCreated }:
           >
             Create new product
           </Button>
-        </Stack>{' '}
+        </Stack>
       </form>
     </Modal>
   );

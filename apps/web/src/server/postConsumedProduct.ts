@@ -1,13 +1,17 @@
-import { db, FoodLog } from '@cerebro/db';
-import { sql } from 'kysely';
+'use server';
 import { z } from 'zod';
-import { InsertedFoodLog } from './food.model';
+import { requireUser } from './getUser';
+import { db } from '@cerebro/db';
 
-const zIsDate = z.string().date();
+const zInsertedFoodLog = z.object({
+  foodProductId: z.number(),
+  amount: z.number(),
+  date: z.string().datetime(),
+});
 
-// TODO: expand to support also custom foods
-export const insertFoodLog = async (userId: string, payload: InsertedFoodLog) => {
-  const { foodProductId, amount, date } = payload;
+export const postConsumedProduct = async (insertedFood: z.infer<typeof zInsertedFoodLog>) => {
+  const user = await requireUser();
+  const { amount, date, foodProductId } = zInsertedFoodLog.parse(insertedFood);
 
   const foodProduct = await db
     .selectFrom('food_product')
@@ -17,11 +21,11 @@ export const insertFoodLog = async (userId: string, payload: InsertedFoodLog) =>
 
   const kcal = foodProduct.kcal_100g * (amount / 100);
 
-  return await db
+  await db
     .insertInto('food_log')
     .values([
       {
-        user_id: userId,
+        user_id: user.id,
         food_product_id: foodProduct.id,
         barcode: foodProduct.barcode,
         kcal,
@@ -33,12 +37,6 @@ export const insertFoodLog = async (userId: string, payload: InsertedFoodLog) =>
       },
     ])
     .execute();
-};
 
-export const deleteFoodLog = async (userId: string, foodId: number) => {
-  return await db
-    .deleteFrom('food_log')
-    .where('user_id', '=', userId)
-    .where('id', '=', foodId)
-    .execute();
+  return null;
 };

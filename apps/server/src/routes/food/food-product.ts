@@ -114,28 +114,3 @@ export async function getFoodByBarcode(barcode: string, userId?: string): Promis
     throw new HTTPException(500, { message: "Failed to retrieve all product's data" });
   }
 }
-
-export const createProduct = async (userId: string, payload: NewProduct) => {
-  const product = {
-    user_id: userId,
-    product_name: payload.name,
-    kcal_100g: payload.kcal,
-    product_quantity: payload.size,
-  };
-
-  logger.verbose('Inserting product %o', product);
-
-  try {
-    const result = await db.insertInto('food_product').values(product).execute();
-    const insertedId = result[0]?.insertId;
-
-    return await db
-      .selectFrom('food_product')
-      .selectAll()
-      .where('id', '=', Number(insertedId))
-      .executeTakeFirstOrThrow();
-  } catch (e) {
-    logger.error('Failed to insert product %o', product);
-    throw new HTTPException(500, { message: 'Failed to insert product' });
-  }
-};

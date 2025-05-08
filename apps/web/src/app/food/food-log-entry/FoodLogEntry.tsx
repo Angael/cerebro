@@ -1,6 +1,6 @@
+'use client';
 import { API } from '@/utils/API';
 import { QUERY_KEYS } from '@/utils/consts';
-import { QueryFoodToday } from '@cerebro/server';
 import { Button, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
 import { mdiPencil } from '@mdi/js';
 import Icon from '@mdi/react';
@@ -25,12 +25,11 @@ const FoodLogEntry = ({ food }: Props) => {
   const queryClient = useQueryClient();
   const deleteMut = useMutation({
     mutationFn: () => {
-      // TODO: merge into one endpoint
-      queryClient.setQueryData([QUERY_KEYS.foodHistory], (data: any) =>
-        data.filter((f: any) => f.id !== food.id),
-      );
+      queryClient.setQueryData([QUERY_KEYS.foodHistory], (data: any) => {
+        data?.filter((f: any) => f.id !== food.id);
+      });
       queryClient.setQueryData([QUERY_KEYS.todaysFood], (data: any) =>
-        data.filter((f: any) => f.id !== food.id),
+        data?.filter((f: any) => f.id !== food.id),
       );
 
       return API.delete(`/food/log/${food.id}`);

@@ -1,11 +1,4 @@
-import { FoodLog, FoodProduct } from '@cerebro/db';
 import { z } from 'zod';
-
-// This file exists, because frontend imports types from backend.
-// Sadly bundlers dont like different import aliases like @/
-export type QueryFoodToday = FoodLog[];
-
-export type QueryMyProducts = FoodProduct[];
 
 export const zQueryScannedCode = z.object({
   code: z.string(), // barcode, inserted by cerebro

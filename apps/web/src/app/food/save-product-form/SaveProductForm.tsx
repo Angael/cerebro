@@ -8,6 +8,8 @@ import { showNotification } from '@mantine/notifications';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import css from './SaveProductForm.module.css';
+import { postConsumedProduct } from '@/server/postConsumedProduct';
+import { showErrorNotification } from '@/utils/notificationHelpers';
 
 type Props = {
   foodProduct: FoodProduct;
@@ -73,11 +75,11 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   const queryClient = useQueryClient();
   const saveMutation = useMutation({
     mutationFn: () =>
-      API.post(`/food/consumed-product`, {
+      postConsumedProduct({
         foodProductId: foodProduct.id,
         amount: Number(inputValue),
         date: new Date().toISOString(),
-      } satisfies InsertedFoodLog),
+      }),
     onSuccess: async () => {
       await Promise.allSettled([
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.foodHistory] }),
@@ -85,12 +87,8 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
       ]);
       onClose();
     },
-    onError: (e) => {
-      showNotification({
-        color: 'red',
-        title: 'Failed to log product',
-        message: parseErrorResponse(e)?.general,
-      });
+    onError: () => {
+      showErrorNotification('Failed to log product', 'Please try again later.');
     },
   });
 

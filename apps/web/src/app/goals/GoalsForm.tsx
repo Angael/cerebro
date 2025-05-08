@@ -1,10 +1,10 @@
 'use client';
 import { API } from '@/utils/API';
-import { parseErrorResponse } from '@/utils/parseErrorResponse';
+import { showErrorNotification } from '@/utils/notificationHelpers';
 import { GoalsType } from '@cerebro/server';
 import { Button, NumberInput, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { notifications, showNotification } from '@mantine/notifications';
+import { notifications } from '@mantine/notifications';
 import { useMutation } from '@tanstack/react-query';
 
 function isNumberAndIsInRange(value: number | null, min: number, max: number) {
@@ -40,14 +40,8 @@ const GoalsForm = ({ goals }: Props) => {
         color: 'green',
       });
     },
-    onError: (e) => {
-      const parsedError = parseErrorResponse(e);
-      console.log({ parsedError });
-      showNotification({
-        color: 'red',
-        title: 'Error saving goals',
-        message: parsedError?.general,
-      });
+    onError: () => {
+      showErrorNotification('Error saving goals', 'Could not save goals. Please try again.');
     },
   });
 
