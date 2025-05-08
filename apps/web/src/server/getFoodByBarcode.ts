@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { requireUser } from './getUser';
 import { unstable_cacheLife as cacheLife } from 'next/cache';
 import { db } from '@cerebro/db';
-import { captureException, startInactiveSpan } from '@sentry/nextjs';
+import { captureException, startInactiveSpan, startSpan } from '@sentry/nextjs';
 import { tryCatch } from '@/utils/tryCatch';
 
 const zString = z.string().min(1).max(500);
@@ -72,7 +72,9 @@ const getFood = async (userId: string, barcode: string) => {
     // If user_id is null, it's a global product
     .where((eb) => eb.or([eb('user_id', '=', userId || null), eb('user_id', 'is', null)]));
 
-  const productFromDb = await productFromDbQuery.executeTakeFirst().catch(() => null);
+  const productFromDb = await startSpan({ name: 'productFromDb' }, () =>
+    productFromDbQuery.executeTakeFirst().catch(() => null),
+  );
 
   if (productFromDb) {
     return productFromDb;
@@ -81,7 +83,7 @@ const getFood = async (userId: string, barcode: string) => {
   const url = new URL(`https://world.openfoodfacts.org/api/v3/product/${barcode}.json`);
   url.searchParams.append('fields', requestedFields); // Assuming requestedFields is a string or can be appended directly
 
-  const response = await fetch(url.toString());
+  const response = await startSpan({ name: 'fetch openfoodfacts' }, () => fetch(url.toString()));
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -102,7 +104,7 @@ const getFood = async (userId: string, barcode: string) => {
   }
 
   try {
-    await insertFoodProduct(product);
+    await startSpan({ name: 'insertFoodProduct' }, () => insertFoodProduct(product));
   } catch (e) {
     if (e instanceof Error) {
       return { error: e.message };
@@ -111,7 +113,9 @@ const getFood = async (userId: string, barcode: string) => {
 
   try {
     // Unnecessary work, but makes sure schema is correct, i am lazy
-    return await productFromDbQuery.executeTakeFirstOrThrow();
+    return await startSpan({ name: 'returning found product' }, () =>
+      productFromDbQuery.executeTakeFirstOrThrow(),
+    );
   } catch (e) {
     return { error: "Failed to retrieve all product's data" };
   }
@@ -122,5 +126,5 @@ export const getFoodByBarcode = async (barcode: string) => {
 
   const parsedCode = zString.parse(barcode);
 
-  return getFood(user.id, parsedCode);
+  return startSpan({ name: 'SF_getFoodByBarcode' }, () => getFood(user.id, parsedCode));
 };
