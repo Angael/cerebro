@@ -1,12 +1,15 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:latest
     container_name: cerebro_db
     volumes:
-      - C:/cerebro/db:/var/lib/mysql
+      - mysql_cerebro_data:/var/lib/mysql
+      - ./packages/db/src/seed/init.sql:/data/application/init.sql
     ports:
       - "3306:3306"
     environment:
+      MYSQL_DATABASE: cerebro2
+      MYSQL_PASSWORD: root
       MYSQL_ROOT_PASSWORD: root
+volumes:
+  mysql_cerebro_data: {}

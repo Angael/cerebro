@@ -7,9 +7,9 @@
 
 ### Apps:
 
-- `web` - Next.js Static export frontend
+- `web` - Next.js RSC app
 
-  - Lightweight static export Next.js app
+  - RSC Next app
   - Mantine for styling
   - React Query
 
@@ -38,15 +38,25 @@
 
 ## Development
 
-Download stripe cli to test webhooks locally
-https://docs.stripe.com/stripe-cli
+Installing 
+```
+bun i
+```
 
-To run the whole stack run the following command:
+### Docker compose
+
+To run db, run the following command:
 
 ```bash
-bun i
-turbo dev
+docker compose up -d
 ```
+
+It may be necessary to give permissions to docker to access the volume folder.
+
+### Stripe
+
+Download stripe cli to test webhooks locally
+https://docs.stripe.com/stripe-cli
 
 In other terminal
 
@@ -54,10 +64,17 @@ In other terminal
 bun dev:stripe
 ```
 
+###
+
+To run the whole stack run the following command:
+
+```bash
+turbo dev
+```
+
 ## Build
 
 ```bash
-bun i
 bun build
 ```
 
