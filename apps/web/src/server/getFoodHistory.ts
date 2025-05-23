@@ -5,11 +5,12 @@ import { format } from 'date-fns';
 import { sql } from 'kysely';
 import { requireUser } from './getUser';
 import { zFoodHistory } from './types/foodTypes';
+import { z } from 'zod';
 
 export type FoodHistoryType = Awaited<ReturnType<typeof getFoodHistory>>;
 
 const limit = 7;
-export const getFoodHistory = async (userId: string) =>
+export const getFoodHistory = async (userId: string): Promise<z.infer<typeof zFoodHistory>> =>
   startSpan({ name: 'SF_getFoodHistory', op: 'db' }, async (span) => {
     const logsCountsDates = await startSpan(
       { name: 'logsCountsDates', op: 'db' },
@@ -28,6 +29,10 @@ export const getFoodHistory = async (userId: string) =>
         return result;
       },
     );
+
+    if(logsCountsDates.length === 0) {
+      return [];
+    }
 
     const yyyyMMdd = logsCountsDates.map((l) => format(l.calendarDate, 'yyyy-MM-dd'));
     span.setAttribute('logsDatesLength', yyyyMMdd.length); // Set attribute on the span
