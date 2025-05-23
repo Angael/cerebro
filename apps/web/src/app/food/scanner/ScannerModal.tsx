@@ -70,7 +70,7 @@ const ScannerModal = ({ open, onClose, onFound, onCreateProduct }: Props) => {
             : null
         }
         onClose={() => setCode(null)}
-        onCreateProduct={() => onCreateProduct(code!)}
+        onCreateProduct={() => {onCreateProduct(code!), setCode(null)}}
       />
     </Modal>
   );
