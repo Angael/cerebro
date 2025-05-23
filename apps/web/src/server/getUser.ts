@@ -3,7 +3,7 @@ import { tryCatch } from '@/utils/tryCatch';
 import { db, UserType } from '@cerebro/db';
 import * as Sentry from '@sentry/nextjs';
 import { unstable_cacheLife as cacheLife } from 'next/cache';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export type UiUserType = {
@@ -62,7 +62,9 @@ export const requireUser = async () => {
   const user = await getUser();
 
   if (!user) {
-    redirect('/signin');
+    const url = (await headers()).get('x-url');
+
+    redirect('/signin?redirectTo=' + encodeURIComponent(url || '/'));
   }
 
   return user;
