@@ -6,8 +6,9 @@ import * as Sentry from '@sentry/nextjs';
 import { env } from './utils/env';
 
 Sentry.init({
+  enabled: env.IS_PROD,
   dsn: env.SENTRY_DSN,
-  tracesSampleRate: env.IS_PROD ? 0.5 : 0.1,
+  tracesSampleRate: 0.5,
   debug: false,
   environment: env.IS_PROD ? 'production' : 'development',
   beforeSendTransaction: (transaction) => {
