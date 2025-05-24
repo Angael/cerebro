@@ -19,4 +19,10 @@
   &:hover {
     background: var(--mantine-color-dark-6);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    background: var(--mantine-color-dark-8);
+    color: var(--mantine-color-dark-6);
+  }
 }

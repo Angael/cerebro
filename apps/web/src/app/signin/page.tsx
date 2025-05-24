@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { API } from '@/utils/API';
-import { useRouter } from 'next/navigation';
-import { Anchor, Button, Card, Flex, Stack, Text, TextInput } from '@mantine/core';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
+import { Anchor, Button, Card, Flex, Stack, Text, TextInput } from '@mantine/core';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
+import React, { useState } from 'react';
 
 const Page = () => {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

@@ -29,7 +29,7 @@ const MyDrawerContents = ({ user, onClose }: Props) => {
   const logout = useMutation({
     mutationFn: () => API.delete('/auth/signout').then((res) => res.data),
     onSettled: () => {
-      window.location.reload();
+      window.location.href = '/signin?redirectTo=' + encodeURIComponent(window.location.href);
     },
   });
 
@@ -37,6 +37,7 @@ const MyDrawerContents = ({ user, onClose }: Props) => {
     <Stack component="nav" className={css.MyDrawerContents} gap="lg" w="340px">
       <Stack gap="0">
         <RouteNavLink
+          prefetch={false}
           href="/browse"
           label="Browse"
           description="Explore the library"
@@ -109,11 +110,10 @@ const MyDrawerContents = ({ user, onClose }: Props) => {
             <button
               className={css.logoutBtn}
               type="button"
+              disabled={logout.isPending}
               onClick={() => {
                 logout.mutate();
                 onClose?.();
-                router.refresh();
-                router.push('/signin');
               }}
             >
               <Icon path={mdiLogout} size="24px" />
