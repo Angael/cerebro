@@ -5,7 +5,8 @@ import Form from 'next/form';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import { SignInErrorCode, signInSubmitForm } from './signIn';
+import { signInSubmitForm } from './signIn';
+import { SignInErrorCode } from './signInUtils';
 import { signUpSubmitForm } from '../signup/signUp';
 
 interface LoginFormProps {
@@ -17,6 +18,7 @@ const errorCodeToMessage: Record<SignInErrorCode, string> = {
   invalid_form_data: 'Invalid form data. Please check your input.',
   invalid_credentials: 'Invalid email or password. Please try again.',
   unknown_error: 'An unknown error occurred. Please try again later.',
+  email_taken: 'This email is already registered. Please use a different email.',
 };
 
 const LoginForm = ({ isSignUp, errorCode }: LoginFormProps) => {
