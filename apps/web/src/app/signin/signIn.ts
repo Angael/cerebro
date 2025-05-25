@@ -1,28 +1,28 @@
 'use server';
 import { getUrl } from '@/server/helpers/getUrl';
-import { Logger } from '@/utils/logger';
-import { db } from '@cerebro/db';
-import { redirect } from 'next/navigation';
-import { z } from 'zod';
-import { Argon2id } from 'oslo/password';
 import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
 } from '@/server/helpers/session';
+import { Logger } from '@/utils/logger';
+import { db } from '@cerebro/db';
+import { redirect } from 'next/navigation';
+import { Argon2id } from 'oslo/password';
+import { z } from 'zod';
 
 export type SignInErrorCode = 'invalid_form_data' | 'invalid_credentials' | 'unknown_error';
 
 const zForm = z.object({
   email: z.string().trim().min(3).email().trim(),
   password: z.string().trim().min(6, 'Password must be at least 6 characters long'),
-  redirectTo: z.string().trim().optional(),
+  redirectTo: z.string().trim().optional().default('/'),
 });
 
-const redirectWithError = (errorCode: SignInErrorCode) => {
-  const searchParams = new URLSearchParams();
-  searchParams.append('errorCode', errorCode);
-  redirect('/signin?' + searchParams.toString());
+const redirectWithError = async (errorCode: SignInErrorCode) => {
+  const searchParams = new URL(await getUrl()).searchParams;
+  searchParams.set('errorCode', errorCode);
+  return redirect('/signin?' + searchParams.toString());
 };
 
 // This needs to be submitted using a Form, because what if hydration happens too late?
@@ -31,9 +31,6 @@ export const signInSubmitForm = async (formData: FormData) => {
     const parsedData = zForm.parse(Object.fromEntries(formData.entries()));
 
     const { email, password, redirectTo } = parsedData;
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Redirect To:', redirectTo);
 
     const user = await db
       .selectFrom('user')
@@ -58,14 +55,22 @@ export const signInSubmitForm = async (formData: FormData) => {
 
     await setSessionTokenCookie(token, expiresAt);
     await createSession(token, user.id);
+
+    redirect(redirectTo);
   } catch (error) {
     if (error instanceof z.ZodError) {
       Logger.error('signInSubmitForm', error);
       return redirectWithError('invalid_form_data');
     } else if (error instanceof Error) {
+      if (error.message === 'NEXT_REDIRECT') {
+        throw error; // rethrow to let Next.js handle the redirect
+      }
+
       Logger.error('signInSubmitForm', error);
     }
 
-    redirectWithError('unknown_error');
+    Logger.error('signInSubmitForm', 'Unknown error occurred');
+
+    return redirectWithError('unknown_error');
   }
 };

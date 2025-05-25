@@ -63,7 +63,7 @@ export async function createSession(token: string, userId: string) {
 
 export async function validateSessionToken(token: string): Promise<UserSession | null> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-  Logger.verbose('validateSessionToken', 'Generated sessionId', sessionId);
+
   const row = await db
     .selectFrom('user_session')
     .innerJoin('user', 'user.id', 'user_session.user_id')
@@ -77,10 +77,9 @@ export async function validateSessionToken(token: string): Promise<UserSession |
       'user.email',
     ])
     .executeTakeFirst();
-  Logger.verbose('validateSessionToken', 'DB query result', row);
 
   if (!row) {
-    Logger.info('validateSessionToken', 'No session found for sessionId', sessionId);
+    Logger.info('validateSessionToken', 'No session found for sessionId');
     return null;
   }
   const session: Session = {
@@ -88,34 +87,33 @@ export async function validateSessionToken(token: string): Promise<UserSession |
     userId: row.sessionUserId,
     expiresAt: row.expires_at,
   };
-  Logger.verbose('validateSessionToken', 'Session object created', session);
 
   const user: User = {
     id: row.userId,
   };
-  Logger.verbose('validateSessionToken', 'User object created', user);
 
   if (Date.now() >= session.expiresAt.getTime()) {
-    Logger.info('validateSessionToken', 'Session expired, deleting session', session.id);
+    Logger.info('validateSessionToken', 'Session expired, deleting session');
     await db.deleteFrom('user_session').where('id', '=', session.id).execute();
-    Logger.verbose('validateSessionToken', 'Session deleted from DB', session.id);
     return null;
   }
 
   if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
-    Logger.info('validateSessionToken', 'Session expiring soon, extending expiration', session.id);
+    Logger.info('validateSessionToken', 'Session expiring soon, extending expiration');
     session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
     await db
       .updateTable('user_session')
       .set('expires_at', session.expiresAt)
       .where('id', '=', session.id)
       .execute();
+
     Logger.verbose(
       'validateSessionToken',
-      'Session expiration updated in DB',
+      'Session expiring soon, refreshed in DB',
       session.id,
       session.expiresAt,
     );
+    await setSessionTokenCookie(token, session.expiresAt);
   }
 
   Logger.info('validateSessionToken', 'Session and user validated', session, user);
