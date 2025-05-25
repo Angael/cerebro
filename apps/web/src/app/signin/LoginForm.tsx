@@ -30,9 +30,7 @@ const LoginForm = ({ errorCode }: LoginFormProps) => {
   // Deprecated, form will log the user in
   const mutation = useMutation({
     mutationFn: () => {
-      console.log(1);
       const val = API.post('/auth/signin', { email, password });
-      console.log(2);
 
       return val;
     },
@@ -40,11 +38,6 @@ const LoginForm = ({ errorCode }: LoginFormProps) => {
     onSuccess: () => {
       // Force a full page reload to refresh server components
       window.location.href = redirectTo;
-      console.log('onSuccess', {
-        redirectTo,
-        currentUrl: window.location.href,
-        newUrl: redirectTo,
-      });
     },
   });
 
