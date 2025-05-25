@@ -1,8 +1,14 @@
 import { Hono } from 'hono';
-import { lucia } from '@/my-lucia';
 import { Context } from 'hono';
 
-type HonoVariables = { Variables: Awaited<ReturnType<typeof lucia.validateSession>> };
+// Define a local User type for compatibility
+export type User = {
+  id: string;
+  email: string;
+  type: string;
+};
+
+type HonoVariables = { Variables: { user: User | null; session: any } };
 export type MyContext = Context<HonoVariables>;
 
 export const honoFactory = () => new Hono<HonoVariables>();

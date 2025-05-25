@@ -4,12 +4,14 @@ import { env } from './env';
 export class Logger {
   static verbose(where: string, ...args: any[]) {
     if (!env.IS_PROD) {
-      console.log(`VERBOSE [${where}]`, ...args);
+      // Yellow color for VERBOSE
+      console.log(`\x1b[33mVERBOSE\x1b[0m [${where}]`, ...args);
     }
   }
 
   static info(where: string, ...args: any[]) {
-    console.info(`INFO [${where}]`, ...args);
+    // Blue color for INFO
+    console.info(`\x1b[34mINFO\x1b[0m [${where}]`, ...args);
   }
 
   static error(where: string, error: Error | string) {
@@ -29,6 +31,7 @@ export class Logger {
     }
 
     Sentry.captureException(newError);
-    console.error(newError);
+    // Red color for ERROR
+    console.error(`\x1b[31mERROR\x1b[0m [${where}]`, newError);
   }
 }

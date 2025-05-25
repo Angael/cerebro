@@ -1,77 +1,84 @@
 'use client';
 
-import { API } from '@/utils/API';
-import { parseErrorResponse } from '@/utils/parseErrorResponse';
-import { Anchor, Button, Card, Flex, Stack, Text, TextInput } from '@mantine/core';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Alert, Anchor, Button, Card, Flex, Stack, Text, TextInput } from '@mantine/core';
+import Form from 'next/form';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { signInSubmitForm } from './signIn';
+import { SignInErrorCode } from './signInUtils';
+import { signUpSubmitForm } from '../signup/signUp';
 
-const LoginForm = () => {
-  const queryClient = useQueryClient();
+interface LoginFormProps {
+  isSignUp?: boolean;
+  errorCode?: SignInErrorCode;
+}
+
+const errorCodeToMessage: Record<SignInErrorCode, string> = {
+  invalid_form_data: 'Invalid form data. Please check your input.',
+  invalid_credentials: 'Invalid email or password. Please try again.',
+  unknown_error: 'An unknown error occurred. Please try again later.',
+  email_taken: 'This email is already registered. Please use a different email.',
+};
+
+const LoginForm = ({ isSignUp, errorCode }: LoginFormProps) => {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirectTo') || '/';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const mutation = useMutation({
-    mutationFn: () => {
-      const val = API.post('/auth/signin', { email, password });
-
-      return val;
-    },
-    onSettled: () => queryClient.invalidateQueries(),
-    onSuccess: () => {
-      // Force a full page reload to refresh server components
-      window.location.href = redirectTo;
-    },
-  });
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutation.mutate();
-  };
-
-  const parsedErr = parseErrorResponse(mutation.error);
+  const redirectToString = searchParams.get('redirectTo')
+    ? '?redirectTo=' + searchParams.get('redirectTo')
+    : '';
 
   return (
     <main style={{ margin: 'auto' }}>
-      <Card component="form" onSubmit={onSubmit} style={{ minWidth: 250 }}>
-        <Stack gap="md">
-          <TextInput
-            label={'Email'}
-            name="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={parsedErr?.fields.email}
-            autoComplete="email"
-          />
-          <TextInput
-            label={'Password'}
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={parsedErr?.fields.password}
-            autoComplete="current-password"
-          />
-          {parsedErr && (
-            <Text size="sm" c="red.8">
-              {parsedErr.general}
-            </Text>
-          )}
-          <Button type="submit" loading={mutation.isPending} disabled={!email || !password}>
-            Log in
-          </Button>
-        </Stack>
+      <Card style={{ minWidth: 250 }}>
+        <Form action={isSignUp ? signUpSubmitForm : signInSubmitForm}>
+          <Stack gap="md">
+            {errorCode && (
+              <Alert title="Error" color="red">
+                {errorCodeToMessage[errorCode]}
+              </Alert>
+            )}
+            <TextInput
+              label="Email"
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+            />
+            <TextInput
+              label="Password"
+              name="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+            <input type="hidden" name="redirectTo" value={redirectTo} />
+
+            <Button type="submit">{isSignUp ? 'Sign Up' : 'Log In'}</Button>
+          </Stack>
+        </Form>
       </Card>
       <Flex justify="center" gap="sm">
-        <Text size="sm">Don't have an account? </Text>
-        <Anchor size="sm" component={Link} href="/signup">
-          Sign Up
-        </Anchor>
+        {isSignUp ? (
+          <>
+            <Text size="sm">Already have an account?</Text>
+            <Anchor size="sm" component={Link} href={`/signin${redirectToString}`}>
+              Log in
+            </Anchor>
+          </>
+        ) : (
+          <>
+            <Text size="sm">Don't have an account? </Text>
+            <Anchor size="sm" component={Link} href={`/signup${redirectToString}`}>
+              Sign Up
+            </Anchor>
+          </>
+        )}
       </Flex>
     </main>
   );

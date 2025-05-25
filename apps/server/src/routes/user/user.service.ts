@@ -10,7 +10,7 @@ import { env } from '@/utils/env.js';
 import logger from '@/utils/log.js';
 import { GetUploadLimits } from '@cerebro/shared';
 import { HTTPException } from 'hono/http-exception';
-import { User } from 'lucia';
+import { MyContext, User } from '../honoFactory';
 import { MyFile } from '../items/upload/upload.type.js';
 import { WeightData } from './user.model.js';
 

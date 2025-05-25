@@ -1,111 +1,30 @@
-import { generateId } from 'lucia';
-import { lucia } from '@/my-lucia.js';
-import { db } from '@cerebro/db';
-import { Argon2id } from 'oslo/password';
-import z from 'zod';
-import { honoFactory } from '../honoFactory';
-import { zValidator } from '@hono/zod-validator';
-import { setCookie, getCookie } from 'hono/cookie';
-import { HTTPException } from 'hono/http-exception';
 import { env } from '@/utils/env';
-
-const badEmailOrPassword = { msg: 'Bad email or password' };
+import { db } from '@cerebro/db';
+import { getCookie, setCookie } from 'hono/cookie';
+import { HTTPException } from 'hono/http-exception';
+import { honoFactory } from '../honoFactory';
 
 const domain = env.AUTH_COOKIE_DOMAIN;
 
-const authRouter = honoFactory()
-  .post(
-    '/auth/signup',
-    zValidator(
-      'json',
-      z.object({
-        email: z.string().email('Provide a valid email').min(6, 'Email is too short').trim(), // a@a.aa
-        password: z.string().min(8, 'Password is too short').trim(),
-      }),
-    ),
-    async (c) => {
-      const { email, password } = c.req.valid('json');
+const authRouter = honoFactory().delete('/auth/signout', async (c) => {
+  const auth_session = getCookie(c, 'auth_session');
 
-      const hashedPassword = await new Argon2id().hash(password);
-      const userId = generateId(15);
+  if (!auth_session) {
+    throw new HTTPException(401);
+  }
 
-      const userExists = await db
-        .selectFrom('user')
-        .selectAll()
-        .where('email', '=', email)
-        .executeTakeFirst();
+  await db.deleteFrom('user_session').where('id', '=', auth_session).execute();
 
-      if (userExists) {
-        return c.json({ msg: 'Email already taken' }, 400);
-      }
-
-      await db
-        .insertInto('user')
-        .values({ id: userId, type: 'FREE', email, hashed_password: hashedPassword })
-        .execute();
-
-      const session = await lucia.createSession(userId, {});
-      const sessionCookie = lucia.createSessionCookie(session.id);
-
-      setCookie(c, sessionCookie.name, sessionCookie.value, {
-        ...sessionCookie.attributes,
-        domain,
-      });
-      return c.body(null, 204);
-    },
-  )
-  .post(
-    '/auth/signin',
-    zValidator(
-      'json',
-      z.object({
-        email: z.string().min(3).trim(),
-        password: z.string().min(3).trim(),
-      }),
-    ),
-    async (c) => {
-      const { email, password } = c.req.valid('json');
-
-      const user = await db
-        .selectFrom('user')
-        .selectAll()
-        .where('email', '=', email)
-        .executeTakeFirst();
-
-      if (!user) {
-        return c.json(badEmailOrPassword, 400);
-      }
-
-      const isValidPassword = await new Argon2id().verify(user.hashed_password, password);
-      if (!isValidPassword) {
-        return c.json(badEmailOrPassword, 400);
-      }
-
-      const session = await lucia.createSession(user.id, {});
-      const sessionCookie = lucia.createSessionCookie(session.id);
-
-      setCookie(c, sessionCookie.name, sessionCookie.value, {
-        ...sessionCookie.attributes,
-        domain,
-      });
-
-      return c.body(null, 204);
-    },
-  )
-  .delete('/auth/signout', async (c) => {
-    const auth_session = getCookie(c, 'auth_session');
-
-    if (!auth_session) {
-      throw new HTTPException(401);
-    }
-
-    await db.deleteFrom('user_session').where('id', '=', auth_session).execute();
-    await lucia.invalidateSession(auth_session);
-
-    const sessionCookie = lucia.createBlankSessionCookie();
-    setCookie(c, sessionCookie.name, sessionCookie.value, { ...sessionCookie.attributes, domain });
-
-    return c.body(null, 204);
+  setCookie(c, 'auth_session', '', {
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 0,
+    domain,
   });
+
+  return c.body(null, 204);
+});
 
 export default authRouter;

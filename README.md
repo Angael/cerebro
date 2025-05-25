@@ -14,7 +14,7 @@
   - React Query
 
 - `server` - Hono backend
-  - Authorization with Lucia
+  - Authorization
   - Integrates with Cloudflare R2
   - Queries mySQL
   - Handles file uploads with Hono
@@ -38,7 +38,8 @@
 
 ## Development
 
-Installing 
+Installing
+
 ```
 bun i
 ```
