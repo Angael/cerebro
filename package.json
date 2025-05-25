@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@cerebro/tsconfig": "workspace:*",
+    "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "date-fns": "^4.1.0",
     "dotenv": "^16.0.3",
