@@ -27,6 +27,7 @@ export async function setSessionTokenCookie(token: string, expiresAt: Date): Pro
   });
 }
 
+// For logout, unfortunately middleware cannot use cookies api, and server component cannot delete cookie
 export async function deleteSessionTokenCookie(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set('auth_session', '', {

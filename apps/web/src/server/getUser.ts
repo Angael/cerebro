@@ -29,7 +29,8 @@ const getUserDb = cache(async (): Promise<null | UserSession> => {
 
   if (!user) {
     Logger.verbose('getUserDb', 'No user found for session', authSession);
-    await deleteSessionTokenCookie();
+    // TODO: Cannot modify cookies in server components :(
+    // await deleteSessionTokenCookie();
     return null;
   }
 
