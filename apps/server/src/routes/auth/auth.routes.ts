@@ -1,13 +1,8 @@
-import { generateId } from 'lucia';
-import { lucia } from '@/my-lucia.js';
-import { db } from '@cerebro/db';
-import { Argon2id } from 'oslo/password';
-import z from 'zod';
-import { honoFactory } from '../honoFactory';
-import { zValidator } from '@hono/zod-validator';
-import { setCookie, getCookie } from 'hono/cookie';
-import { HTTPException } from 'hono/http-exception';
 import { env } from '@/utils/env';
+import { db } from '@cerebro/db';
+import { getCookie, setCookie } from 'hono/cookie';
+import { HTTPException } from 'hono/http-exception';
+import { honoFactory } from '../honoFactory';
 
 const domain = env.AUTH_COOKIE_DOMAIN;
 
@@ -19,10 +14,15 @@ const authRouter = honoFactory().delete('/auth/signout', async (c) => {
   }
 
   await db.deleteFrom('user_session').where('id', '=', auth_session).execute();
-  await lucia.invalidateSession(auth_session);
 
-  const sessionCookie = lucia.createBlankSessionCookie();
-  setCookie(c, sessionCookie.name, sessionCookie.value, { ...sessionCookie.attributes, domain });
+  setCookie(c, 'auth_session', '', {
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 0,
+    domain,
+  });
 
   return c.body(null, 204);
 });

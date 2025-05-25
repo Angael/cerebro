@@ -2,7 +2,7 @@ import LoginForm from '../signin/LoginForm';
 import { SignInErrorCode } from '../signin/signInUtils';
 
 interface PageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const Page = async ({ searchParams }: PageProps) => {

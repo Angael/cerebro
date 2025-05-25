@@ -6,7 +6,7 @@ import { queryAndMergeItems } from '@/utils/queryAndMergeItems.js';
 import { db } from '@cerebro/db';
 import { AuthorQuery, FrontItem, QueryItems } from '@cerebro/shared';
 import { HTTPException } from 'hono/http-exception';
-import { User } from 'lucia';
+import { MyContext, User } from '../honoFactory';
 import invariant from 'tiny-invariant';
 
 export async function getItems(

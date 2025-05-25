@@ -1,4 +1,4 @@
-import { User } from 'lucia';
+import { User } from '../routes/honoFactory';
 
 export const isUserOrAdmin = (user: User, userId: string) => {
   if (user.type === 'ADMIN') {

@@ -1,13 +1,11 @@
-import { lucia } from '@/my-lucia';
-import { MyContext } from '@/routes/honoFactory';
 import { parseCookies } from 'oslo/cookie';
-
+import { MyContext } from '@/routes/honoFactory';
 import { db } from '@cerebro/db';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeHexLowerCase } from '@oslojs/encoding';
 
 // Simplified copy of validateSessionToken in next web app
-export const optionalSession = async (c: MyContext): ReturnType<typeof lucia.validateSession> => {
+export const optionalSession = async (c: MyContext) => {
   // Optimization to not query db twice
   const user = c.get('user');
   const session = c.get('session');
@@ -48,7 +46,6 @@ export const optionalSession = async (c: MyContext): ReturnType<typeof lucia.val
       expiresAt: row.expires_at,
       fresh: true, // idk what this is, we don't use it here
     };
-
     const user = {
       id: row.userId,
       email: row.email,
