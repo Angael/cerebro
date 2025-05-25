@@ -1,13 +1,10 @@
 'use client';
 
-import { API } from '@/utils/API';
-import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import { Alert, Anchor, Button, Card, Flex, Stack, Text, TextInput } from '@mantine/core';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Form from 'next/form';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SignInErrorCode, signInSubmitForm } from './signIn';
 
 interface LoginFormProps {
@@ -21,32 +18,10 @@ const errorCodeToMessage: Record<SignInErrorCode, string> = {
 };
 
 const LoginForm = ({ errorCode }: LoginFormProps) => {
-  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirectTo') || '/';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // Deprecated, form will log the user in
-  const mutation = useMutation({
-    mutationFn: () => {
-      const val = API.post('/auth/signin', { email, password });
-
-      return val;
-    },
-    onSettled: () => queryClient.invalidateQueries(),
-    onSuccess: () => {
-      // Force a full page reload to refresh server components
-      window.location.href = redirectTo;
-    },
-  });
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutation.mutate();
-  };
-
-  const parsedErr = parseErrorResponse(mutation.error);
 
   return (
     <main style={{ margin: 'auto' }}>
@@ -64,7 +39,6 @@ const LoginForm = ({ errorCode }: LoginFormProps) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              error={parsedErr?.fields.email}
               autoComplete="email"
             />
             <TextInput
@@ -73,14 +47,11 @@ const LoginForm = ({ errorCode }: LoginFormProps) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              error={parsedErr?.fields.password}
               autoComplete="current-password"
             />
             <input type="hidden" name="redirectTo" value={redirectTo} />
 
-            <Button type="submit" loading={mutation.isPending}>
-              Log in
-            </Button>
+            <Button type="submit">Log in</Button>
           </Stack>
         </Form>
       </Card>

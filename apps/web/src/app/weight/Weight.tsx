@@ -1,6 +1,6 @@
 'use client';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
-import { UiUserType } from '@/server/getUser';
+import { UserSession } from '@/server/getUser';
 import { GoalsType, WeightData } from '@cerebro/server';
 import { AreaChart } from '@mantine/charts';
 import '@mantine/charts/styles.css';
@@ -10,7 +10,7 @@ import WeightDialog from './WeightDialog';
 import { fillMissingDates } from './weightHelpers';
 
 export type Props = {
-  user: UiUserType;
+  user: UserSession;
   weight: WeightData[];
   goals: GoalsType | undefined;
 };

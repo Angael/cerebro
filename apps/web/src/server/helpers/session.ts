@@ -1,14 +1,10 @@
-'use server';
 import { env } from '@/utils/env';
 import { db } from '@cerebro/db';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
 import { cookies } from 'next/headers';
 import { Logger } from '@/utils/logger';
-
-export type SessionValidationResult =
-  | { session: Session; user: User }
-  | { session: null; user: null };
+import { UserSession } from '../getUser';
 
 export interface Session {
   id: string;
@@ -22,7 +18,7 @@ export interface User {
 
 export async function setSessionTokenCookie(token: string, expiresAt: Date): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set('session', token, {
+  cookieStore.set('auth_session', token, {
     httpOnly: true,
     sameSite: 'lax',
     secure: env.IS_PROD,
@@ -33,7 +29,7 @@ export async function setSessionTokenCookie(token: string, expiresAt: Date): Pro
 
 export async function deleteSessionTokenCookie(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set('session', '', {
+  cookieStore.set('auth_session', '', {
     httpOnly: true,
     sameSite: 'lax',
     secure: env.IS_PROD,
@@ -59,30 +55,33 @@ export async function createSession(token: string, userId: string) {
 
   await db
     .insertInto('user_session')
-    .values({ id: session.id, user_id: session.userId, expires_at: session.expiresAt });
+    .values({ id: session.id, user_id: session.userId, expires_at: session.expiresAt })
+    .execute();
 
   return session;
 }
 
-export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
+export async function validateSessionToken(token: string): Promise<UserSession | null> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   Logger.verbose('validateSessionToken', 'Generated sessionId', sessionId);
   const row = await db
     .selectFrom('user_session')
     .innerJoin('user', 'user.id', 'user_session.user_id')
+    .where('user_session.id', '=', sessionId)
     .select([
       'user_session.id as sessionId',
       'user_session.user_id as sessionUserId',
       'user_session.expires_at',
       'user.id as userId',
+      'user.type',
+      'user.email',
     ])
-    .where('user_session.id', '=', sessionId)
     .executeTakeFirst();
   Logger.verbose('validateSessionToken', 'DB query result', row);
 
   if (!row) {
     Logger.info('validateSessionToken', 'No session found for sessionId', sessionId);
-    return { session: null, user: null };
+    return null;
   }
   const session: Session = {
     id: row.sessionId,
@@ -100,7 +99,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
     Logger.info('validateSessionToken', 'Session expired, deleting session', session.id);
     await db.deleteFrom('user_session').where('id', '=', session.id).execute();
     Logger.verbose('validateSessionToken', 'Session deleted from DB', session.id);
-    return { session: null, user: null };
+    return null;
   }
 
   if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
@@ -120,5 +119,10 @@ export async function validateSessionToken(token: string): Promise<SessionValida
   }
 
   Logger.info('validateSessionToken', 'Session and user validated', session, user);
-  return { session, user };
+  return {
+    id: user.id,
+    email: row.email,
+    type: row.type,
+    expiresAt: session.expiresAt,
+  } as UserSession;
 }

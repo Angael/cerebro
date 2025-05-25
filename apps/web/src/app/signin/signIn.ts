@@ -5,6 +5,11 @@ import { db } from '@cerebro/db';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { Argon2id } from 'oslo/password';
+import {
+  createSession,
+  generateSessionToken,
+  setSessionTokenCookie,
+} from '@/server/helpers/session';
 
 export type SignInErrorCode = 'invalid_form_data' | 'invalid_credentials' | 'unknown_error';
 
@@ -37,13 +42,22 @@ export const signInSubmitForm = async (formData: FormData) => {
       .executeTakeFirst();
 
     if (!user) {
+      Logger.verbose('signInSubmitForm', 'User not found');
       return redirectWithError('invalid_credentials');
     }
 
     const isValidPassword = await new Argon2id().verify(user.hashed_password, password);
     if (!isValidPassword) {
+      Logger.verbose('signInSubmitForm', 'Invalid password');
       return redirectWithError('invalid_credentials');
     }
+
+    Logger.verbose('signInSubmitForm', 'User authenticated successfully', user.id);
+    const token = generateSessionToken();
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30); // 30 days
+
+    await setSessionTokenCookie(token, expiresAt);
+    await createSession(token, user.id);
   } catch (error) {
     if (error instanceof z.ZodError) {
       Logger.error('signInSubmitForm', error);

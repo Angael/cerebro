@@ -1,7 +1,7 @@
 'use client';
 import { RouteNavLink } from '@/lib/route-nav-link/RouteNavLink';
 import { API } from '@/utils/API';
-import { UiUserType } from '@/server/getUser';
+import { UserSession } from '@/server/getUser';
 import { Flex, Stack, Title } from '@mantine/core';
 import {
   mdiAccountCircleOutline,
@@ -19,7 +19,7 @@ import { useRouter } from 'next/navigation';
 import css from './MyDrawerContents.module.scss';
 
 type Props = {
-  user: UiUserType | null;
+  user: UserSession | null;
   onClose?: () => void;
 };
 
