@@ -64,7 +64,6 @@ export const requireUser = async () => {
   if (!user) {
     const url = (await headers()).get('x-url');
 
-    console.log('requireUser url', url);
     redirect('/signin?redirectTo=' + encodeURIComponent(url || '/'));
   }
 
