@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,300..800&display=optional"
             rel="stylesheet"
           />
-          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
           {env.IS_PROD ? (
             <>
               <link rel="shortcut icon" href="/favicon.ico" />
@@ -39,9 +39,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <link rel="shortcut icon" href="/favicon-dev.ico" />
           )}
           <link rel="manifest" href="/site.webmanifest" />
-          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-          <meta name="msapplication-TileColor" content="#1e293b" />
-          <meta name="theme-color" content="#1e293b" />
+          <meta name="msapplication-TileColor" content="#141414" />
+          <meta name="theme-color" content="#141414" />
           <ColorSchemeScript forceColorScheme="dark" />
         </head>
         <body className={css.body}>
