@@ -9,8 +9,6 @@ import { setCookie, getCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
 import { env } from '@/utils/env';
 
-const badEmailOrPassword = { msg: 'Bad email or password' };
-
 const domain = env.AUTH_COOKIE_DOMAIN;
 
 const authRouter = honoFactory()
@@ -51,44 +49,6 @@ const authRouter = honoFactory()
         ...sessionCookie.attributes,
         domain,
       });
-      return c.body(null, 204);
-    },
-  )
-  .post(
-    '/auth/signin',
-    zValidator(
-      'json',
-      z.object({
-        email: z.string().min(3).trim(),
-        password: z.string().min(3).trim(),
-      }),
-    ),
-    async (c) => {
-      const { email, password } = c.req.valid('json');
-
-      const user = await db
-        .selectFrom('user')
-        .selectAll()
-        .where('email', '=', email)
-        .executeTakeFirst();
-
-      if (!user) {
-        return c.json(badEmailOrPassword, 400);
-      }
-
-      const isValidPassword = await new Argon2id().verify(user.hashed_password, password);
-      if (!isValidPassword) {
-        return c.json(badEmailOrPassword, 400);
-      }
-
-      const session = await lucia.createSession(user.id, {});
-      const sessionCookie = lucia.createSessionCookie(session.id);
-
-      setCookie(c, sessionCookie.name, sessionCookie.value, {
-        ...sessionCookie.attributes,
-        domain,
-      });
-
       return c.body(null, 204);
     },
   )
