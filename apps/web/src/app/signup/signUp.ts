@@ -1,4 +1,5 @@
 'use server';
+
 import { getUrl } from '@/server/helpers/getUrl';
 import {
   createSession,
@@ -10,7 +11,8 @@ import { db } from '@cerebro/db';
 import { redirect } from 'next/navigation';
 import { Argon2id } from 'oslo/password';
 import { z } from 'zod';
-import { SignInErrorCode, zSignInForm } from './signInUtils';
+import { SignInErrorCode, zSignInForm } from '../signin/signInUtils';
+import { nanoid } from 'nanoid';
 
 const redirectWithError = async (errorCode: SignInErrorCode) => {
   const searchParams = new URL(await getUrl()).searchParams;
@@ -19,49 +21,51 @@ const redirectWithError = async (errorCode: SignInErrorCode) => {
 };
 
 // This needs to be submitted using a Form, because what if hydration happens too late?
-export const signInSubmitForm = async (formData: FormData) => {
+export const signUpSubmitForm = async (formData: FormData) => {
   try {
     const parsedData = zSignInForm.parse(Object.fromEntries(formData.entries()));
-
     const { email, password, redirectTo } = parsedData;
 
-    const user = await db
+    const hashedPassword = await new Argon2id().hash(password);
+    const userId = nanoid();
+
+    const userExists = await db
       .selectFrom('user')
       .selectAll()
       .where('email', '=', email)
       .executeTakeFirst();
 
-    if (!user) {
-      Logger.verbose('signInSubmitForm', 'User not found');
-      return redirectWithError('invalid_credentials');
+    if (userExists) {
+      Logger.verbose('signUpSubmitForm', 'Email taken');
+      return redirectWithError('email_taken');
     }
 
-    const isValidPassword = await new Argon2id().verify(user.hashed_password, password);
-    if (!isValidPassword) {
-      Logger.verbose('signInSubmitForm', 'Invalid password');
-      return redirectWithError('invalid_credentials');
-    }
+    await db
+      .insertInto('user')
+      .values({ id: userId, type: 'FREE', email, hashed_password: hashedPassword })
+      .execute();
 
-    Logger.verbose('signInSubmitForm', 'User authenticated successfully', user.id);
     const token = generateSessionToken();
     const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30); // 30 days
 
     await setSessionTokenCookie(token, expiresAt);
-    await createSession(token, user.id);
+    await createSession(token, userId);
+
+    Logger.info('signUpSubmitForm', 'User signed up successfully', userId);
 
     redirect(redirectTo);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      Logger.error('signInSubmitForm', error);
+      Logger.error('signUpSubmitForm', error);
       return redirectWithError('invalid_form_data');
     } else if (error instanceof Error) {
       if (error.message === 'NEXT_REDIRECT') {
         throw error; // rethrow to let Next.js handle the redirect
       }
 
-      Logger.error('signInSubmitForm', error);
+      Logger.error('signUpSubmitForm', error);
     } else {
-      Logger.error('signInSubmitForm', 'Unknown error occurred');
+      Logger.error('signUpSubmitForm', 'Unknown error occurred');
     }
 
     return redirectWithError('unknown_error');

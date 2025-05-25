@@ -6,8 +6,10 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { SignInErrorCode, signInSubmitForm } from './signIn';
+import { signUpSubmitForm } from '../signup/signUp';
 
 interface LoginFormProps {
+  isSignUp?: boolean;
   errorCode?: SignInErrorCode;
 }
 
@@ -17,16 +19,20 @@ const errorCodeToMessage: Record<SignInErrorCode, string> = {
   unknown_error: 'An unknown error occurred. Please try again later.',
 };
 
-const LoginForm = ({ errorCode }: LoginFormProps) => {
+const LoginForm = ({ isSignUp, errorCode }: LoginFormProps) => {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirectTo') || '/';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const redirectToString = searchParams.get('redirectTo')
+    ? '?redirectTo=' + searchParams.get('redirectTo')
+    : '';
+
   return (
     <main style={{ margin: 'auto' }}>
       <Card style={{ minWidth: 250 }}>
-        <Form action={signInSubmitForm}>
+        <Form action={isSignUp ? signUpSubmitForm : signInSubmitForm}>
           <Stack gap="md">
             {errorCode && (
               <Alert title="Error" color="red">
@@ -34,7 +40,7 @@ const LoginForm = ({ errorCode }: LoginFormProps) => {
               </Alert>
             )}
             <TextInput
-              label={'Email'}
+              label="Email"
               name="email"
               type="email"
               value={email}
@@ -42,7 +48,7 @@ const LoginForm = ({ errorCode }: LoginFormProps) => {
               autoComplete="email"
             />
             <TextInput
-              label={'Password'}
+              label="Password"
               name="password"
               type="password"
               value={password}
@@ -51,15 +57,26 @@ const LoginForm = ({ errorCode }: LoginFormProps) => {
             />
             <input type="hidden" name="redirectTo" value={redirectTo} />
 
-            <Button type="submit">Log in</Button>
+            <Button type="submit">{isSignUp ? 'Sign Up' : 'Log In'}</Button>
           </Stack>
         </Form>
       </Card>
       <Flex justify="center" gap="sm">
-        <Text size="sm">Don't have an account? </Text>
-        <Anchor size="sm" component={Link} href="/signup">
-          Sign Up
-        </Anchor>
+        {isSignUp ? (
+          <>
+            <Text size="sm">Already have an account?</Text>
+            <Anchor size="sm" component={Link} href={`/signin${redirectToString}`}>
+              Log in
+            </Anchor>
+          </>
+        ) : (
+          <>
+            <Text size="sm">Don't have an account? </Text>
+            <Anchor size="sm" component={Link} href={`/signup${redirectToString}`}>
+              Sign Up
+            </Anchor>
+          </>
+        )}
       </Flex>
     </main>
   );

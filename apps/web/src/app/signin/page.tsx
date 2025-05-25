@@ -1,5 +1,5 @@
 import LoginForm from './LoginForm';
-import { SignInErrorCode } from './signIn';
+import { SignInErrorCode } from './signInUtils';
 
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
