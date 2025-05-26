@@ -23,24 +23,15 @@ const getUserDb = cache(async (): Promise<null | UserSession> => {
     return null;
   }
 
-  Logger.info('getUserDb', 'authSession', authSession);
-
   const { data: user, error } = await tryCatch(validateSessionToken(authSession));
 
   if (!user) {
     Logger.verbose('getUserDb', 'No user found for session', authSession);
-    // TODO: Cannot modify cookies in server components :(
-    // await deleteSessionTokenCookie();
     return null;
   }
 
   if (error) {
     Logger.error('getUserDb', error);
-    return null;
-  }
-
-  if (new Date(user.expiresAt).getTime() < new Date().getTime()) {
-    Logger.verbose('getUserDb', 'Session expired', user.expiresAt);
     return null;
   }
 
@@ -56,8 +47,6 @@ export const requireUser = async () => {
 
   if (!user) {
     const url = (await headers()).get('x-url');
-
-    console.log('requireUser url', url);
     redirect('/signin?redirectTo=' + encodeURIComponent(url || '/'));
   }
 

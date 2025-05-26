@@ -4,6 +4,7 @@ const nextConfig = {
     optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
     useCache: true,
     ppr: true,
+    nodeMiddleware: true,
   },
 };
 
