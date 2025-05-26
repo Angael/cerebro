@@ -6,6 +6,12 @@ import { cookies } from 'next/headers';
 import { Logger } from '@/utils/logger';
 import { UserSession } from '../getUser';
 
+export const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 30; // 30 days
+export const SESSION_SLIDING_EXPIRATION_WINDOW_SECONDS = SESSION_DURATION_SECONDS / 2; // 15 days
+
+export const SESSION_DURATION_MS = SESSION_DURATION_SECONDS * 1000; // 30 days
+export const SESSION_SLIDING_EXPIRATION_WINDOW_MS = SESSION_DURATION_MS / 2; // 15 days
+
 export interface Session {
   id: string;
   userId: string;
@@ -22,12 +28,13 @@ export async function setSessionTokenCookie(token: string, expiresAt: Date): Pro
     httpOnly: true,
     sameSite: 'lax',
     secure: env.IS_PROD,
-    expires: expiresAt,
+    maxAge: SESSION_DURATION_SECONDS,
     path: '/',
   });
 }
 
-// For logout, unfortunately middleware cannot use cookies api, and server component cannot delete cookie
+// For logout.
+// Unfortunately middleware cannot use cookies api, and server component cannot delete cookie
 export async function deleteSessionTokenCookie(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set('auth_session', '', {
@@ -62,6 +69,11 @@ export async function createSession(token: string, userId: string) {
   return session;
 }
 
+async function removeAllExpiredSessions() {
+  const now = new Date(Date.now()); // 30 days ago
+  await db.deleteFrom('user_session').where('expires_at', '<', now).execute();
+}
+
 export async function validateSessionToken(token: string): Promise<UserSession | null> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 
@@ -83,6 +95,7 @@ export async function validateSessionToken(token: string): Promise<UserSession |
     Logger.info('validateSessionToken', 'No session found for sessionId');
     return null;
   }
+
   const session: Session = {
     id: row.sessionId,
     userId: row.sessionUserId,
@@ -93,31 +106,28 @@ export async function validateSessionToken(token: string): Promise<UserSession |
     id: row.userId,
   };
 
+  // Check if session is expired
   if (Date.now() >= session.expiresAt.getTime()) {
-    Logger.info('validateSessionToken', 'Session expired, deleting session');
-    await db.deleteFrom('user_session').where('id', '=', session.id).execute();
+    Logger.info('validateSessionToken', 'Session expired, deleting all expired sessions');
+    // not great preformance, but my scale is not that big
+    await removeAllExpiredSessions();
     return null;
   }
 
-  if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
+  // If session is expiring soon, extend it
+  if (Date.now() >= session.expiresAt.getTime() - SESSION_SLIDING_EXPIRATION_WINDOW_MS) {
     Logger.info('validateSessionToken', 'Session expiring soon, extending expiration');
-    session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
-    await db
-      .updateTable('user_session')
-      .set('expires_at', session.expiresAt)
-      .where('id', '=', session.id)
-      .execute();
-
-    Logger.verbose(
-      'validateSessionToken',
-      'Session expiring soon, refreshed in DB',
-      session.id,
-      session.expiresAt,
-    );
-    await setSessionTokenCookie(token, session.expiresAt);
+    session.expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
+    await Promise.all([
+      db
+        .updateTable('user_session')
+        .set('expires_at', session.expiresAt)
+        .where('id', '=', session.id)
+        .execute(),
+      removeAllExpiredSessions(),
+    ]);
   }
 
-  Logger.info('validateSessionToken', 'Session and user validated', session, user);
   return {
     id: user.id,
     email: row.email,

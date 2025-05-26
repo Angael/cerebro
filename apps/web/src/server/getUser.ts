@@ -1,11 +1,11 @@
 import { Logger } from '@/utils/logger';
 import { tryCatch } from '@/utils/tryCatch';
-import { db, UserType } from '@cerebro/db';
+import { UserType } from '@cerebro/db';
 import * as Sentry from '@sentry/nextjs';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import { deleteSessionTokenCookie, validateSessionToken } from './helpers/session';
+import { validateSessionToken } from './helpers/session';
 
 export type UserSession = {
   id: string;
