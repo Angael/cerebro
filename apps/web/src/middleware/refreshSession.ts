@@ -21,5 +21,6 @@ export const refreshSession = (request: NextRequest, response: NextResponse) => 
     sameSite: 'lax',
     httpOnly: true,
     secure: env.IS_PROD,
+    domain: env.AUTH_COOKIE_DOMAIN,
   });
 };

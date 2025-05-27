@@ -30,6 +30,7 @@ export async function setSessionTokenCookie(token: string, expiresAt: Date): Pro
     secure: env.IS_PROD,
     maxAge: SESSION_DURATION_SECONDS,
     path: '/',
+    domain: env.AUTH_COOKIE_DOMAIN,
   });
 }
 
@@ -43,6 +44,7 @@ export async function deleteSessionTokenCookie(): Promise<void> {
     secure: env.IS_PROD,
     maxAge: 0,
     path: '/',
+    domain: env.AUTH_COOKIE_DOMAIN,
   });
 }
 
