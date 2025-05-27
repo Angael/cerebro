@@ -6,7 +6,7 @@ import { Burger, Drawer, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import MyDrawerContents from '@/lib/navbar/drawer/MyDrawerContents';
 import { useShowDrawer } from '@/lib/navbar/drawer/useShowDrawer';
-import { UserSession } from '@/server/getUser';
+import { UserSession } from '@/server/auth/getUser';
 
 const Navbar = ({ user }: { user: UserSession | null }) => {
   const [opened, { toggle, close }] = useDisclosure();

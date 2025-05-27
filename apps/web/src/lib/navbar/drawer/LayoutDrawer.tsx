@@ -1,7 +1,7 @@
 import React from 'react';
 import MyDrawerContents from '@/lib/navbar/drawer/MyDrawerContents';
 import css from './LayoutDrawer.module.css';
-import { getUser } from '@/server/getUser';
+import { getUser } from '@/server/auth/getUser';
 
 const LayoutDrawer = async () => {
   const user = await getUser();

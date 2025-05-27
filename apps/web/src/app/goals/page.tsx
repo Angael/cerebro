@@ -1,4 +1,4 @@
-import { requireUser } from '@/server/getUser';
+import { requireUser } from '@/server/auth/getUser';
 import { getGoals } from '@/server/getGoals';
 import { Paper, Stack, Title } from '@mantine/core';
 import GoalsForm from './GoalsForm';

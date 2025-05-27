@@ -4,7 +4,6 @@ import { csrf } from 'hono/csrf';
 import { env } from '../utils/env.js';
 
 import adminRoutes from '@/routes/admin/admin.routes.js';
-import authRouter from '@/routes/auth/auth.routes.js';
 import serverStatsRoutes from '@/routes/server-stats/server-stats.routes.js';
 import userRouter from '@/routes/user/user.routes.js';
 import stripeRoutes from '@/routes/webhooks-stripe/stripe.routes.js';
@@ -20,7 +19,6 @@ export const app = honoFactory()
   .use(cors({ origin: env.CORS_URL, credentials: true, maxAge: 600 }))
   .get('/', (c) => c.json({ version: 'v0.9' }))
   .route('/', itemRouter)
-  .route('/', authRouter)
   .route('/', userRouter)
   .route('/', adminRoutes)
   .route('/', stripeRoutes)

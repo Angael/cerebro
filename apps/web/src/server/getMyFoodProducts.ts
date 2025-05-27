@@ -1,6 +1,6 @@
 'use server';
 import { db } from '@cerebro/db';
-import { requireUser } from './getUser';
+import { requireUser } from './auth/getUser';
 import { startSpan } from '@sentry/nextjs';
 
 export const fetchMyFoodProducts = async () => {

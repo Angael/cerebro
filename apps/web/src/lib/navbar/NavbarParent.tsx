@@ -1,4 +1,4 @@
-import { getUser } from '@/server/getUser';
+import { getUser } from '@/server/auth/getUser';
 import Navbar from './Navbar';
 
 const NavbarParent = async () => {

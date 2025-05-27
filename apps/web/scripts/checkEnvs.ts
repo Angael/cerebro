@@ -8,8 +8,6 @@ try {
     .flat()
     .filter((key) => typeof key === 'string' && key.startsWith('{') && key.endsWith('}'));
 
-  console.log(serverEnv, clientEnv);
-
   if (unreplacedEnvVars.length > 0) {
     console.error('The following environment variables were not replaced:', unreplacedEnvVars);
     process.exit(1);

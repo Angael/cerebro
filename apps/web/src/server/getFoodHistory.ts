@@ -3,7 +3,7 @@ import { db } from '@cerebro/db';
 import { startSpan } from '@sentry/nextjs';
 import { format } from 'date-fns';
 import { sql } from 'kysely';
-import { requireUser } from './getUser';
+import { requireUser } from './auth/getUser';
 import { zFoodHistory } from './types/foodTypes';
 import { z } from 'zod';
 
@@ -30,7 +30,7 @@ export const getFoodHistory = async (userId: string): Promise<z.infer<typeof zFo
       },
     );
 
-    if(logsCountsDates.length === 0) {
+    if (logsCountsDates.length === 0) {
       return [];
     }
 

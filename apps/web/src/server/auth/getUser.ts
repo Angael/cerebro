@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/nextjs';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import { validateSessionToken } from './helpers/session';
+import { validateSessionToken } from '../helpers/session';
 
 export type UserSession = {
   id: string;

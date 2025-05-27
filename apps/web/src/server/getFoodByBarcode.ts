@@ -1,6 +1,6 @@
 'use server';
 import { z } from 'zod';
-import { requireUser } from './getUser';
+import { requireUser } from './auth/getUser';
 import { unstable_cacheLife as cacheLife } from 'next/cache';
 import { db } from '@cerebro/db';
 import { captureException, startInactiveSpan, startSpan } from '@sentry/nextjs';

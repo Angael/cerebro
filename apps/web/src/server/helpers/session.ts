@@ -4,7 +4,7 @@ import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
 import { cookies } from 'next/headers';
 import { Logger } from '@/utils/logger';
-import { UserSession } from '../getUser';
+import { UserSession } from '../auth/getUser';
 import { serverEnv } from '@/utils/serverEnv';
 
 export const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 30; // 30 days
@@ -56,8 +56,16 @@ export function generateSessionToken(): string {
   return token;
 }
 
+// token to sessionId
+export const getSessionIdFromToken = (token: string): string => {
+  if (!token) {
+    throw new Error('Token is required to generate session ID');
+  }
+  return encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+};
+
 export async function createSession(token: string, userId: string) {
-  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const sessionId = getSessionIdFromToken(token);
   const session: Session = {
     id: sessionId,
     userId,
@@ -138,3 +146,16 @@ export async function validateSessionToken(token: string): Promise<UserSession |
     expiresAt: session.expiresAt,
   } as UserSession;
 }
+
+export const deleteSession = async (): Promise<void> => {
+  'use server';
+  const auth_token = (await cookies()).get('auth_session');
+
+  if (!auth_token) {
+    return;
+  }
+
+  const sessionId = getSessionIdFromToken(auth_token.value);
+
+  await db.deleteFrom('user_session').where('id', '=', sessionId).execute();
+};

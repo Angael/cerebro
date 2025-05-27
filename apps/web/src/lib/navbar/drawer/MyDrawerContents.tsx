@@ -1,7 +1,7 @@
 'use client';
 import { RouteNavLink } from '@/lib/route-nav-link/RouteNavLink';
 import { API } from '@/utils/API';
-import { UserSession } from '@/server/getUser';
+import { UserSession } from '@/server/auth/getUser';
 import { Flex, Stack, Title } from '@mantine/core';
 import {
   mdiAccountCircleOutline,
@@ -17,6 +17,7 @@ import { Icon } from '@mdi/react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import css from './MyDrawerContents.module.scss';
+import { logUserOut } from '@/server/auth/logUserOut';
 
 type Props = {
   user: UserSession | null;
@@ -110,9 +111,11 @@ const MyDrawerContents = ({ user, onClose }: Props) => {
             <button
               className={css.logoutBtn}
               type="button"
-              disabled={logout.isPending}
-              onClick={() => {
-                logout.mutate();
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await logUserOut();
+                router.refresh();
                 onClose?.();
               }}
             >

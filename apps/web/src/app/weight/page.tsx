@@ -1,5 +1,5 @@
 import { getGoals } from '@/server/getGoals';
-import { requireUser } from '@/server/getUser';
+import { requireUser } from '@/server/auth/getUser';
 import { db } from '@cerebro/db';
 import { Stack, Title } from '@mantine/core';
 import Weight from './Weight';
