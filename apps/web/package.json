@@ -7,7 +7,7 @@
     "dev:linux": "next dev -p 4000",
     "build": "next build",
     "start": "next start -p 4000",
-    "lint": "tsc && next lint"
+    "lint": "bun run ./scripts/checkEnvs.ts && tsc && next lint"
   },
   "dependencies": {
     "@cerebro/server": "workspace:*",

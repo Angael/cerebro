@@ -3,14 +3,14 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
-import { env } from './utils/env';
+import { clientEnv } from './utils/clientEnv';
 
 Sentry.init({
-  enabled: env.IS_PROD,
-  dsn: env.SENTRY_DSN,
+  enabled: clientEnv.IS_PROD,
+  dsn: clientEnv.SENTRY_DSN,
   tracesSampleRate: 0.5,
   debug: false,
-  environment: env.IS_PROD ? 'production' : 'development',
+  environment: clientEnv.IS_PROD ? 'production' : 'development',
   beforeSendTransaction: (transaction) => {
     // Filter out react render duration spans, cause they are into the 1000s range, and eat up span limit
     if (transaction.spans) {

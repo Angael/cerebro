@@ -1,4 +1,4 @@
-import { env } from '@/utils/env';
+import { clientEnv } from '@/utils/clientEnv';
 import { Alert, Button, Group, LoadingOverlay, Stack } from '@mantine/core';
 import clsx from 'clsx';
 import { memo, useState } from 'react';
@@ -50,7 +50,7 @@ const Scanner = ({ codeFoundCallback }: Props) => {
 
         {devices.length > 1 && (
           <Group className={css.changeCameraBtn}>
-            {!env.IS_PROD && (
+            {!clientEnv.IS_PROD && (
               <Button
                 color="orange.9"
                 variant="filled"
@@ -59,7 +59,7 @@ const Scanner = ({ codeFoundCallback }: Props) => {
                 Debug chips
               </Button>
             )}
-            {!env.IS_PROD && (
+            {!clientEnv.IS_PROD && (
               <Button
                 color="orange.9"
                 variant="filled"
@@ -74,7 +74,7 @@ const Scanner = ({ codeFoundCallback }: Props) => {
           </Group>
         )}
 
-        {!env.IS_PROD && (
+        {!clientEnv.IS_PROD && (
           <details className={css.debugDetails}>
             <summary>Debug Info {selectedDeviceName}</summary>
             <pre>{JSON.stringify({ devices }, null, 2)}</pre>

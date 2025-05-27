@@ -1,5 +1,6 @@
 import { SESSION_DURATION_SECONDS } from '@/server/helpers/session';
-import { env } from '@/utils/env';
+import { clientEnv } from '@/utils/clientEnv';
+import { serverEnv } from '@/utils/serverEnv';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const refreshSession = (request: NextRequest, response: NextResponse) => {
@@ -20,7 +21,7 @@ export const refreshSession = (request: NextRequest, response: NextResponse) => 
     maxAge: SESSION_DURATION_SECONDS,
     sameSite: 'lax',
     httpOnly: true,
-    secure: env.IS_PROD,
-    domain: env.AUTH_COOKIE_DOMAIN,
+    secure: clientEnv.IS_PROD,
+    domain: serverEnv.AUTH_COOKIE_DOMAIN,
   });
 };

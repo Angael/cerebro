@@ -7,14 +7,14 @@ import { Providers } from '@/app/providers';
 import LayoutDrawer from '@/lib/navbar/drawer/LayoutDrawer';
 import NavbarParent from '@/lib/navbar/NavbarParent';
 import { theme } from '@/utils/mantineTheme';
-import { env } from '@/utils/env';
+import { clientEnv } from '@/utils/clientEnv';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
 
 export const metadata: Metadata = {
-  title: env.IS_PROD ? 'Cerebro' : 'Cerebro (Dev)',
+  title: clientEnv.IS_PROD ? 'Cerebro' : 'Cerebro (Dev)',
   description: 'Stuff sharing website',
 };
 
@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             rel="stylesheet"
           />
           <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png" />
-          {env.IS_PROD ? (
+          {clientEnv.IS_PROD ? (
             <>
               <link rel="shortcut icon" href="/favicon.ico" />
               <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />

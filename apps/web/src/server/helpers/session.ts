@@ -1,10 +1,11 @@
-import { env } from '@/utils/env';
+import { clientEnv } from '@/utils/clientEnv';
 import { db } from '@cerebro/db';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
 import { cookies } from 'next/headers';
 import { Logger } from '@/utils/logger';
 import { UserSession } from '../getUser';
+import { serverEnv } from '@/utils/serverEnv';
 
 export const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 30; // 30 days
 export const SESSION_SLIDING_EXPIRATION_WINDOW_SECONDS = SESSION_DURATION_SECONDS / 2; // 15 days
@@ -27,10 +28,10 @@ export async function setSessionTokenCookie(token: string, expiresAt: Date): Pro
   cookieStore.set('auth_session', token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: env.IS_PROD,
+    secure: clientEnv.IS_PROD,
     maxAge: SESSION_DURATION_SECONDS,
     path: '/',
-    domain: env.AUTH_COOKIE_DOMAIN,
+    domain: serverEnv.AUTH_COOKIE_DOMAIN,
   });
 }
 
@@ -41,10 +42,10 @@ export async function deleteSessionTokenCookie(): Promise<void> {
   cookieStore.set('auth_session', '', {
     httpOnly: true,
     sameSite: 'lax',
-    secure: env.IS_PROD,
+    secure: clientEnv.IS_PROD,
     maxAge: 0,
     path: '/',
-    domain: env.AUTH_COOKIE_DOMAIN,
+    domain: serverEnv.AUTH_COOKIE_DOMAIN,
   });
 }
 

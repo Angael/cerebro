@@ -1,7 +1,7 @@
 import ReactPlayer, { FilePlayerProps } from 'react-player/file';
 import { OnProgressProps } from 'react-player/base';
 import { useRef, useState } from 'react';
-import { env } from '@/utils/env';
+import { clientEnv } from '@/utils/clientEnv';
 import { useVideoProgressSlider } from '@/lib/video-player/useVideoProgressSlider';
 
 export const useVideoPlayerBasics = () => {
@@ -11,7 +11,7 @@ export const useVideoPlayerBasics = () => {
   const [isBuffering, setIsBuffering] = useState(true);
   const [length, setLength] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [volume, setVolume] = useState(env.IS_PROD ? 0.8 : 0.2);
+  const [volume, setVolume] = useState(clientEnv.IS_PROD ? 0.8 : 0.2);
 
   const setVolumeLimited = (volume: number) => {
     setVolume(Math.max(Math.min(volume, 1), 0));

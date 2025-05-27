@@ -1,9 +1,9 @@
 'use client';
 import axios from 'redaxios';
-import { env } from '@/utils/env';
+import { clientEnv } from '@/utils/clientEnv';
 
 export const API = axios.create({
   headers: { 'Content-Type': 'application/json' },
-  baseURL: env.API_URL,
+  baseURL: clientEnv.API_URL,
   withCredentials: true,
 });

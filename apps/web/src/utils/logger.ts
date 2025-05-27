@@ -1,9 +1,9 @@
 import * as Sentry from '@sentry/nextjs';
-import { env } from './env';
+import { clientEnv } from './clientEnv';
 
 export class Logger {
   static verbose(where: string, ...args: any[]) {
-    if (!env.IS_PROD) {
+    if (!clientEnv.IS_PROD) {
       // Yellow color for VERBOSE
       console.log(`\x1b[33mVERBOSE\x1b[0m [${where}]`, ...args);
     }

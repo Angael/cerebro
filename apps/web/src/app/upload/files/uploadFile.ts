@@ -1,4 +1,4 @@
-import { env } from '@/utils/env';
+import { clientEnv } from '@/utils/clientEnv';
 
 type Callbacks = {
   onProgress: (percentage: number) => void;
@@ -7,7 +7,7 @@ type Callbacks = {
 export function uploadFile(formData: FormData, { onProgress }: Callbacks) {
   return new Promise<void>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    const uploadUrl = `${env.API_URL}/items/upload/file`;
+    const uploadUrl = `${clientEnv.API_URL}/items/upload/file`;
 
     xhr.withCredentials = true;
     xhr.open('POST', uploadUrl, true);
