@@ -1,24 +1,6 @@
 import { db } from '@cerebro/db';
 import { sql } from 'kysely';
-import { z } from 'zod';
 import { GoalsType } from './goals.model';
-
-const zIsDate = z.string().date();
-
-export async function getGoals(userId: string, date?: string): Promise<GoalsType | null> {
-  let dateOrToday = date ? zIsDate.parse(date) : new Date().toISOString().split('T')[0]!;
-
-  const goals = await db
-    .selectFrom('food_goal')
-    .select(['weight_kg', 'kcal', 'date'])
-    .where('user_id', '=', userId)
-    // First entry with date lower or equal to the date
-    .where(sql<any>`DATE(date) <= ${dateOrToday}`)
-    .orderBy('date', 'desc')
-    .executeTakeFirst();
-
-  return goals ?? null;
-}
 
 export const setCurrentGoals = async (userId: string, payload: GoalsType) => {
   const { kcal, weight_kg, date } = payload;
