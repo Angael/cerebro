@@ -8,10 +8,13 @@ import Icon from '@mdi/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
+import { useState } from 'react';
+import { useDisclosure } from '@mantine/hooks';
+import AddProductModal from '../add-product-modal/AddProductModal';
 
 type Props = {
   food: {
-    id: number;
+    id: number; // id of the food log entry
     brands: string | null;
     product_name: string;
     amount: number;
@@ -21,6 +24,7 @@ type Props = {
 
 const FoodLogEntry = ({ food }: Props) => {
   const { openFoodLogId, setOpenFoodLogId } = useFoodLogsContext();
+  const [isEdited, { open: startEditing, close: endEditing }] = useDisclosure(false);
   const isOpen = openFoodLogId === food.id;
 
   const queryClient = useQueryClient();
@@ -83,7 +87,11 @@ const FoodLogEntry = ({ food }: Props) => {
       <Collapse in={isOpen}>
         <Group pb="xs">
           <Button disabled>Add today</Button>
-          <Button disabled variant="outline" leftSection={<Icon path={mdiPencil} size={1} />}>
+          <Button
+            variant="outline"
+            leftSection={<Icon path={mdiPencil} size={1} />}
+            onClick={startEditing}
+          >
             Edit
           </Button>
           <Button color="red" onClick={() => deleteMut.mutate()} loading={deleteMut.isPending}>
@@ -91,6 +99,8 @@ const FoodLogEntry = ({ food }: Props) => {
           </Button>
         </Group>
       </Collapse>
+
+      <AddProductModal open={isEdited} onClose={endEditing} foodLog={food} />
     </li>
   );
 };
