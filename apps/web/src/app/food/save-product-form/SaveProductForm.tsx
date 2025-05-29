@@ -2,7 +2,7 @@ import { postConsumedProduct } from '@/server/postConsumedProduct';
 import { QUERY_KEYS } from '@/utils/consts';
 import { FoodProduct } from '@cerebro/db';
 import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import css from './SaveProductForm.module.css';
 
@@ -67,7 +67,6 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
     setInputValue(`${productQuantity}`);
   };
 
-  const queryClient = useQueryClient();
   const saveMutation = useMutation({
     meta: {
       invalidateQueryKey: [QUERY_KEYS.fetchFoodHistory],
@@ -79,6 +78,9 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
         amount: Number(inputValue),
         date: new Date().toISOString(),
       }),
+    onSuccess: () => {
+      onClose();
+    },
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
