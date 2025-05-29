@@ -1,16 +1,14 @@
 'use client';
 import { deleteFoodLog } from '@/server/deleteFoodLog';
 import { QUERY_KEYS } from '@/utils/consts';
-import { showErrorNotification } from '@/utils/notificationHelpers';
 import { Button, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { mdiPencil } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import AddProductModal from '../add-product-modal/AddProductModal';
 import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
-import { useState } from 'react';
-import { useDisclosure } from '@mantine/hooks';
-import AddProductModal from '../add-product-modal/AddProductModal';
 
 type Props = {
   food: {
@@ -29,22 +27,18 @@ const FoodLogEntry = ({ food }: Props) => {
 
   const queryClient = useQueryClient();
   const deleteMut = useMutation({
+    meta: {
+      invalidateQueryKey: [QUERY_KEYS.fetchFoodHistory],
+      error: {
+        title: 'Error deleting food log',
+        message: 'Please try again later.',
+      },
+    },
     mutationFn: () => {
-      queryClient.setQueryData([QUERY_KEYS.foodHistory], (data: any) => {
+      queryClient.setQueryData([QUERY_KEYS.fetchFoodHistory], (data: any) => {
         data?.filter((f: any) => f.id !== food.id);
       });
-      queryClient.setQueryData([QUERY_KEYS.todaysFood], (data: any) =>
-        data?.filter((f: any) => f.id !== food.id),
-      );
-
       return deleteFoodLog(food.id);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.foodHistory] });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.todaysFood] });
-    },
-    onError: (error) => {
-      showErrorNotification('Error deleting food log', 'Please try again later.');
     },
   });
 

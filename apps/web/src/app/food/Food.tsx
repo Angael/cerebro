@@ -40,7 +40,7 @@ interface Props {
 
 const Food = ({ goals, foodHistoryInit }: Props) => {
   const foodHistory = useQuery({
-    queryKey: [QUERY_KEYS.todaysFood],
+    queryKey: [QUERY_KEYS.fetchFoodHistory],
     queryFn: fetchFoodHistory,
     initialData: foodHistoryInit,
   });

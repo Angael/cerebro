@@ -1,6 +1,5 @@
 import { postConsumedProduct } from '@/server/postConsumedProduct';
 import { QUERY_KEYS } from '@/utils/consts';
-import { showErrorNotification } from '@/utils/notificationHelpers';
 import { FoodProduct } from '@cerebro/db';
 import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -70,22 +69,16 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
 
   const queryClient = useQueryClient();
   const saveMutation = useMutation({
+    meta: {
+      invalidateQueryKey: [QUERY_KEYS.fetchFoodHistory],
+      error: { title: 'Error logging product', message: 'Please try again later.' },
+    },
     mutationFn: () =>
       postConsumedProduct({
         foodProductId: foodProduct.id,
         amount: Number(inputValue),
         date: new Date().toISOString(),
       }),
-    onSuccess: async () => {
-      await Promise.allSettled([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.foodHistory] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.todaysFood] }),
-      ]);
-      onClose();
-    },
-    onError: () => {
-      showErrorNotification('Failed to log product', 'Please try again later.');
-    },
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
