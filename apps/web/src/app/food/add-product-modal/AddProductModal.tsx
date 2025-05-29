@@ -1,6 +1,6 @@
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { FoodProduct } from '@cerebro/db';
-import { Modal, Stack } from '@mantine/core';
+import { LoadingOverlay, Modal, Stack } from '@mantine/core';
 import { memo } from 'react';
 import SaveProductForm from '../save-product-form/SaveProductForm';
 import FoodProductSummary from '../scanner/scanned-code/FoodProductSummary';
@@ -47,7 +47,8 @@ const AddProductModal = ({ foodProduct, foodLog, open, onClose }: Props) => {
       title={foodLog ? 'Edit product' : 'Add product'}
       zIndex={201}
     >
-      <Stack gap="md">
+      <Stack gap="md" pos="relative">
+        <LoadingOverlay visible={foodProductFromLog.isLoading} />
         {foodLog && (
           <>
             {foodProductFromLog.data ? (
