@@ -1,5 +1,6 @@
 .imgAndDescFlex {
   position: relative;
+  min-height: 130px;
 
   padding: var(--mantine-spacing-md);
   overflow: clip;
