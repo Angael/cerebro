@@ -4,6 +4,7 @@ import { z } from 'zod';
 export const zFoodHistory = z.array(
   z.object({
     id: z.number(),
+    food_product_id: z.number().int().positive().nullable(),
     brands: z.string().nullable(),
     product_name: z.string(),
     amount: z.number(),

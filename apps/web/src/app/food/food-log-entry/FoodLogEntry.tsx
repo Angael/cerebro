@@ -1,46 +1,39 @@
 'use client';
 import { deleteFoodLog } from '@/server/deleteFoodLog';
 import { QUERY_KEYS } from '@/utils/consts';
-import { showErrorNotification } from '@/utils/notificationHelpers';
 import { Button, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { mdiPencil } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import AddProductModal from '../add-product-modal/AddProductModal';
 import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
+import { FoodHistoryType } from '@/server/getFoodHistory';
 
 type Props = {
-  food: {
-    id: number;
-    brands: string | null;
-    product_name: string;
-    amount: number;
-    kcal: number;
-  };
+  food: FoodHistoryType[number];
 };
 
 const FoodLogEntry = ({ food }: Props) => {
   const { openFoodLogId, setOpenFoodLogId } = useFoodLogsContext();
+  const [isEdited, { open: startEditing, close: endEditing }] = useDisclosure(false);
   const isOpen = openFoodLogId === food.id;
 
   const queryClient = useQueryClient();
   const deleteMut = useMutation({
+    meta: {
+      invalidateQueryKey: [QUERY_KEYS.fetchFoodHistory],
+      error: {
+        title: 'Error deleting food log',
+        message: 'Please try again later.',
+      },
+    },
     mutationFn: () => {
-      queryClient.setQueryData([QUERY_KEYS.foodHistory], (data: any) => {
+      queryClient.setQueryData([QUERY_KEYS.fetchFoodHistory], (data: any) => {
         data?.filter((f: any) => f.id !== food.id);
       });
-      queryClient.setQueryData([QUERY_KEYS.todaysFood], (data: any) =>
-        data?.filter((f: any) => f.id !== food.id),
-      );
-
       return deleteFoodLog(food.id);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.foodHistory] });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.todaysFood] });
-    },
-    onError: (error) => {
-      showErrorNotification('Error deleting food log', 'Please try again later.');
     },
   });
 
@@ -59,7 +52,7 @@ const FoodLogEntry = ({ food }: Props) => {
           }
         }}
       >
-        <Group className={css.hoverAnimation} align="flex-start" justify="space-between">
+        <Group align="flex-start" justify="space-between">
           <Stack component="header" gap={0} flex={3}>
             <Text size="sm" c="gray.3">
               {bigText}
@@ -83,7 +76,12 @@ const FoodLogEntry = ({ food }: Props) => {
       <Collapse in={isOpen}>
         <Group pb="xs">
           <Button disabled>Add today</Button>
-          <Button disabled variant="outline" leftSection={<Icon path={mdiPencil} size={1} />}>
+          <Button
+            variant="outline"
+            leftSection={<Icon path={mdiPencil} size={1} />}
+            onClick={startEditing}
+            loading={isEdited}
+          >
             Edit
           </Button>
           <Button color="red" onClick={() => deleteMut.mutate()} loading={deleteMut.isPending}>
@@ -91,6 +89,8 @@ const FoodLogEntry = ({ food }: Props) => {
           </Button>
         </Group>
       </Collapse>
+
+      <AddProductModal open={isEdited} onClose={endEditing} foodLog={food} />
     </li>
   );
 };

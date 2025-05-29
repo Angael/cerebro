@@ -9,8 +9,8 @@ export const QUERY_KEYS = {
   adminServerStats: 'adminServerStats',
   adminUserPreview: 'adminUserPreview',
   accountPlan: 'accountPlan',
-  todaysFood: 'todaysFood',
   foodByBarcode: 'foodByBarcode',
-  foodHistory: 'foodHistory',
+  fetchFoodHistory: 'fetchFoodHistory',
   foodGoals: 'foodGoals',
+  getFoodProduct: 'getFoodProduct',
 };

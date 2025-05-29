@@ -6,7 +6,7 @@ import { startInactiveSpan, startSpan } from '@sentry/nextjs';
 
 const zInsertedFoodLog = z.object({
   foodProductId: z.number(),
-  amount: z.number(),
+  amount: z.number().positive(),
   date: z.string().datetime(),
 });
 

@@ -15,9 +15,10 @@ import FoodList from './FoodList';
 import History from './history/History';
 import css from './page.module.css';
 import ScannerModal from './scanner/ScannerModal';
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 
 const splitFoodHistoryOnToday = (foodHistory: FoodHistoryType) => {
-  const todaysDate = new Date().toISOString().split('T')[0];
+  const todaysDate = formatYYYYMMDD(new Date());
 
   const todaysFood: FoodHistoryType = [];
   const notTodaysFood: FoodHistoryType = [];
@@ -40,14 +41,14 @@ interface Props {
 
 const Food = ({ goals, foodHistoryInit }: Props) => {
   const foodHistory = useQuery({
-    queryKey: [QUERY_KEYS.todaysFood],
+    queryKey: [QUERY_KEYS.fetchFoodHistory],
     queryFn: fetchFoodHistory,
     initialData: foodHistoryInit,
   });
 
   const [todaysFood, notTodaysFood] = useMemo(
     () => splitFoodHistoryOnToday(foodHistory.data),
-    [foodHistory.data],
+    [splitFoodHistoryOnToday, foodHistory.data],
   );
 
   const [findOpen, setFindOpen] = useState(false);

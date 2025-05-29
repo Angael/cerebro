@@ -1,5 +1,6 @@
 .imgAndDescFlex {
   position: relative;
+  min-height: 130px;
 
   padding: var(--mantine-spacing-md);
   overflow: clip;
@@ -27,6 +28,16 @@
   opacity: 0.75;
 
   z-index: 0;
+
+  animation: fadeIn 0.5s ease-in-out forwards;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 0.75;
+    }
+  }
 }
 
 .foodDesc {

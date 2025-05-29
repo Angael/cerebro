@@ -1,4 +1,5 @@
 import { API } from '@/utils/API';
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { WeightData } from '@cerebro/server';
 import '@mantine/charts/styles.css';
@@ -21,7 +22,7 @@ const WeightDialog = ({ open, onClose, lastWeight }: Props) => {
   const saveMutation = useMutation({
     mutationFn: () => {
       const body: WeightData = {
-        date: new Date().toISOString().split('T')[0],
+        date: formatYYYYMMDD(new Date()),
         weight_kg: Number(weight),
       };
       return API.post('/user/weight', body);

@@ -1,11 +1,11 @@
 'use server';
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 import { db } from '@cerebro/db';
 import { startSpan } from '@sentry/nextjs';
-import { format } from 'date-fns';
 import { sql } from 'kysely';
+import { z } from 'zod';
 import { requireUser } from './auth/getUser';
 import { zFoodHistory } from './types/foodTypes';
-import { z } from 'zod';
 
 export type FoodHistoryType = Awaited<ReturnType<typeof getFoodHistory>>;
 
@@ -34,14 +34,14 @@ export const getFoodHistory = async (userId: string): Promise<z.infer<typeof zFo
       return [];
     }
 
-    const yyyyMMdd = logsCountsDates.map((l) => format(l.calendarDate, 'yyyy-MM-dd'));
+    const yyyyMMdd = logsCountsDates.map((l) => formatYYYYMMDD(l.calendarDate));
     span.setAttribute('logsDatesLength', yyyyMMdd.length); // Set attribute on the span
 
     const logsOnThoseDays = await startSpan(
       { name: 'sqlGetLogsOnThoseDays', op: 'db' },
       async (_span) => {
         const result = await sql<any>`
-select id, brands, product_name,amount, kcal, kcal_100g, DATE(date) as dayDate 
+select id, brands, product_name, food_product_id, amount, kcal, kcal_100g, DATE(date) as dayDate 
   from food_log 
   where user_id = ${userId} 
   and DATE(date) IN (${yyyyMMdd})`.execute(db);

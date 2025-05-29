@@ -1,27 +1,26 @@
-import FoodMacros from '@/lib/food-macros/FoodMacros';
 import { FoodProduct } from '@cerebro/db';
-import { Paper, Stack, Text, Title } from '@mantine/core';
+import { Stack, Text, Title } from '@mantine/core';
 import css from './FoodProductSummary.module.css';
 
 type Props = {
-  foodProduct: FoodProduct;
+  product_name: FoodProduct['product_name'];
+  brands: FoodProduct['brands'];
+  kcal_100g: FoodProduct['kcal_100g'];
+  image_url?: FoodProduct['image_url'];
+  product_quantity?: FoodProduct['product_quantity'];
+  product_quantity_unit?: FoodProduct['product_quantity_unit'];
 };
 
-const FoodProductSummary = ({ foodProduct }: Props) => {
-  const {
-    kcal_100g,
-    carb_100g,
-    proteins_100g,
-    fat_100g,
-    image_url,
-    product_quantity,
-    product_quantity_unit,
-  } = foodProduct;
-
-  const hasNutriments = carb_100g !== null && proteins_100g !== null && fat_100g !== null;
-
-  const bigText = foodProduct.product_name || foodProduct.brands;
-  const smallText = foodProduct.product_name ? foodProduct.brands : null;
+const FoodProductSummary = ({
+  product_name,
+  brands,
+  kcal_100g,
+  image_url,
+  product_quantity,
+  product_quantity_unit,
+}: Props) => {
+  const bigText = product_name || brands;
+  const smallText = product_name ? brands : null;
 
   return (
     <div className={css.imgAndDescFlex}>

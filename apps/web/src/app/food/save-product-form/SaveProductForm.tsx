@@ -1,15 +1,21 @@
 import { postConsumedProduct } from '@/server/postConsumedProduct';
 import { QUERY_KEYS } from '@/utils/consts';
-import { showErrorNotification } from '@/utils/notificationHelpers';
 import { FoodProduct } from '@cerebro/db';
 import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import css from './SaveProductForm.module.css';
+import { editFoodLog } from '@/server/editFoodLog';
 
 type Props = {
-  foodProduct: FoodProduct;
+  foodProductId: FoodProduct['id'];
+  product_quantity: FoodProduct['product_quantity'];
+  kcal_100g: FoodProduct['kcal_100g'];
   onClose: () => void;
+
+  // If present, this is an edit form for an existing log
+  logId?: number;
+  amount?: number;
 };
 
 const percentageButtons = [
@@ -47,10 +53,17 @@ function getNrFromQuantity(quantity: number | null): number {
   return quantity || 100;
 }
 
-const SaveProductModal = ({ foodProduct, onClose }: Props) => {
+const SaveProductModal = ({
+  foodProductId,
+  kcal_100g,
+  product_quantity,
+  onClose,
+  logId,
+  amount,
+}: Props) => {
   // By default 100% of the product
   const [inputValue, setInputValue] = useState(
-    foodProduct.product_quantity ? `${Math.round(foodProduct.product_quantity) || ''}` : '',
+    amount ? String(amount) : product_quantity ? `${Math.round(product_quantity) || ''}` : '',
   );
 
   const handleQuickAdd = (value: string) => {
@@ -58,7 +71,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   };
 
   const onPercentQuickAdd = (percent: number) => {
-    const quantityNumber = getNrFromQuantity(foodProduct.product_quantity);
+    const quantityNumber = getNrFromQuantity(product_quantity);
 
     if (isNaN(quantityNumber)) {
       return;
@@ -68,23 +81,26 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
     setInputValue(`${productQuantity}`);
   };
 
-  const queryClient = useQueryClient();
   const saveMutation = useMutation({
-    mutationFn: () =>
-      postConsumedProduct({
-        foodProductId: foodProduct.id,
-        amount: Number(inputValue),
-        date: new Date().toISOString(),
-      }),
-    onSuccess: async () => {
-      await Promise.allSettled([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.foodHistory] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.todaysFood] }),
-      ]);
-      onClose();
+    meta: {
+      invalidateQueryKey: [QUERY_KEYS.fetchFoodHistory],
+      error: { title: 'Error logging product', message: 'Please try again later.' },
     },
-    onError: () => {
-      showErrorNotification('Failed to log product', 'Please try again later.');
+    mutationFn: () =>
+      logId
+        ? editFoodLog({
+            foodLogId: logId,
+            amount: Number(inputValue),
+            kcal_100g,
+            date: new Date().toISOString(),
+          })
+        : postConsumedProduct({
+            foodProductId,
+            amount: Number(inputValue),
+            date: new Date().toISOString(),
+          }),
+    onSuccess: () => {
+      onClose();
     },
   });
 
@@ -107,9 +123,9 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
     });
   };
 
-  const allowPercentageQuickAdd = !!foodProduct.product_quantity;
+  const allowPercentageQuickAdd = !!product_quantity;
 
-  const kcal = (foodProduct.kcal_100g / 100) * Number(inputValue);
+  const kcal = (kcal_100g / 100) * Number(inputValue);
 
   return (
     <form onSubmit={handleSubmit}>
