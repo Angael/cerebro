@@ -52,7 +52,7 @@ const FoodLogEntry = ({ food }: Props) => {
           }
         }}
       >
-        <Group className={css.hoverAnimation} align="flex-start" justify="space-between">
+        <Group align="flex-start" justify="space-between">
           <Stack component="header" gap={0} flex={3}>
             <Text size="sm" c="gray.3">
               {bigText}
@@ -80,6 +80,7 @@ const FoodLogEntry = ({ food }: Props) => {
             variant="outline"
             leftSection={<Icon path={mdiPencil} size={1} />}
             onClick={startEditing}
+            loading={isEdited}
           >
             Edit
           </Button>

@@ -5,6 +5,7 @@ import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import css from './SaveProductForm.module.css';
+import { editFoodLog } from '@/server/editFoodLog';
 
 type Props = {
   foodProductId: FoodProduct['id'];
@@ -86,11 +87,18 @@ const SaveProductModal = ({
       error: { title: 'Error logging product', message: 'Please try again later.' },
     },
     mutationFn: () =>
-      postConsumedProduct({
-        foodProductId,
-        amount: Number(inputValue),
-        date: new Date().toISOString(),
-      }),
+      logId
+        ? editFoodLog({
+            foodLogId: logId,
+            amount: Number(inputValue),
+            kcal_100g,
+            date: new Date().toISOString(),
+          })
+        : postConsumedProduct({
+            foodProductId,
+            amount: Number(inputValue),
+            date: new Date().toISOString(),
+          }),
     onSuccess: () => {
       onClose();
     },

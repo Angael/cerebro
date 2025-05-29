@@ -1,3 +1,5 @@
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
+
 export function fillMissingDates(data: { date: string; weight_kg: number }[]) {
   if (!data || data.length === 0) {
     return [];
@@ -11,7 +13,7 @@ export function fillMissingDates(data: { date: string; weight_kg: number }[]) {
   const endDate = new Date(data[data.length - 1].date);
 
   while (currentDate <= endDate) {
-    const currentDateString = currentDate.toISOString().split('T')[0];
+    const currentDateString = formatYYYYMMDD(currentDate);
     const existingEntry = data.find((entry) => entry.date === currentDateString);
 
     if (existingEntry) {

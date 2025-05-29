@@ -1,5 +1,6 @@
 'use server';
 
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 import { db } from '@cerebro/db';
 import { startSpan } from '@sentry/nextjs';
 import { sql } from 'kysely';
@@ -13,7 +14,7 @@ export const getGoals = async (userId: string) =>
       .select(['weight_kg', 'kcal', 'date'])
       .where('user_id', '=', userId)
       // First entry with date lower or equal to the date
-      .where(sql<any>`DATE(date) <= ${new Date().toISOString().split('T')[0]!}`)
+      .where(sql<any>`DATE(date) <= ${formatYYYYMMDD(new Date())}`)
       .orderBy('date', 'desc')
       .executeTakeFirst(),
   );

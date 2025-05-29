@@ -1,9 +1,9 @@
 import { FoodHistoryType } from '@/server/getFoodHistory';
 import { zFoodHistory } from '@/server/types/foodTypes';
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 import { Button, Stack, Title } from '@mantine/core';
-import { format } from 'date-fns';
-import HistoryDay from './HistoryDay';
 import { z } from 'zod';
+import HistoryDay from './HistoryDay';
 
 type Props = {
   foodHistory: FoodHistoryType;
@@ -12,7 +12,7 @@ type Props = {
 const History = ({ foodHistory }: Props) => {
   const groupedFoods = foodHistory?.reduceRight(
     (acc, food) => {
-      const date = format(new Date(food.dayDate), 'yyyy-MM-dd');
+      const date = formatYYYYMMDD(new Date(food.dayDate));
       if (!acc[date]) {
         acc[date] = [];
       }

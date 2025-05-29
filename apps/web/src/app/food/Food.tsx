@@ -15,9 +15,10 @@ import FoodList from './FoodList';
 import History from './history/History';
 import css from './page.module.css';
 import ScannerModal from './scanner/ScannerModal';
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 
 const splitFoodHistoryOnToday = (foodHistory: FoodHistoryType) => {
-  const todaysDate = new Date().toISOString().split('T')[0];
+  const todaysDate = formatYYYYMMDD(new Date());
 
   const todaysFood: FoodHistoryType = [];
   const notTodaysFood: FoodHistoryType = [];
@@ -49,6 +50,8 @@ const Food = ({ goals, foodHistoryInit }: Props) => {
     () => splitFoodHistoryOnToday(foodHistory.data),
     [foodHistory.data],
   );
+
+  console.log('todaysFood', { todaysFood, notTodaysFood });
 
   const [findOpen, setFindOpen] = useState(false);
   const [foodProduct, setFoodProduct] = useState<FoodProduct | null>(null);

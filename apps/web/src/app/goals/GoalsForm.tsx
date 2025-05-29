@@ -1,5 +1,6 @@
 'use client';
 import { API } from '@/utils/API';
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 import { showErrorNotification } from '@/utils/notificationHelpers';
 import { GoalsType } from '@cerebro/server';
 import { Button, NumberInput, Stack } from '@mantine/core';
@@ -29,7 +30,7 @@ const GoalsForm = ({ goals }: Props) => {
       const payload = {
         weight_kg: Number(values.weight_kg),
         kcal: Number(values.kcal),
-        date: new Date().toISOString().split('T')[0],
+        date: formatYYYYMMDD(new Date()),
       };
       return API.post('/goals/set', payload).then((res) => res.data);
     },
