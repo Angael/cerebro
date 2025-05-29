@@ -1,10 +1,8 @@
 'use client';
 
-import { QueryClientProvider } from '@tanstack/react-query';
-import * as React from 'react';
-import { queryClient } from '@/utils/queryClient';
-import { MutationCache, QueryClient, QueryKey } from '@tanstack/react-query';
 import { showErrorNotification } from '@/utils/notificationHelpers';
+import { MutationCache, QueryClient, QueryClientProvider, QueryKey } from '@tanstack/react-query';
+import * as React from 'react';
 
 declare module '@tanstack/react-query' {
   interface Register {
