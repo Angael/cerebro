@@ -4,19 +4,27 @@ import { Modal, Stack } from '@mantine/core';
 import { memo } from 'react';
 import SaveProductForm from '../save-product-form/SaveProductForm';
 import FoodProductSummary from '../scanner/scanned-code/FoodProductSummary';
+import { Prettify } from '@/utils/types/Prettify.type';
+import { FoodHistoryType } from '@/server/getFoodHistory';
 
-interface Props {
-  foodProduct?: FoodProduct | null;
-  foodLog?: {
-    id: number; // only id is used, rest is for optimistic loading
-    brands: string | null;
-    product_name: string;
-    amount: number;
-    kcal: number;
-  };
+interface BaseProps {
   open: boolean;
   onClose: () => void;
 }
+
+type Props = Prettify<
+  BaseProps &
+    (
+      | {
+          foodProduct?: never;
+          foodLog: FoodHistoryType[number];
+        }
+      | {
+          foodProduct: FoodProduct | null;
+          foodLog?: never;
+        }
+    )
+>;
 
 const AddProductModal = ({ foodProduct, foodLog, open, onClose }: Props) => {
   const isMobile = useIsMobile();
@@ -31,10 +39,19 @@ const AddProductModal = ({ foodProduct, foodLog, open, onClose }: Props) => {
       zIndex={201}
     >
       <Stack gap="md">
-        {foodLog && <pre>{JSON.stringify(foodLog, null, 2)}</pre>}
+        {foodLog && (
+          <>
+            <FoodProductSummary
+              product_name={foodLog.product_name}
+              brands={foodLog.brands}
+              kcal_100g={foodLog.kcal_100g}
+            />
+            {JSON.stringify(foodLog, null, 2)}
+          </>
+        )}
         {foodProduct && (
           <>
-            <FoodProductSummary foodProduct={foodProduct} />
+            <FoodProductSummary {...foodProduct} />
             <SaveProductForm foodProduct={foodProduct} onClose={onClose} />
           </>
         )}

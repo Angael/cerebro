@@ -9,15 +9,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddProductModal from '../add-product-modal/AddProductModal';
 import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
+import { FoodHistoryType } from '@/server/getFoodHistory';
 
 type Props = {
-  food: {
-    id: number; // id of the food log entry
-    brands: string | null;
-    product_name: string;
-    amount: number;
-    kcal: number;
-  };
+  food: FoodHistoryType[number];
 };
 
 const FoodLogEntry = ({ food }: Props) => {
