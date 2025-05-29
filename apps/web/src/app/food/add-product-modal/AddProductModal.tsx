@@ -35,17 +35,8 @@ const AddProductModal = ({ foodProduct, foodLog, open, onClose }: Props) => {
   const foodProductFromLog = useQuery({
     enabled: open && !!foodLog?.food_product_id,
     queryKey: [QUERY_KEYS.getFoodProduct, foodLog?.food_product_id],
-    queryFn: async () => getFoodProduct(foodLog!.food_product_id!),
+    queryFn: () => getFoodProduct(foodLog!.food_product_id!),
   });
-
-  const foodProductDataFromLog = foodLog
-    ? (foodProductFromLog.data ?? {
-        brands: foodLog.brands,
-        product_name: foodLog.product_name,
-        kcal_100g: foodLog.kcal_100g,
-        amount: 0,
-      })
-    : null;
 
   return (
     <Modal
@@ -75,12 +66,25 @@ const AddProductModal = ({ foodProduct, foodLog, open, onClose }: Props) => {
                 kcal_100g={foodLog.kcal_100g}
               />
             )}
+            <SaveProductForm
+              logId={foodLog.id}
+              foodProductId={foodLog.food_product_id!}
+              product_quantity={foodProductFromLog.data?.product_quantity ?? null}
+              kcal_100g={foodLog.kcal_100g}
+              amount={foodLog.amount}
+              onClose={onClose}
+            />
           </>
         )}
         {foodProduct && (
           <>
             <FoodProductSummary {...foodProduct} />
-            <SaveProductForm foodProduct={foodProduct} onClose={onClose} />
+            <SaveProductForm
+              foodProductId={foodProduct.id}
+              kcal_100g={foodProduct.kcal_100g}
+              product_quantity={foodProduct.product_quantity}
+              onClose={onClose}
+            />
           </>
         )}
       </Stack>

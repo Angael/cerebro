@@ -7,8 +7,14 @@ import { useState } from 'react';
 import css from './SaveProductForm.module.css';
 
 type Props = {
-  foodProduct: FoodProduct;
+  foodProductId: FoodProduct['id'];
+  product_quantity: FoodProduct['product_quantity'];
+  kcal_100g: FoodProduct['kcal_100g'];
   onClose: () => void;
+
+  // If present, this is an edit form for an existing log
+  logId?: number;
+  amount?: number;
 };
 
 const percentageButtons = [
@@ -46,10 +52,17 @@ function getNrFromQuantity(quantity: number | null): number {
   return quantity || 100;
 }
 
-const SaveProductModal = ({ foodProduct, onClose }: Props) => {
+const SaveProductModal = ({
+  foodProductId,
+  kcal_100g,
+  product_quantity,
+  onClose,
+  logId,
+  amount,
+}: Props) => {
   // By default 100% of the product
   const [inputValue, setInputValue] = useState(
-    foodProduct.product_quantity ? `${Math.round(foodProduct.product_quantity) || ''}` : '',
+    amount ? String(amount) : product_quantity ? `${Math.round(product_quantity) || ''}` : '',
   );
 
   const handleQuickAdd = (value: string) => {
@@ -57,7 +70,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
   };
 
   const onPercentQuickAdd = (percent: number) => {
-    const quantityNumber = getNrFromQuantity(foodProduct.product_quantity);
+    const quantityNumber = getNrFromQuantity(product_quantity);
 
     if (isNaN(quantityNumber)) {
       return;
@@ -74,7 +87,7 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
     },
     mutationFn: () =>
       postConsumedProduct({
-        foodProductId: foodProduct.id,
+        foodProductId,
         amount: Number(inputValue),
         date: new Date().toISOString(),
       }),
@@ -102,9 +115,9 @@ const SaveProductModal = ({ foodProduct, onClose }: Props) => {
     });
   };
 
-  const allowPercentageQuickAdd = !!foodProduct.product_quantity;
+  const allowPercentageQuickAdd = !!product_quantity;
 
-  const kcal = (foodProduct.kcal_100g / 100) * Number(inputValue);
+  const kcal = (kcal_100g / 100) * Number(inputValue);
 
   return (
     <form onSubmit={handleSubmit}>
