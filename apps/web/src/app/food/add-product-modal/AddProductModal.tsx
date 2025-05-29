@@ -6,6 +6,9 @@ import SaveProductForm from '../save-product-form/SaveProductForm';
 import FoodProductSummary from '../scanner/scanned-code/FoodProductSummary';
 import { Prettify } from '@/utils/types/Prettify.type';
 import { FoodHistoryType } from '@/server/getFoodHistory';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/utils/consts';
+import { getFoodProduct } from '@/server/food/getFoodProduct';
 
 interface BaseProps {
   open: boolean;
@@ -29,6 +32,21 @@ type Props = Prettify<
 const AddProductModal = ({ foodProduct, foodLog, open, onClose }: Props) => {
   const isMobile = useIsMobile();
 
+  const foodProductFromLog = useQuery({
+    enabled: open && !!foodLog?.food_product_id,
+    queryKey: [QUERY_KEYS.getFoodProduct, foodLog?.food_product_id],
+    queryFn: async () => getFoodProduct(foodLog!.food_product_id!),
+  });
+
+  const foodProductDataFromLog = foodLog
+    ? (foodProductFromLog.data ?? {
+        brands: foodLog.brands,
+        product_name: foodLog.product_name,
+        kcal_100g: foodLog.kcal_100g,
+        amount: 0,
+      })
+    : null;
+
   return (
     <Modal
       opened={open}
@@ -39,14 +57,16 @@ const AddProductModal = ({ foodProduct, foodLog, open, onClose }: Props) => {
       zIndex={201}
     >
       <Stack gap="md">
-        {foodLog && (
+        {foodProductDataFromLog && (
           <>
             <FoodProductSummary
-              product_name={foodLog.product_name}
-              brands={foodLog.brands}
-              kcal_100g={foodLog.kcal_100g}
+              product_name={foodProductDataFromLog.product_name}
+              brands={foodProductDataFromLog.brands}
+              kcal_100g={foodProductDataFromLog.kcal_100g}
+              image_url={foodProductDataFromLog.image_url}
+              product_quantity={foodProductDataFromLog.product_quantity}
+              product_quantity_unit={foodProductDataFromLog.product_quantity_unit}
             />
-            {JSON.stringify(foodLog, null, 2)}
           </>
         )}
         {foodProduct && (

@@ -41,7 +41,7 @@ export const getFoodHistory = async (userId: string): Promise<z.infer<typeof zFo
       { name: 'sqlGetLogsOnThoseDays', op: 'db' },
       async (_span) => {
         const result = await sql<any>`
-select id, brands, product_name,amount, kcal, kcal_100g, DATE(date) as dayDate 
+select id, brands, product_name, food_product_id, amount, kcal, kcal_100g, DATE(date) as dayDate 
   from food_log 
   where user_id = ${userId} 
   and DATE(date) IN (${yyyyMMdd})`.execute(db);

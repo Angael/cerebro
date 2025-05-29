@@ -12,4 +12,5 @@ export const QUERY_KEYS = {
   foodByBarcode: 'foodByBarcode',
   fetchFoodHistory: 'fetchFoodHistory',
   foodGoals: 'foodGoals',
+  getFoodProduct: 'getFoodProduct',
 };
