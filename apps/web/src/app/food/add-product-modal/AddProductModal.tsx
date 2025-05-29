@@ -57,16 +57,24 @@ const AddProductModal = ({ foodProduct, foodLog, open, onClose }: Props) => {
       zIndex={201}
     >
       <Stack gap="md">
-        {foodProductDataFromLog && (
+        {foodLog && (
           <>
-            <FoodProductSummary
-              product_name={foodProductDataFromLog.product_name}
-              brands={foodProductDataFromLog.brands}
-              kcal_100g={foodProductDataFromLog.kcal_100g}
-              image_url={foodProductDataFromLog.image_url}
-              product_quantity={foodProductDataFromLog.product_quantity}
-              product_quantity_unit={foodProductDataFromLog.product_quantity_unit}
-            />
+            {foodProductFromLog.data ? (
+              <FoodProductSummary
+                product_name={foodProductFromLog.data.product_name}
+                brands={foodProductFromLog.data.brands}
+                kcal_100g={foodProductFromLog.data.kcal_100g}
+                image_url={foodProductFromLog.data.image_url}
+                product_quantity={foodProductFromLog.data.product_quantity}
+                product_quantity_unit={foodProductFromLog.data.product_quantity_unit}
+              />
+            ) : (
+              <FoodProductSummary
+                product_name={foodLog.product_name}
+                brands={foodLog.brands}
+                kcal_100g={foodLog.kcal_100g}
+              />
+            )}
           </>
         )}
         {foodProduct && (
