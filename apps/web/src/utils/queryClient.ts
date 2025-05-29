@@ -8,6 +8,7 @@ declare module '@tanstack/react-query' {
     };
 
     mutationMeta: {
+      invalidate?: Parameters<QueryClient['invalidateQueries']>[0];
       invalidateQueryKey?: QueryKey;
       successMessage?: string; // unused
       error?: {
@@ -44,6 +45,9 @@ export const queryClient = new QueryClient({
         queryClient.invalidateQueries({
           queryKey: mutation.meta.invalidateQueryKey,
         });
+      }
+      if (mutation.meta?.invalidate) {
+        queryClient.invalidateQueries(mutation.meta.invalidate);
       }
     },
   }),
