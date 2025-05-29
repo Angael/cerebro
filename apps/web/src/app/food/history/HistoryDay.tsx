@@ -10,7 +10,7 @@ type Props = {
 };
 
 const HistoryDay = ({ date, logs }: Props) => {
-  const kcalSum = logs.reduce((acc, log) => acc + log.kcal, 0);
+  const kcalSum = Math.round(logs.reduce((acc, log) => acc + log.kcal, 0));
 
   return (
     <Paper p="md" component="article">
