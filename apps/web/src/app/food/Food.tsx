@@ -48,10 +48,8 @@ const Food = ({ goals, foodHistoryInit }: Props) => {
 
   const [todaysFood, notTodaysFood] = useMemo(
     () => splitFoodHistoryOnToday(foodHistory.data),
-    [foodHistory.data],
+    [splitFoodHistoryOnToday, foodHistory.data],
   );
-
-  console.log('todaysFood', { todaysFood, notTodaysFood });
 
   const [findOpen, setFindOpen] = useState(false);
   const [foodProduct, setFoodProduct] = useState<FoodProduct | null>(null);
