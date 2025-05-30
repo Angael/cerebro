@@ -1,11 +1,11 @@
-import { postConsumedProduct } from '@/server/postConsumedProduct';
+import { postConsumedProduct } from '@/server/food/postConsumedProduct';
 import { QUERY_KEYS } from '@/utils/consts';
 import { FoodProduct } from '@cerebro/db';
 import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import css from './SaveProductForm.module.css';
-import { editFoodLog } from '@/server/editFoodLog';
+import { editFoodLog } from '@/server/food/editFoodLog';
 
 type Props = {
   foodProductId: FoodProduct['id'];

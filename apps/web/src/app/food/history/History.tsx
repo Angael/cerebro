@@ -1,4 +1,4 @@
-import { FoodHistoryType } from '@/server/getFoodHistory';
+import { FoodHistoryType } from '@/server/food/getFoodHistory';
 import { zFoodHistory } from '@/server/types/foodTypes';
 import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 import { Button, Stack, Title } from '@mantine/core';

@@ -1,5 +1,5 @@
 'use client';
-import { fetchFoodHistory, FoodHistoryType } from '@/server/getFoodHistory';
+import { fetchFoodHistory, FoodHistoryType } from '@/server/food/getFoodHistory';
 import { GoalsType } from '@/server/getGoals';
 import { QUERY_KEYS } from '@/utils/consts';
 import { FoodProduct } from '@cerebro/db';

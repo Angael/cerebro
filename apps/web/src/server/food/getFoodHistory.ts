@@ -4,8 +4,8 @@ import { db } from '@cerebro/db';
 import { startSpan } from '@sentry/nextjs';
 import { sql } from 'kysely';
 import { z } from 'zod';
-import { requireUser } from './auth/getUser';
-import { zFoodHistory } from './types/foodTypes';
+import { requireUser } from '@/server/auth/getUser';
+import { zFoodHistory } from '@/server/types/foodTypes';
 
 export type FoodHistoryType = Awaited<ReturnType<typeof getFoodHistory>>;
 

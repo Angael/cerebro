@@ -1,4 +1,4 @@
-import { postNewFoodProduct } from '@/server/postNewFoodProduct';
+import { postNewFoodProduct } from '@/server/food/postNewFoodProduct';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
 import { FoodProduct } from '@cerebro/db';

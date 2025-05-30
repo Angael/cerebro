@@ -5,7 +5,7 @@ import { memo } from 'react';
 import SaveProductForm from '../save-product-form/SaveProductForm';
 import FoodProductSummary from '../scanner/scanned-code/FoodProductSummary';
 import { Prettify } from '@/utils/types/Prettify.type';
-import { FoodHistoryType } from '@/server/getFoodHistory';
+import { FoodHistoryType } from '@/server/food/getFoodHistory';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/utils/consts';
 import { getFoodProduct } from '@/server/food/getFoodProduct';

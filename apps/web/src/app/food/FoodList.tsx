@@ -1,7 +1,7 @@
 import { Text } from '@mantine/core';
 import FoodLogEntry from './food-log-entry/FoodLogEntry';
 import FoodLogsList from './food-log-entry/FoodLogsList';
-import { FoodHistoryType } from '@/server/getFoodHistory';
+import { FoodHistoryType } from '@/server/food/getFoodHistory';
 
 type Props = {
   foods: FoodHistoryType;

@@ -1,4 +1,4 @@
-import { getFoodByBarcode } from '@/server/getFoodByBarcode';
+import { getFoodByBarcode } from '@/server/food/getFoodByBarcode';
 import { QUERY_KEYS } from '@/utils/consts';
 import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { parseErrorResponse } from '@/utils/parseErrorResponse';
@@ -70,7 +70,9 @@ const ScannerModal = ({ open, onClose, onFound, onCreateProduct }: Props) => {
             : null
         }
         onClose={() => setCode(null)}
-        onCreateProduct={() => {onCreateProduct(code!), setCode(null)}}
+        onCreateProduct={() => {
+          onCreateProduct(code!), setCode(null);
+        }}
       />
     </Modal>
   );

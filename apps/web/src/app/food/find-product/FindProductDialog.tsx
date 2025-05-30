@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import Fuse from 'fuse.js';
 import { useMemo, useState } from 'react';
 import CustomProductBtn from './CustomProductBtn';
-import { fetchMyFoodProducts } from '@/server/getMyFoodProducts';
+import { fetchMyFoodProducts } from '@/server/food/getMyFoodProducts';
 
 type Props = {
   open: boolean;

@@ -4,7 +4,7 @@ import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
 import { cookies } from 'next/headers';
 import { Logger } from '@/utils/logger';
-import { UserSession } from '../auth/getUser';
+import { UserSession } from '@/server/auth/getUser';
 import { serverEnv } from '@/utils/serverEnv';
 
 export const SESSION_DURATION_SECONDS = 60 * 60 * 24 * 30; // 30 days

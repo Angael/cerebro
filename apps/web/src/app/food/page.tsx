@@ -1,7 +1,7 @@
 import { requireUser } from '@/server/auth/getUser';
 import Food from './Food';
 import { getGoals } from '@/server/getGoals';
-import { getFoodHistory } from '@/server/getFoodHistory';
+import { getFoodHistory } from '@/server/food/getFoodHistory';
 import { FoodLogsContextProvider } from './food-log-entry/FoodLogsContext';
 
 const FoodPage = async () => {

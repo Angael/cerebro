@@ -1,6 +1,6 @@
 'use server';
 import { z } from 'zod';
-import { requireUser } from './auth/getUser';
+import { requireUser } from '@/server/auth/getUser';
 import { db } from '@cerebro/db';
 import { startInactiveSpan, startSpan } from '@sentry/nextjs';
 

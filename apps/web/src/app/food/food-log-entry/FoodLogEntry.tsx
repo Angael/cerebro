@@ -1,5 +1,5 @@
 'use client';
-import { deleteFoodLog } from '@/server/deleteFoodLog';
+import { deleteFoodLog } from '@/server/food/deleteFoodLog';
 import { QUERY_KEYS } from '@/utils/consts';
 import { Button, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AddProductModal from '../add-product-modal/AddProductModal';
 import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
-import { FoodHistoryType } from '@/server/getFoodHistory';
+import { FoodHistoryType } from '@/server/food/getFoodHistory';
 import { copyFoodLog } from '@/server/food/copyFoodLog';
 import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 
