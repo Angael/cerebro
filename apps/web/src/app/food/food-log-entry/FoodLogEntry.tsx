@@ -10,6 +10,8 @@ import AddProductModal from '../add-product-modal/AddProductModal';
 import css from './FoodLogEntry.module.css';
 import { useFoodLogsContext } from './FoodLogsContext';
 import { FoodHistoryType } from '@/server/getFoodHistory';
+import { copyFoodLog } from '@/server/food/copyFoodLog';
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 
 type Props = {
   food: FoodHistoryType[number];
@@ -37,8 +39,25 @@ const FoodLogEntry = ({ food }: Props) => {
     },
   });
 
+  const copyMut = useMutation({
+    meta: {
+      invalidateQueryKey: [QUERY_KEYS.fetchFoodHistory],
+      error: {
+        title: 'Error copying food log',
+        message: 'Please try again later.',
+      },
+    },
+    mutationFn: () =>
+      copyFoodLog({
+        foodLogId: food.id,
+        date: formatYYYYMMDD(new Date()),
+      }),
+  });
+
   const bigText = food.product_name || food.brands;
   const smallText = food.product_name ? food.brands : null;
+
+  const isToday = food.dayDate === formatYYYYMMDD(new Date());
 
   return (
     <li className={css.unstyledLi}>
@@ -75,7 +94,11 @@ const FoodLogEntry = ({ food }: Props) => {
       </UnstyledButton>
       <Collapse in={isOpen}>
         <Group pb="xs">
-          <Button disabled>Add today</Button>
+          {!isToday && (
+            <Button loading={copyMut.isPending} onClick={() => copyMut.mutate()}>
+              Add today
+            </Button>
+          )}
           <Button
             variant="outline"
             leftSection={<Icon path={mdiPencil} size={1} />}
