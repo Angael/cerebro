@@ -6,23 +6,37 @@ import * as Sentry from '@sentry/nextjs';
 import { useEffect } from 'react';
 import css from './SimpleError.module.scss';
 
-export default function SimpleError({ error }: { error: any }) {
-  const errorMsg = parseErrorResponse(error);
+interface SimpleErrorProps {
+  error?: any;
+  title?: string;
+  text?: string;
+}
+
+export default function SimpleError({ 
+  error, 
+  title = "Something went wrong", 
+  text = "Try reloading the page." 
+}: SimpleErrorProps) {
+  const errorMsg = error ? parseErrorResponse(error) : null;
 
   useEffect(() => {
-    Sentry.captureException(error);
+    if (error) {
+      Sentry.captureException(error);
+    }
   }, [error]);
 
   return (
-    <Alert color="red" title="Something went wrong">
-      <Text mb="xs">Try reloading the page.</Text>
+    <Alert color="red" title={title}>
+      <Text mb="xs">{text}</Text>
 
-      <details className={css.details} open={process.env.NODE_ENV !== 'production'}>
-        <summary>Details</summary>
-        <pre className={css.stack}>
-          {error.name ?? 'Unknown'}: {JSON.stringify(errorMsg, null, 2)}
-        </pre>
-      </details>
+      {error && (
+        <details className={css.details} open={process.env.NODE_ENV !== 'production'}>
+          <summary>Details</summary>
+          <pre className={css.stack}>
+            {error.name ?? 'Unknown'}: {JSON.stringify(errorMsg, null, 2)}
+          </pre>
+        </details>
+      )}
     </Alert>
   );
 }
