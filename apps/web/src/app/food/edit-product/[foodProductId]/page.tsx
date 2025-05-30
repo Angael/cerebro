@@ -2,7 +2,7 @@ import SimpleError from '@/app/error';
 import { requireUser } from '@/server/auth/getUser';
 import { editFoodProduct } from '@/server/food/editFoodProduct';
 import { getFoodProduct } from '@/server/food/getFoodProduct';
-import { Button, NumberInput, Stack, Text, TextInput, Title } from '@mantine/core';
+import { Button, Fieldset, Group, NumberInput, Stack, Text, TextInput, Title } from '@mantine/core';
 import Form from 'next/form';
 
 const EditProductPage = async ({ params }: { params: Promise<{ foodProductId: string }> }) => {
@@ -10,9 +10,6 @@ const EditProductPage = async ({ params }: { params: Promise<{ foodProductId: st
     requireUser(),
     getFoodProduct(Number((await params).foodProductId)),
   ]);
-
-  console.log('User:', user);
-  console.log('Product:', product);
 
   const canEdit = user.type === 'ADMIN' || user.id === product.user_id;
   if (!canEdit) {
@@ -24,12 +21,56 @@ const EditProductPage = async ({ params }: { params: Promise<{ foodProductId: st
   return (
     <Stack>
       <Title>Edit Product</Title>
-      <Text>This is the edit product page.</Text>
+      <details>
+        <summary>Debug Info</summary>
+        <pre>{JSON.stringify(product, null, 2)}</pre>
+      </details>
 
       <Form action={editFoodProduct}>
-        <pre>{JSON.stringify(product, null, 2)}</pre>
-        <TextInput name="product_name" label="Product Name" defaultValue={product.product_name} />
-        <Button type="submit" color="blue">
+        <Fieldset legend="Product Description" variant="default" mb="md">
+          <Stack>
+            <TextInput name="barcode" label="Barcode" defaultValue={product.barcode ?? ''} />
+            <Group grow wrap="wrap">
+              <TextInput
+                name="product_name"
+                label="Name"
+                defaultValue={product.product_name}
+                required
+                style={{ minWidth: 100 }}
+              />
+              <TextInput name="brands" label="Brand" defaultValue={product.brands ?? ''} />
+            </Group>
+            <TextInput name="image_url" label="Image URL" defaultValue={product.image_url ?? ''} />
+          </Stack>
+        </Fieldset>
+
+        <Fieldset legend="Quantity" variant="default" mb="md">
+          <Stack>
+            <NumberInput
+              name="kcal_100g"
+              label="Calories per 100g"
+              defaultValue={product.kcal_100g ?? undefined}
+              step={1}
+              min={0}
+              required
+            />
+
+            <NumberInput
+              name="product_quantity"
+              label="Product Quantity (grams)"
+              description="This is the total weight of the product in grams."
+              defaultValue={product.product_quantity ?? undefined}
+              placeholder="e.g. 100 g"
+              rightSection={'gram'}
+              rightSectionWidth={60}
+              step={1}
+              min={0}
+              flex={3}
+            />
+          </Stack>
+        </Fieldset>
+
+        <Button type="submit" color="blue" ml="auto">
           Save Changes
         </Button>
       </Form>
