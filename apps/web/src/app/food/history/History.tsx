@@ -4,6 +4,7 @@ import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 import { Button, Stack, Title } from '@mantine/core';
 import { z } from 'zod';
 import HistoryDay from './HistoryDay';
+import { memo } from 'react';
 
 type Props = {
   foodHistory: FoodHistoryType;
@@ -39,4 +40,4 @@ const History = ({ foodHistory }: Props) => {
   );
 };
 
-export default History;
+export default memo(History);
