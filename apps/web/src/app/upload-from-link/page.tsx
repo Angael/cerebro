@@ -1,17 +1,16 @@
 'use client';
+import UsedSpace from '@/lib/used-space/UsedSpace';
+import { API } from '@/utils/API';
+import { QUERY_KEYS } from '@/utils/consts';
+import { useUserLimits } from '@/utils/hooks/useUserLimits';
+import { isUrl } from '@/utils/isUrl';
+import { Button, Text, TextInput } from '@mantine/core';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import css from './ImportFromLink.module.scss';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import StatsFromLink from './StatsFromLink';
-import { isUrl } from '@/utils/isUrl';
-import UsedSpace from '@/lib/used-space/UsedSpace';
-import { QUERY_KEYS } from '@/utils/consts';
-import { API } from '@/utils/API';
-import { Button, Text, TextInput } from '@mantine/core';
-import { useUserLimits } from '@/utils/hooks/useUserLimits';
 
 const Page = () => {
-  const queryClient = useQueryClient();
   const [link, setLink] = useState('');
   const isValidUrl = isUrl(link);
 
@@ -19,10 +18,8 @@ const Page = () => {
   const disableUpload = data ? data?.used >= data?.max : true;
 
   const mutation = useMutation({
+    meta: { invalidateQueryKey: [QUERY_KEYS.uploadLimits] },
     mutationFn: () => API.post('/items/upload/file-from-link', { link }),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.uploadLimits] });
-    },
   });
 
   const {
