@@ -2,6 +2,7 @@ import SimpleError from '@/app/error';
 import { requireUser } from '@/server/auth/getUser';
 import { editFoodProduct } from '@/server/food/editFoodProduct';
 import { getFoodProduct } from '@/server/food/getFoodProduct';
+import { clientEnv } from '@/utils/clientEnv';
 import { Button, Fieldset, Group, NumberInput, Stack, Text, TextInput, Title } from '@mantine/core';
 import Form from 'next/form';
 
@@ -21,12 +22,16 @@ const EditProductPage = async ({ params }: { params: Promise<{ foodProductId: st
   return (
     <Stack>
       <Title>Edit Product</Title>
-      <details>
-        <summary>Debug Info</summary>
-        <pre>{JSON.stringify(product, null, 2)}</pre>
-      </details>
+
+      {!clientEnv.IS_PROD && (
+        <details>
+          <summary>Debug Info</summary>
+          <pre>{JSON.stringify(product, null, 2)}</pre>
+        </details>
+      )}
 
       <Form action={editFoodProduct}>
+        <input type="hidden" name="id" value={product.id} />
         <Fieldset legend="Product Description" variant="default" mb="md">
           <Stack>
             <TextInput name="barcode" label="Barcode" defaultValue={product.barcode ?? ''} />
