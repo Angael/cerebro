@@ -1,13 +1,13 @@
 'use client';
-import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { UserSession } from '@/server/auth/getUser';
+import { useIsMobile } from '@/utils/hooks/useIsMobile';
 import { GoalsType, WeightData } from '@cerebro/server';
-import { AreaChart } from '@mantine/charts';
+import { AreaChart, LineChart } from '@mantine/charts';
 import '@mantine/charts/styles.css';
 import { Button, Group, Paper, Stack, Text } from '@mantine/core';
 import { useMemo, useState } from 'react';
 import WeightDialog from './WeightDialog';
-import { fillMissingDates } from './weightHelpers';
+import { formatYYYYMMDD } from '@/utils/formatYYYYMMDD';
 
 export type Props = {
   user: UserSession;
@@ -46,30 +46,46 @@ const Weight = ({ user, weight, goals }: Props) => {
     return getDomain(Math.min(...weights) - 1, Math.max(...weights) + 1);
   }, [weight, goals]);
 
-  const datesWithFilledDates = useMemo(() => {
+  const weightWithTimeDates = useMemo(() => {
     if (!weight) return [];
-    const filledData = fillMissingDates(weight);
-    return filledData.map((d) => ({ ...d, date: new Date(d.date).toLocaleDateString() }));
+    return weight.map((d) => ({ ...d, date: new Date(d.date).getTime() }));
   }, [weight]);
 
   const isMobile = useIsMobile();
 
+  // TODO write better logic for domain
+  const xDomain = [
+    weightWithTimeDates[0].date,
+    weightWithTimeDates[weightWithTimeDates.length - 1].date,
+  ];
+
   return (
     <div>
-      <AreaChart
+      <LineChart
         curveType="monotone"
         h={200}
-        data={datesWithFilledDates}
+        data={weightWithTimeDates}
         dataKey="date"
         series={[{ name: 'weight_kg', color: 'grape.5' }]}
         referenceLines={
           weight_kg ? [{ y: weight_kg, label: 'Weight goal', color: 'red.6' }] : undefined
         }
-        yAxisProps={{ domain, tickCount: 6 }}
-        xAxisProps={{ interval: 30 }}
+        yAxisProps={{ domain, tickFormatter: (value) => `${value} kg` }}
+        xAxisProps={{
+          type: 'number',
+          domain: xDomain,
+          scale: 'time',
+          tickFormatter: (timestamp) => new Date(timestamp).toLocaleDateString(),
+          allowDuplicatedCategory: false,
+        }}
+        tooltipProps={{
+          labelFormatter: (timestamp) => {
+            return formatYYYYMMDD(new Date(timestamp));
+          },
+          formatter: (value) => `${value} kg`,
+        }}
         tickLine="y"
         withPointLabels
-        connectNulls
         withXAxis={isMobile ? false : true}
         withYAxis={isMobile ? false : true}
       />
