@@ -6,7 +6,7 @@ import { mdiBarcode } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useQuery } from '@tanstack/react-query';
 import Fuse from 'fuse.js';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import CustomProductBtn from './CustomProductBtn';
 import { fetchMyFoodProducts } from '@/server/food/getMyFoodProducts';
 
@@ -55,6 +55,10 @@ const FindProductDialog = ({
   };
 
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    setName('');
+  }, [open]);
 
   return (
     <Modal opened={open} onClose={onClose} fullScreen={isMobile} size="lg" title="Find product">
