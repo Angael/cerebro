@@ -4,7 +4,12 @@ import { startSpan } from '@sentry/nextjs';
 import { z } from 'zod';
 
 const zFoodProduct = z.object({
-  product_name: z.string().min(1, 'Product name is required'),
+  id: z.coerce.number().int(), // barcode, inserted by cerebro
+  product_name: z.string().min(1).trim(),
+  brands: z.string().trim().optional(),
+  kcal_100g: z.coerce.number().positive().optional(),
+  image_url: z.string().trim().optional(),
+  product_quantity: z.coerce.number().optional(),
 });
 
 export const editFoodProduct = async (formData: FormData) =>

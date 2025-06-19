@@ -31,6 +31,7 @@ const EditProductPage = async ({ params }: { params: Promise<{ foodProductId: st
       )}
 
       <Form action={editFoodProduct}>
+        <input type="hidden" name="id" value={product.id} />
         <Fieldset legend="Product Description" variant="default" mb="md">
           <Stack>
             <TextInput name="barcode" label="Barcode" defaultValue={product.barcode ?? ''} />
