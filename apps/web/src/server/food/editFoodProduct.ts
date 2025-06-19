@@ -1,9 +1,7 @@
 'use server';
-import { z } from 'zod';
 import { requireUser } from '@/server/auth/getUser';
-import { db } from '@cerebro/db';
-import { startInactiveSpan, startSpan } from '@sentry/nextjs';
-import { zSignInForm } from '@/app/signin/signInUtils';
+import { startSpan } from '@sentry/nextjs';
+import { z } from 'zod';
 
 const zFoodProduct = z.object({
   product_name: z.string().min(1, 'Product name is required'),
