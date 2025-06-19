@@ -59,9 +59,7 @@ const ScannerModal = ({ open, onClose, onFound, onCreateProduct }: Props) => {
 
   return (
     <Modal opened={open} onClose={onClose} fullScreen={isMobile} size="xl" title="Scan product">
-      <Box pos="relative">
-        <Scanner codeFoundCallback={codeFoundCallback} />
-      </Box>
+      <Box pos="relative">{open ? <Scanner codeFoundCallback={codeFoundCallback} /> : null}</Box>
       <ScannerFeedback
         code={code}
         error={
