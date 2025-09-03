@@ -2,6 +2,8 @@
 import { requireUser } from '@/server/auth/getUser';
 import { startSpan } from '@sentry/nextjs';
 import { z } from 'zod';
+import { getFoodProduct } from './getFoodProduct';
+import { db } from '@cerebro/db';
 
 const zFoodProduct = z.object({
   id: z.coerce.number().int(), // barcode, inserted by cerebro
@@ -12,13 +14,38 @@ const zFoodProduct = z.object({
   product_quantity: z.coerce.number().optional(),
 });
 
-export const editFoodProduct = async (formData: FormData) =>
-  startSpan({ name: 'SF_editFoodProduct', op: 'db' }, async () => {
-    const user = await requireUser();
+export const editFoodProduct = async (product: z.infer<typeof zFoodProduct>) =>
+  startSpan({ name: 'SF_editFoodProduct' }, async () => {
+    console.log('### ###');
+    const parsedData = zFoodProduct.safeParse(product);
 
-    const parsedData = zFoodProduct.parse(Object.fromEntries(formData.entries()));
+    console.log({ parsedData });
+
+    if (parsedData.error) {
+      console.error('Validation error:', parsedData.error);
+      return { error: parsedData.error.issues };
+    }
+
+    const [user, foodProduct] = await Promise.all([requireUser(), getFoodProduct(parsedData.id)]);
 
     console.log('parsed data:', parsedData);
+    if (foodProduct.user_id !== user.id) {
+      throw new Error('You are not allowed to edit this product');
+    }
 
-    return;
+    await startSpan({ name: 'editing food log', parentSpan, op: 'db' }, () =>
+      db
+        .updateTable('food_product')
+        .set({
+          kcal,
+          kcal_100g,
+          amount,
+          date: new Date(date),
+        })
+        .where('id', '=', foodLogId)
+        .where('user_id', '=', user.id)
+        .execute(),
+    );
+
+    return { error: null };
   });

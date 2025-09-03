@@ -53,6 +53,7 @@ const AddProductModal = ({ foodProduct, foodLog, open, onClose }: Props) => {
           <>
             {foodProductFromLog.data ? (
               <FoodProductSummary
+                id={foodProductFromLog.data.id}
                 product_name={foodProductFromLog.data.product_name}
                 brands={foodProductFromLog.data.brands}
                 kcal_100g={foodProductFromLog.data.kcal_100g}

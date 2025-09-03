@@ -1,8 +1,12 @@
 import { FoodProduct } from '@cerebro/db';
-import { Stack, Text, Title } from '@mantine/core';
+import { ActionIcon, Group, Stack, Text, Title } from '@mantine/core';
+import { mdiPencil } from '@mdi/js';
+import Icon from '@mdi/react';
 import css from './FoodProductSummary.module.css';
+import Link from 'next/link';
 
 type Props = {
+  id: FoodProduct['id'];
   product_name: FoodProduct['product_name'];
   brands: FoodProduct['brands'];
   kcal_100g: FoodProduct['kcal_100g'];
@@ -12,6 +16,7 @@ type Props = {
 };
 
 const FoodProductSummary = ({
+  id,
   product_name,
   brands,
   kcal_100g,
@@ -32,9 +37,22 @@ const FoodProductSummary = ({
               {smallText}
             </Text>
           )}
-          <Title order={3} size="lg">
-            {bigText}
-          </Title>
+          <Group>
+            <Title order={3} size="lg">
+              {bigText}
+            </Title>
+            {id && (
+              <ActionIcon
+                variant="transparent"
+                aria-label="Edit"
+                size="sm"
+                component={Link}
+                href={`/food/edit-product/${id}`}
+              >
+                <Icon path={mdiPencil} />
+              </ActionIcon>
+            )}
+          </Group>
         </div>
         <div>
           <Text size="sm">{kcal_100g} kcal / 100g</Text>
